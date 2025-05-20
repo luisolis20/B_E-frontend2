@@ -22,13 +22,13 @@ export default {
             telf: '',
             direccion: '',
             imagen: '',
-            url: 'http://192.168.1.15/b_e/api/vin/users',
+            url: 'http://backendbolsaempleo.test/api/b_e/vin/users',
 
             si_cvn: false,
             no_cvn: true,
             cargando: false,
             //Datos Personales
-            urlinformacionpersonal: "http://cvubackendv2.test/api/v1/informacionpersonal",
+            urlinformacionpersonal: "http://10.11.14.110/cvn/api/cvn/v1/informacionpersonal",
             iddatos_personales: 0,
             datos_personales: null,
             CIInfPer: "",
@@ -45,8 +45,8 @@ export default {
             mailPer: "",
             edad: "",
             //Formacion Academica
-            urlformacion_academica: "http://cvubackendv2.test/api/v1/formacion_academica",
-            urlfichasocioeconomica: "http://cvubackendv2.test/api/v1/fichasocioeconomica",
+            urlformacion_academica: "http://10.11.14.110/cvn/api/cvn/v1/formacion_academica",
+            urlfichasocioeconomica: "http://10.11.14.110/cvn/api/cvn/v1/fichasocioeconomica",
             idformacion_academica: 0,
             idfichasocioeconomica: 0,
             formacion_academica: null,
@@ -78,7 +78,7 @@ export default {
             estudios_posgrado_culminados: "",
             estudios_bachiller_culminados: "",
             //Experiencias Profesionales
-            urlexperiencia_profesionale: "http://cvubackendv2.test/api/v1/experiencia_profesionale",
+            urlexperiencia_profesionale: "http://10.11.14.110/cvn/api/cvn/v1/experiencia_profesionale",
             idexperiencias_profesionales: 0,
             experiencias_profesionales: null,
             mostrarexperienciasprofesionales: true,
@@ -113,7 +113,7 @@ export default {
             fechacursos: "",
             fechaFinLabelCursos: "",
             //Investigacion y publicaciones
-            urlinvestigacion_publicacione: "http://cvubackendv2.test/api/v1/investigacion_publicacione",
+            urlinvestigacion_publicacione: "http://10.11.14.110/cvn/api/cvn/v1/investigacion_publicacione",
             idinvestigacion_publicaciones: 0,
             investigacion_publicaciones: null,
             publicaciones: "",
@@ -126,7 +126,7 @@ export default {
                 congreso_evento: "",
             },
             //Idiom
-            urlidioma: "http://cvubackendv2.test/api/v1/idioma",
+            urlidioma: "http://10.11.14.110/cvn/api/cvn/v1/idioma",
             idlenguaje: 0,
             lenguaje: null,
             idiomasarray: [],
@@ -141,7 +141,7 @@ export default {
                 certificado: "",
             },
             //SW
-            urlhabilidades_informatica: "http://cvubackendv2.test/api/v1/habilidades_informatica",
+            urlhabilidades_informatica: "http://10.11.14.110/cvn/api/cvn/v1/habilidades_informatica",
             idhabilidades_informaticas: 0,
             habilidades_informaticas: null,
             habilidades_comunicativas_array: [],
@@ -190,7 +190,7 @@ export default {
             habi_oficios: "",
             habi_otros_habi: "",
             //Cursos Capacitaciones
-            urlcursoscapacitacion: "http://cvubackendv2.test/api/v1/cursoscapacitacion",
+            urlcursoscapacitacion: "http://10.11.14.110/cvn/api/cvn/v1/cursoscapacitacion",
             idcursoscapacitaciones: 0,
             curso_capacitacion: null,
             curso_capacitacionarray: [],
@@ -208,7 +208,7 @@ export default {
                 horas_curso: "",
             },
             //Datos Relevantes
-            urlotros_datos_relevante: "http://cvubackendv2.test/api/v1/otros_datos_relevante",
+            urlotros_datos_relevante: "http://10.11.14.110/cvn/api/cvn/v1/otros_datos_relevante",
             idotros_datos_personales: 0,
             otros_datos_personales: null,
             otros_datos_personalesarray: [],
@@ -219,7 +219,7 @@ export default {
                 descripcion_fracasos: "",
             },
             //Informacion de Contacto
-            urlinformacion_contacto: "http://cvubackendv2.test/api/v1/informacion_contacto",
+            urlinformacion_contacto: "http://10.11.14.110/cvn/api/cvn/v1/informacion_contacto",
             idinformacion_contacto: 0,
             informacion_contacto: null,
             informacion_contactoarray: [],
@@ -231,13 +231,14 @@ export default {
                 referencia_telefono: "",
             },
             //Declaracion Personal
-            urldeclaracion_personal: "http://cvubackendv2.test/api/v1/declaracion_personal",
+            urldeclaracion_personal: "http://10.11.14.110/cvn/api/cvn/v1/declaracion_personal",
+            urlDeclaracionPersonal: "http://10.11.14.110/cvn/api/cvn/v1/sicvn",
             iddeclaracion_personal: 0,
             declaracion_personal: null,
             texto: "",
-            apiBaseUrl: "http://cvubackendv2.test/api/v1",
+            apiBaseUrl: "http://10.11.14.110/cvn/api/cvn/v1",
             urls: {
-                
+
                 formacion: '', // URL de formación académica
                 experiencia: '', // URL de experiencia profesional
                 declaracion: '', // URL de declaración personal
@@ -248,6 +249,15 @@ export default {
                 investigacion: '', // URL de investigación y publicaciones
                 otrosDatos: '', // URL de otros datos relevantes
             },
+            filtereddeclaracion_personals2: [],
+            filteredcursos2: [],
+            experiencia_profesionales2: [],
+            formacion_academicas2: [],
+            habilidades_informaticas2: [],
+            filteredidiomas2: [],
+            filteredreferencias2: [],
+            filteredpublicacion2: [],
+            otros_datos_relevantes2: [],
         }
     },
     mounted() {
@@ -291,7 +301,7 @@ export default {
         // Generar dinámicamente las URLs basadas en el ID del usuario actual
         generatedUrls() {
             return {
-               
+
                 formacion: `${this.apiBaseUrl}/formacion_academica/${this.id}`,
                 experiencia: `${this.apiBaseUrl}/experiencia_profesionale/${this.id}`,
                 declaracion: `${this.apiBaseUrl}/declaracion_personal/${this.id}`,
@@ -310,8 +320,8 @@ export default {
             try {
 
                 const response = await axios.get(this.urlinformacionpersonal);
-                if (response.data && response.data.length > 0) {
-                    const data = response.data[0];
+                if (response.data.data && response.data.data.length > 0) {
+                    const data = response.data.data[0];
                     this.CIInfPer = data.CIInfPer;
                     this.ApellInfPer = data.ApellInfPer;
                     this.ApellMatInfPer = data.ApellMatInfPer;
@@ -331,7 +341,7 @@ export default {
                     } else if (data.GeneroPer = "M") {
                         this.GeneroPer = "MUJER";
                     }
-                    this.CiudadPer = data.CiudadPer.toUpperCase();
+                    this.CiudadPer = data.CiudadPer;
                     this.DirecDomicilioPer = data.DirecDomicilioPer;
                     this.Telf1InfPer = data.Telf1InfPer;
                     this.mailPer = data.mailPer;
@@ -356,10 +366,11 @@ export default {
             try {
                 const response = await axios.get(this.urlformacion_academica);
                 console.log(this.estudioactualmentefacultadcarreras);
+                
 
-
-                if (response.data && response.data.length > 0) {
-                    const data = response.data;
+                if (response.data.data && response.data.data.length > 0) {
+                    const data = response.data.data;
+                    this.formacion_academicas2= data;
 
                     // Limpiamos los arreglos existentes
                     this.titulosBachiller = [];
@@ -433,8 +444,9 @@ export default {
         async getExperienciasProfesionales() {
             try {
                 const response = await axios.get(this.urlexperiencia_profesionale);
-                if (response.data && response.data.length > 0) {
-                    const data = response.data;
+                if (response.data.data && response.data.data.length > 0) {
+                    const data = response.data.data;
+                    this.experiencia_profesionales2= data;
                     this.cargosEmpresas = [];
                     this.cargosPasantias = [];
 
@@ -492,8 +504,9 @@ export default {
         async getInvestigacionPublicaciones() {
             try {
                 const response = await axios.get(this.urlinvestigacion_publicacione);
-                if (response.data && response.data.length > 0) {
-                    const data = response.data;
+                if (response.data.data && response.data.data.length > 0) {
+                    const data = response.data.data;
+                    this.filteredpublicacion2=data;
                     this.publicacionesarray = [];
 
                     data.forEach(item => {
@@ -527,8 +540,9 @@ export default {
         async getIdiomas() {
             try {
                 const response = await axios.get(this.urlidioma);
-                if (response.data && response.data.length > 0) {
-                    const data = response.data;
+                if (response.data.data && response.data.data.length > 0) {
+                    const data = response.data.data;
+                    this.filteredidiomas2 = data;
                     this.idiomasarray = [];
 
                     data.forEach(item => {
@@ -564,8 +578,9 @@ export default {
         async getHabilidadesInformaticas() {
             try {
                 const response = await axios.get(this.urlhabilidades_informatica);
-                if (response.data && response.data.length > 0) {
-                    const data = response.data;
+                if (response.data.data && response.data.data.length > 0) {
+                    const data = response.data.data;
+                    this.habilidades_informaticas2=data;
                     this.habilidades_comunicativas_array = [];
                     this.habilidades_creativas_array = [];
                     this.habilidades_informaticas_array = [];
@@ -640,8 +655,9 @@ export default {
         async getCursosCapacitaciones() {
             try {
                 const response = await axios.get(this.urlcursoscapacitacion);
-                if (response.data && response.data.length > 0) {
-                    const data = response.data;
+                if (response.data.data && response.data.data.length > 0) {
+                    const data = response.data.data;
+                    this.filteredcursos2=data;
                     this.curso_capacitacionarray = [];
 
                     data.forEach(item => {
@@ -682,8 +698,9 @@ export default {
         async getDatosRelevantes() {
             try {
                 const response = await axios.get(this.urlotros_datos_relevante);
-                if (response.data && response.data.length > 0) {
-                    const data = response.data;
+                if (response.data.data && response.data.data.length > 0) {
+                    const data = response.data.data;
+                    this.otros_datos_relevantes2=data;
                     this.otros_datos_personalesarray = [];
 
                     data.forEach(item => {
@@ -717,8 +734,9 @@ export default {
         async getInformacionContacto() {
             try {
                 const response = await axios.get(this.urlinformacion_contacto);
-                if (response.data && response.data.length > 0) {
-                    const data = response.data;
+                if (response.data.data && response.data.data.length > 0) {
+                    const data = response.data.data;
+                    this.filteredreferencias2=data;
                     this.informacion_contactoarray = [];
 
                     data.forEach(item => {
@@ -754,8 +772,9 @@ export default {
         async getDeclaracionPersonal() {
             try {
                 const response = await axios.get(this.urldeclaracion_personal);
-                if (response.data && response.data.length > 0) {
-                    const data = response.data[0];
+                if (response.data.data && response.data.data.length > 0) {
+                    const data = response.data.data[0];
+                    this.filtereddeclaracion_personals2=data;
                     this.iddeclaracion_personal = data.id;
                     this.texto = data.texto;
 
@@ -1370,43 +1389,52 @@ export default {
             }
         },
         async getUsuario_CVN() {
-            const {  formacion, experiencia, declaracion, habilidades, idiomas, contacto, cursos, investigacion, otrosDatos } = this.generatedUrls;
+
 
             try {
-                // Ejecutar todas las solicitudes en paralelo
-                const [
-                    
-                    formacionData,
-                    experienciaData,
-                    declaracionData,
-                    habilidadesData,
-                    idiomasData,
-                    contactoData,
-                    cursosData,
-                    investigacionData,
-                    otrosDatosData
-                ] = await Promise.all([
-                    this.fetchData(formacion),
-                    this.fetchData(experiencia),
-                    this.fetchData(declaracion),
-                    this.fetchData(habilidades),
-                    this.fetchData(idiomas),
-                    this.fetchData(contacto),
-                    this.fetchData(cursos),
-                    this.fetchData(investigacion),
-                    this.fetchData(otrosDatos)
-                ]);
+                const response = await axios.get(this.urlinformacionpersonal);
+                const allData = response.data.data;
+                console.log(response);
+                const sortedData = allData.map((person) => {
+                    if (!person || !person.CIInfPer) return null;
 
-                // Si el usuario tiene al menos un dato en cualquier tabla, cambiar si_cvn a true
-                this.si_cvn = formacionData.length > 0 ||
-                    experienciaData.length > 0 ||
-                    declaracionData.length > 0 ||
-                    habilidadesData.length > 0 ||
-                    idiomasData.length > 0 ||
-                    contactoData.length > 0 ||
-                    cursosData.length > 0 ||
-                    investigacionData.length > 0 ||
-                    otrosDatosData.length > 0;
+                    const CIInfPer = person.CIInfPer;
+
+                    const hasDataInAtLeastOneTable =
+                        this.filteredcursos2.some((data) => data.CIInfPer === CIInfPer) ||
+                        this.experiencia_profesionales2.some((data) => data.CIInfPer === CIInfPer) ||
+                        this.formacion_academicas2.some((data) => data.CIInfPer === CIInfPer) ||
+                        this.habilidades_informaticas2.some((data) => data.CIInfPer === CIInfPer) ||
+                        this.filteredidiomas2.some((data) => data.CIInfPer === CIInfPer) ||
+                        this.filteredreferencias2.some((data) => data.CIInfPer === CIInfPer) ||
+                        this.otros_datos_relevantes2.some((data) => data.CIInfPer === CIInfPer) ||
+                        this.filteredpublicacion2.some((data) => data.CIInfPer === CIInfPer);
+
+                    const hasDataInAllTables =
+                        this.filteredcursos2.some((data) => data.CIInfPer === CIInfPer) ||
+                        this.experiencia_profesionales2.some((data) => data.CIInfPer === CIInfPer) ||
+                        this.formacion_academicas2.some((data) => data.CIInfPer === CIInfPer) ||
+                        this.habilidades_informaticas2.some((data) => data.CIInfPer === CIInfPer) ||
+                        this.filteredidiomas2.some((data) => data.CIInfPer === CIInfPer) ||
+                        this.filteredreferencias2.some((data) => data.CIInfPer === CIInfPer) ||
+                        this.otros_datos_relevantes2.some((data) => data.CIInfPer === CIInfPer) ||
+                        this.filteredpublicacion2.some((data) => data.CIInfPer === CIInfPer);
+
+                    // Asignar estado según los datos
+                    if (hasDataInAllTables) {
+                        console.log('Tiene CVN completo');
+                        this.si_cvn = true;
+                    } else if (hasDataInAtLeastOneTable) {
+                        console.log('Tiene CVN incompleto');
+                        this.si_cvn = true;
+                    } else {
+                        console.log('Tiene CVN en proceso');
+                        this.si_cvn = true;
+                    }
+
+                    return person;
+                }).filter(Boolean);
+
 
             } catch (error) {
                 console.error('Error al verificar los datos del CVN:', error);

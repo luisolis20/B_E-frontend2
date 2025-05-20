@@ -134,7 +134,7 @@ export default {
             visione:'',
             descripcione:'',
             usuario_id:'',
-            urk3:'http://192.168.1.15/b_e/api/vin/consultaredir',
+            urk3:'http://backendbolsaempleo.test/api/b_e/vin/consultaredir',
             cargando: false,
         }
     },

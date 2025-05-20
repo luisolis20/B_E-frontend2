@@ -18,7 +18,7 @@ export default {
             telf:'',
             direccion:'',
             imagen:'',
-            url:'http://192.168.1.15/b_e/api/vin/users',
+            url:'http://backendbolsaempleo.test/api/b_e/vin/users',
             showPassword: false,
             cargando: false,
         }
@@ -90,7 +90,7 @@ export default {
               };
             enviarsolig("POST", parametros, "http://bolsaempleobackend.test/api/vin/enviar-correo", "Codigo de Verificacion Enviado al Correo");
             */
-            const response = await axios.post("http://192.168.1.15/b_e/api/vin/enviar-correo",
+            const response = await axios.post("http://backendbolsaempleo.test/api/b_e/vin/enviar-correo",
               {
                 email: this.email.trim(),
               }

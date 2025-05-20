@@ -127,8 +127,8 @@ export default {
             modalidad:'',
             categoria:'',
             jefe:'',
-            urk32:'http://192.168.1.15/b_e/api/vin/consultaofert',
-            apiBaseUrl: "http://cvubackendv2.test/api/v1",
+            urk32:'http://backendbolsaempleo.test/api/b_e/vin/consultaofert',
+            apiBaseUrl: "http://cvubackendv2.test/api/cvn/v1",
             urls: {
                
                 formacion: '', // URL de formación académica
@@ -257,7 +257,7 @@ export default {
             };
 
             if (this.si_cvn) {
-                enviarsolig('POST', parametros, 'http://192.168.1.15/b_e/api/vin/postulacions', 'Postulado con Exito');
+                enviarsolig('POST', parametros, 'http://backendbolsaempleo.test/api/b_e/vin/postulacions', 'Postulado con Exito');
                 this.$router.push('/principal/' + this.ide);
             } else {
                 mostraralertas2("Por requisitos del sistema no puedes postularte hasta que tengas tu CVN. Ve a tu perfil y crea tu CVN", "warning");

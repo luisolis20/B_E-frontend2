@@ -73,7 +73,7 @@
         data(){
             return{
                 idus:0,
-                url255:'http://192.168.1.15/b_e/api/vin/users',
+                url255:'http://backendbolsaempleo.test/api/b_e/vin/users',
                 usuarios:null,
                 cargando:false
             }
@@ -96,7 +96,7 @@
                 );
             },
             eliminar(id,nombre){
-                confimar('http://192.168.1.15/b_e/api/vin/users/',id,'Eliminar registro','¿Realmente desea eliminar a '+nombre+'?');
+                confimar('http://backendbolsaempleo.test/api/b_e/vin/users/',id,'Eliminar registro','¿Realmente desea eliminar a '+nombre+'?');
                 this.cargando = false;
                 this.$router.push('/principal/'+this.idus);
 

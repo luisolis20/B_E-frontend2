@@ -18,7 +18,7 @@ export default {
             vision:'',
             descripcion:'',
             usuario_id:'',
-            ur3:'http://192.168.1.15/b_e/api/vin/consultaredir',
+            ur3:'http://backendbolsaempleo.test/api/b_e/vin/consultaredir',
             cargando: false,
             
         }

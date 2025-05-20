@@ -13,7 +13,7 @@ export default {
             mision:'',
             vision:'',
             descripcion:'',
-            url:'http://192.168.1.15/b_e/api/vin/empresas',
+            url:'http://backendbolsaempleo.test/api/b_e/vin/empresas',
             cargando: false,
         }
     },
@@ -71,7 +71,7 @@ export default {
 
                 }
                
-                enviarsolig('POST',parametros,'http://192.168.1.15/b_e/api/vin/empresas','Empresa Creada');
+                enviarsolig('POST',parametros,'http://backendbolsaempleo.test/api/b_e/vin/empresas','Empresa Creada');
                 this.$router.push('/principal/'+this.idus);
             }
         },

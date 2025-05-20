@@ -52,7 +52,7 @@
                             <div class="text-center" v-if="si_cvn">
                                 <h4 class="mb-4">Parece que si tienes registrado tu hoja de vida en la página del CVN de
                                     la UTLVTE, puedes visualizarlo en el botón de abajo <br>
-                                    Si deseas puedes editar tu CVN dando clic <a href="http://" target="_blank"
+                                    Si deseas puedes editar tu CVN dando clic <a href="http://http://192.168.1.110/cvn/" target="_blank"
                                         rel="noopener noreferrer">aquí</a> </h4>
                             </div>
                         </div>

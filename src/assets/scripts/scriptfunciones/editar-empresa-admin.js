@@ -16,7 +16,7 @@ export default {
             telf:'',
             direccion:'',
             imagen:'',
-            url:'http://192.168.1.15/b_e/api/vin/users',
+            url:'http://backendbolsaempleo.test/api/vin/users',
             cargando: false,
         }
     },
