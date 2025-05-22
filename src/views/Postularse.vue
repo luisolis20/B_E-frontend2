@@ -83,9 +83,18 @@
                                             style="width: 50%; border-style: double; top: 0; left: 50%; transform: translate(-50%, -50%);">
                                             ¿Deseas Postularte a esta oferta de empleo? 
                                         </div>
-                                        <div class="mt-4">
+                                        <div class="mt-4" v-if="postulosii">
                                             <div class="col-12 text-center wow fadeIn" data-wow-delay="0.1s">
                                                 <button v-on:click="guardar" class="btn btn-primary btn-primary-outline-0 py-3 px-5 text-white">Si, Deseo Postularme</button>
+                                            </div>
+                                        </div>
+                                        <div class="mt-4" v-else>
+                                            <div class="col-12 text-center wow fadeIn" data-wow-delay="0.1s">
+                                               <label for="" class="text-dark">Por limitaciones técnicas, para postularte a esta oferta debes:</label>
+                                                <p class="text-dark"><i class="fa fa-check text-primary me-3"></i>Irte a tu perfil</p>
+                                                <p class="text-dark"><i class="fa fa-check text-primary me-3"></i>Decargar tu cvn</p>
+                                                <p class="text-dark"><i class="fa fa-check text-primary me-3"></i>Enviarlo al correo talento.humano@humboldt.edu.ec</p>
+                                                <p class="text-dark"><i class="fa fa-check text-primary me-3"></i>Colocar el asunto: Tutor educativo en esmeraldas y enviar el correo</p>
                                             </div>
                                         </div>
                                     </div>
@@ -143,8 +152,21 @@ export default {
                 otrosDatos: '', // URL de otros datos relevantes
             },
             si_cvn: false,
+            postulosii: false,
             cargando: false,
             filteredDatosPersonales: [],
+
+             filtereddeclaracion_personals2: [],
+            filteredcursos2: [],
+            experiencia_profesionales2: [],
+            formacion_academicas2: [],
+            habilidades_informaticas2: [],
+            filteredidiomas2: [],
+            filteredreferencias2: [],
+            filteredpublicacion2: [],
+            otros_datos_relevantes2: [],
+            urlinformacionpersonal: "http://190.15.134.90/cvn/api/cvn/v1/declaracion_personal",
+
         }
     },
     mounted(){
@@ -153,6 +175,7 @@ export default {
         this.idus = ruta.params.secondId;
 
         this.urk32 +=  '/'+this.idus;
+        this.urlinformacionpersonal += '/'+this.ide;
         
         Promise.all([
                 this.getUsuario_CVN(),
@@ -166,65 +189,75 @@ export default {
     // Generar dinámicamente las URLs basadas en el ID del usuario actual
         generatedUrls() {
             return {
-                formacion: `${this.apiBaseUrl}/formacion_academica/${this.ide}`,
-                experiencia: `${this.apiBaseUrl}/experiencia_profesionale/${this.ide}`,
-                declaracion: `${this.apiBaseUrl}/declaracion_personal/${this.ide}`,
-                habilidades: `${this.apiBaseUrl}/habilidades_informatica/${this.ide}`,
-                idiomas: `${this.apiBaseUrl}/idioma/${this.ide}`,
-                contacto: `${this.apiBaseUrl}/informacion_contacto/${this.ide}`,
-                cursos: `${this.apiBaseUrl}/cursoscapacitacion/${this.ide}`,
-                investigacion: `${this.apiBaseUrl}/investigacion_publicacione/${this.ide}`,
-                otrosDatos: `${this.apiBaseUrl}/otros_datos_relevante/${this.ide}`,
+                formacion: `${this.apiBaseUrl}/formacion_academica/${this.id}`,
+                experiencia: `${this.apiBaseUrl}/experiencia_profesionale/${this.id}`,
+                declaracion: `${this.apiBaseUrl}/declaracion_personal/${this.id}`,
+                habilidades: `${this.apiBaseUrl}/habilidades_informatica/${this.id}`,
+                idiomas: `${this.apiBaseUrl}/idioma/${this.id}`,
+                contacto: `${this.apiBaseUrl}/informacion_contacto/${this.id}`,
+                cursos: `${this.apiBaseUrl}/cursoscapacitacion/${this.id}`,
+                investigacion: `${this.apiBaseUrl}/investigacion_publicacione/${this.id}`,
+                otrosDatos: `${this.apiBaseUrl}/otros_datos_relevante/${this.id}`,
             };
         }
     },
     methods:{
-        async fetchData(url) {
+         async fetchData(url) {
             try {
                 const response = await axios.get(url);
                 return response.data;
             } catch (error) {
-                console.error(`Error al obtener datos desde ${url}:`, error);
+                console.error(`Error fetching data from ${url}:`, error);
                 return [];
             }
         },
-        async getUsuario_CVN() {
-            const { formacion, experiencia, declaracion, habilidades, idiomas, contacto, cursos, investigacion, otrosDatos } = this.generatedUrls;
+         async getUsuario_CVN() {
+
 
             try {
-                // Ejecutar todas las solicitudes en paralelo
-                const [
-                    formacionData,
-                    experienciaData,
-                    declaracionData,
-                    habilidadesData,
-                    idiomasData,
-                    contactoData,
-                    cursosData,
-                    investigacionData,
-                    otrosDatosData
-                ] = await Promise.all([
-                    this.fetchData(formacion),
-                    this.fetchData(experiencia),
-                    this.fetchData(declaracion),
-                    this.fetchData(habilidades),
-                    this.fetchData(idiomas),
-                    this.fetchData(contacto),
-                    this.fetchData(cursos),
-                    this.fetchData(investigacion),
-                    this.fetchData(otrosDatos)
-                ]);
+                const response = await axios.get(this.urlinformacionpersonal);
+                const allData = response.data.data;
+                console.log(response);
+                const sortedData = allData.map((person) => {
+                    if (!person || !person.CIInfPer) return null;
 
-                // Si el usuario tiene al menos un dato en cualquier tabla, cambiar si_cvn a true
-                this.si_cvn = formacionData.length > 0 ||
-                    experienciaData.length > 0 ||
-                    declaracionData.length > 0 ||
-                    habilidadesData.length > 0 ||
-                    idiomasData.length > 0 ||
-                    contactoData.length > 0 ||
-                    cursosData.length > 0 ||
-                    investigacionData.length > 0 ||
-                    otrosDatosData.length > 0;
+                    const CIInfPer = person.CIInfPer;
+
+                    const hasDataInAtLeastOneTable =
+                        this.filteredcursos2.some((data) => data.CIInfPer === CIInfPer) ||
+                        this.experiencia_profesionales2.some((data) => data.CIInfPer === CIInfPer) ||
+                        this.formacion_academicas2.some((data) => data.CIInfPer === CIInfPer) ||
+                        this.habilidades_informaticas2.some((data) => data.CIInfPer === CIInfPer) ||
+                        this.filteredidiomas2.some((data) => data.CIInfPer === CIInfPer) ||
+                        this.filteredreferencias2.some((data) => data.CIInfPer === CIInfPer) ||
+                        this.otros_datos_relevantes2.some((data) => data.CIInfPer === CIInfPer) ||
+                        this.filteredpublicacion2.some((data) => data.CIInfPer === CIInfPer);
+
+                    const hasDataInAllTables =
+                        this.filteredcursos2.some((data) => data.CIInfPer === CIInfPer) ||
+                        this.experiencia_profesionales2.some((data) => data.CIInfPer === CIInfPer) ||
+                        this.formacion_academicas2.some((data) => data.CIInfPer === CIInfPer) ||
+                        this.habilidades_informaticas2.some((data) => data.CIInfPer === CIInfPer) ||
+                        this.filteredidiomas2.some((data) => data.CIInfPer === CIInfPer) ||
+                        this.filteredreferencias2.some((data) => data.CIInfPer === CIInfPer) ||
+                        this.otros_datos_relevantes2.some((data) => data.CIInfPer === CIInfPer) ||
+                        this.filteredpublicacion2.some((data) => data.CIInfPer === CIInfPer);
+
+                    // Asignar estado según los datos
+                    if (hasDataInAllTables) {
+                        console.log('Tiene CVN completo');
+                        this.si_cvn = true;
+                    } else if (hasDataInAtLeastOneTable) {
+                        console.log('Tiene CVN incompleto');
+                        this.si_cvn = true;
+                    } else {
+                        console.log('Tiene CVN en proceso');
+                        this.si_cvn = true;
+                    }
+
+                    return person;
+                }).filter(Boolean);
+
 
             } catch (error) {
                 console.error('Error al verificar los datos del CVN:', error);
