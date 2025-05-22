@@ -10,12 +10,8 @@
                         <tr>
                             <th scope="col">Id</th>
                             <th scope="col">Nombres</th>
-                            <th scope="col">Apellidos</th>
                             <th scope="col">Email</th>
                             <th scope="col">Rol</th>
-                            <th scope="col">Telefono</th>
-                            <th scope="col">Direccion</th>
-                            <th scope="col">Imagen</th>
                             <th scope="col">Registrado</th>
                             <th scope="col"></th>
                         </tr>
@@ -27,16 +23,10 @@
                        <tr v-else v-for="ofe,  in this.usuarios" :key="ofe.id">
                             
                             <td v-text="ofe.id"></td>
-                            <td v-text="ofe.firts_name"></td>
-                            <td v-text="ofe.last_name"></td>
+                            <td v-text="ofe.name"></td>
                             <td v-text="ofe.email"></td>
-                            <td v-text="ofe.rol"></td>
-                            <td v-text="ofe.telefono"></td>
-                            <td v-text="ofe.direccion"></td>
-                            <td>
-                                <img v-if="ofe.imagen" style="width: 100px !important;" :src="ofe.imagen" class="img-thumbnail" >
-                                <img v-else style="width: 100px !important;" src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/User_icon_2.svg/480px-User_icon_2.svg.png" class="img-thumbnail" >
-                            </td>
+                            <td v-text="ofe.role"></td>
+                            
                             <td v-text="new Date(ofe.created_at).toLocaleDateString('en-US')"></td>
                             <td>
                                 <router-link :to="{path:'/useredit/'+ofe.id}" class="btn btn-warning">
@@ -96,7 +86,7 @@
                 );
             },
             eliminar(id,nombre){
-                confimar('http://backendbolsaempleo.test/api/b_e/vin/users/',id,'Eliminar registro','¿Realmente desea eliminar a '+nombre+'?');
+                confimar('http://192.168.1.110/b_e/api/b_e/vin/users/',id,'Eliminar registro','¿Realmente desea eliminar a '+nombre+'?');
                 this.cargando = false;
                 this.$router.push('/principal/'+this.idus);
 

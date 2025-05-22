@@ -239,6 +239,7 @@
 import customscript from '@/assets/scripts/custom.js';
 import axios from 'axios';
 import { useRoute } from 'vue-router';
+
 export default {
   data() {
     return {

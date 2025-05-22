@@ -113,6 +113,7 @@ import axios from 'axios';
 import store from '@/store';
 import {mostraralertas, enviarsolig, mostraralertas2} from '@/assets/scripts/scriptfunciones/funciones';
 
+
 export default {
    data(){
         return{
@@ -128,7 +129,7 @@ export default {
             categoria:'',
             jefe:'',
             urk32:'http://backendbolsaempleo.test/api/b_e/vin/consultaofert',
-            apiBaseUrl: "http://cvubackendv2.test/api/cvn/v1",
+            apiBaseUrl: "http://190.15.134.90/cvn/api/cvn/v1",
             urls: {
                
                 formacion: '', // URL de formación académica

@@ -76,7 +76,7 @@
             const ruta = useRoute();
             this.idus = ruta.params.id;
             this.url213 +=  '/'+this.idus;
-            console.log(this.url213);
+            //console.log(this.url213);
             this.getPostulaciones();
         },
         methods:{

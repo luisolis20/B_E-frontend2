@@ -4,15 +4,20 @@ export default {
    data(){
         return{
             idus:0,
+            ruc:'',
             nombre:'',
             ciudad:'',
             pais:'',
             telefono:'',
             direccion:'',
-            tipo_empresa:'',
+            emailempre:'',
+            urlempre:'',
+            titulorepre:'',
+            nombrerepre:'',
+            cargorepre:'',
+            tipo_empre:'',
             mision:'',
             vision:'',
-            descripcion:'',
             url:'http://backendbolsaempleo.test/api/b_e/vin/empresas',
             cargando: false,
         }
@@ -28,45 +33,67 @@ export default {
        
         guardar(event){
             event.preventDefault();
-            if(this.nombre.trim()==''){
+            if(this.ruc==''){
+                mostraralertas('Ingrese ruc de la empresa','warning','ruc');
+            }
+            else if(this.nombre==''){
                 mostraralertas('Ingrese nombre de la empresa','warning','nombre');
             }
-            else if(this.ciudad.trim()==''){
+            else if(this.ciudad==''){
                 mostraralertas('Ingrese ciudad','warning','ciudad');
             }
-            else if(this.pais.trim()==''){
+            else if(this.pais==''){
                 mostraralertas('Ingrese pais','warning','pais');
             }
             
-            else if(this.telefono.trim()==''){
+            else if(this.telefono==''){
                 mostraralertas('Ingrese telf de la empresa','warning','telefono');
             }
-            else if(this.direccion.trim()==''){
+            else if(this.direccion==''){
                 mostraralertas('Ingrese dirección de la empresa','warning','direccion');
             }
-            else if(this.tipo_empresa.trim()==''){
+            else if(this.emailempre==''){
+                mostraralertas('Ingrese e-mail de la empresa','warning','emailempre');
+            }
+            else if(this.urlempre==''){
+                mostraralertas('Ingrese url de la empresa','warning','urlempre');
+            }
+            else if(this.titulorepre==''){
+                mostraralertas('Ingrese titulo del representante de la empresa','warning','titulorepre');
+            }
+            else if(this.nombrerepre==''){
+                mostraralertas('Ingrese nombre del representante de la empresa','warning','nombrerepre');
+            }
+            else if(this.cargorepre==''){
+                mostraralertas('Ingrese cargo del representante de la empresa','warning','cargorepre');
+            }
+            else if(this.tipo_empresa==''){
                 mostraralertas('Ingrese tipo de empres','warning','tipo_empresa');
             }
-            else if(this.mision.trim()==''){
+            else if(this.mision==''){
                 mostraralertas('Ingrese la misión de la empresa','warning','mision');
             }
-            else if(this.vision.trim()==''){
+            else if(this.vision==''){
                 mostraralertas('Ingrese la visión de la empresa','warning','vision');
             }
-            else if(this.descripcion.trim()==''){
-                mostraralertas('Ingrese descripción de la Empresa','warning','descripcion');
-            }
+            
+          
             else{
                 var parametros = {
-                    nombre:this.nombre.trim(),
-                    ciudad:this.ciudad.trim(),
-                    pais:this.pais.trim(),
-                    telefono:this.telefono.trim(),
-                    direccion:this.direccion.trim(),
-                    tipo_empresa:this.tipo_empresa.trim(),
-                    mision:this.mision.trim(),
-                    vision:this.vision.trim(),
-                    descripcion:this.descripcion.trim(),
+                    ruc:this.ruc,
+                    empresacorta:this.nombre,
+                    lugar:this.ciudad,
+                    pais:this.pais,
+                    telefono:this.telefono,
+                    direccion:this.direccion,
+                    email:this.emailempre,
+                    url:this.urlempre,
+                    titulo:this.titulorepre,
+                    representante:this.nombrerepre,
+                    cargo:this.cargorepre,
+                    tipo:this.tipo_empre,
+                    mision:this.mision,
+                    vision:this.vision,
                     usuario_id:this.idus
 
                 }

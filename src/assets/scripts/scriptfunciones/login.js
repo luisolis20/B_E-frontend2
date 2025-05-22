@@ -31,23 +31,36 @@ export default {
         const usuario = await getMe();
         const role = response.role;
         const tok = response.token;
-        if (role === "Administrador") {
-          mostraralertas("LE DAMOS LA BIENVENIDA ADMINISTRADOR " + (usuario.name || ""), "success");
-          this.$router.push("/principal/" + usuario.id);
-        } else if (role === "Estudiante") {
-          mostraralertas(
-            "LE DAMOS LA BIENVENIDA ESTUDIANTE " + (response.ApellInfPer || ""),
-            "success"
-          );
-          this.$router.push("/principal/" + response.CIInfPer);
-        } else if (role === "Empresa") {
-          mostraralertas(
-            "LE DAMOS LA BIENVENIDA EMPRESA " + (response.name || ""),
-            "success"
-          );
-          this.$router.push("/principal/" + usuario.id);
+        if (response) {
+          if (role === "Administrador") {
+            mostraralertas(
+              "LE DAMOS LA BIENVENIDA ADMINISTRADOR " + (response.name || ""),
+              "success"
+            );
+            this.$router.push("/principal/" + response.id);
+          } else if (role === "Estudiante") {
+            if (response.Graduado=='Si') {
+              mostraralertas(
+                "LE DAMOS LA BIENVENIDA ESTUDIANTE " + response.ApellInfPer,
+                "success"
+              );
+              this.$router.push("/principal/" + response.CIInfPer);
+            } else {
+              mostraralertas("ESTUDIANTE NO TITULADO ", "warning");
+              localStorage.clear();
+
+            }
+            //this.$router.push("/principal/" + response.CIInfPer);
+          } else if (role === "Empresa") {
+            mostraralertas(
+              "LE DAMOS LA BIENVENIDA EMPRESA " + (response.name || ""),
+              "success"
+            );
+            this.$router.push("/principal/" + response.id);
+          } 
         } else {
-          mostraralertas("Rol no reconocido", "warning");
+          mostraralertas("Usuario y/o Contraseñas Incorrectos", "warning");
+          console.error("Respuesta inesperada:", response);
         }
 
         /*else if (response && response.token) {

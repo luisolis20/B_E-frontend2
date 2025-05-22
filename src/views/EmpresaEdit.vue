@@ -23,12 +23,17 @@
                     </div>
                     <div class="col-lg-6">
                       <fieldset>
+                        <input type="name" v-model="ruc" id="nombre" placeholder="Ruc de la empresa..." autocomplete="on" required>
+                      </fieldset>
+                    </div>
+                    <div class="col-lg-6">
+                      <fieldset>
                         <input type="name" v-model="nombre" id="nombre" placeholder="Nombre de la empresa..." autocomplete="on" required>
                       </fieldset>
                     </div>
                     <div class="col-lg-6">
                       <fieldset>
-                        <input type="name" v-model="ciudad" id="ciudad" placeholder="Ingrese el país..."
+                        <input type="name" v-model="ciudad" id="ciudad" placeholder="Ingrese la ciudad..."
                           autocomplete="on" required>
                       </fieldset>
                     </div>
@@ -51,7 +56,32 @@
                     </div>
                     <div class="col-lg-6">
                       <fieldset>
-                        <input type="address" v-model="tipo_empresa" id="tipo_empresa" placeholder="Tipo de empresa..." autocomplete="on" required>
+                        <input type="address" v-model="emailempre" id="emailempre" placeholder="Email de la empresa..." autocomplete="on" required>
+                      </fieldset>
+                    </div>
+                    <div class="col-lg-6">
+                      <fieldset>
+                        <input type="address" v-model="urlempre" id="urlempre" placeholder="Url de la empresa..." autocomplete="on" required>
+                      </fieldset>
+                    </div>
+                    <div class="col-lg-6">
+                      <fieldset>
+                        <input type="address" v-model="titulorepre" id="titulorepre" placeholder="Título del Representante..." autocomplete="on" required>
+                      </fieldset>
+                    </div>
+                    <div class="col-lg-6">
+                      <fieldset>
+                        <input type="address" v-model="nombrerepre" id="nombrerepre" placeholder="Nombre del Representante..." autocomplete="on" required>
+                      </fieldset>
+                    </div>
+                    <div class="col-lg-6">
+                      <fieldset>
+                        <input type="address" v-model="cargorepre" id="cargorepre" placeholder="Cargo del Representante..." autocomplete="on" required>
+                      </fieldset>
+                    </div>
+                    <div class="col-lg-6">
+                      <fieldset>
+                        <input type="address" v-model="tipo_empre" id="tipo_empre" placeholder="Tipo de Empresa..." autocomplete="on" required>
                       </fieldset>
                     </div>
                     <div class="col-lg-12">
@@ -62,11 +92,6 @@
                     <div class="col-lg-12">
                       <fieldset>
                         <textarea rows="6" v-model="vision" id="vision" placeholder="Ingrese la visión de la empresa.." required></textarea>
-                      </fieldset>
-                    </div>
-                    <div class="col-lg-12">
-                      <fieldset>
-                        <textarea rows="6" v-model="descripcion" id="descripcion" placeholder="Ingrese la descripcion de la empresa.." required></textarea>
                       </fieldset>
                     </div>
                     <div class="col-lg-12">

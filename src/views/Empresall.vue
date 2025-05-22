@@ -10,8 +10,8 @@
                         <tr>
                             <th scope="col">Id</th>
                             <th scope="col">Empresa</th>
-                            <th scope="col">Descripcion</th>
-                            <th scope="col">Contacto</th>
+                            <th scope="col">Ciudad</th>
+                            <th scope="col">Representante</th>
                             <th scope="col">Telefono</th>
                             <th scope="col">Direccion</th>
                             <th scope="col">Registrado</th>
@@ -23,16 +23,16 @@
                        </tr>
                        <tr v-else v-for="emp,  in this.empresas" :key="emp.id">
                             
-                            <td v-text="emp.id"></td>
-                            <td v-text="emp.nombre"></td>
-                            <td v-text="emp.descripcion"></td>
-                            <td v-text="emp.contacto"></td>
+                            <td v-text="emp.idempresa"></td>
+                            <td v-text="emp.empresacorta"></td>
+                            <td v-text="emp.lugar"></td>
+                            <td v-text="emp.representante"></td>
                             <td v-text="emp.telefono"></td>
                             <td v-text="emp.direccion"></td>
                             <td v-text="new Date(emp.created_at).toLocaleDateString('en-US')"></td>
                             <td>
                                
-                                <button v-if="mostrarOpciones3" class="btn btn-danger" v-on:click="eliminar(emp.id,emp.nombre)">
+                                <button v-if="mostrarOpciones3" class="btn btn-danger" v-on:click="eliminar(emp.idempresa,emp.nombre)">
                                     <i class="fa-solid fa-trash"></i>
                                 </button>
                                

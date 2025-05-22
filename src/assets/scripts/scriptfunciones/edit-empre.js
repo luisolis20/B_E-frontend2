@@ -8,15 +8,20 @@ export default {
    data(){
         return{
             ide:0,
+            ruc:'',
             nombre:'',
             ciudad:'',
             pais:'',
             telefono:'',
             direccion:'',
-            tipo_empresa:'',
+            emailempre:'',
+            urlempre:'',
+            titulorepre:'',
+            nombrerepre:'',
+            cargorepre:'',
+            tipo_empre:'',
             mision:'',
             vision:'',
-            descripcion:'',
             usuario_id:'',
             ur3:'http://backendbolsaempleo.test/api/b_e/vin/consultaredir',
             cargando: false,
@@ -34,15 +39,20 @@ export default {
         getEmpresa(){
            axios.get(this.ur3).then(
                 res=>{
-                    this.nombre=res.data.data.nombre;
-                    this.ciudad=res.data.data.ciudad;
+                    this.ruc=res.data.data.ruc;
+                    this.nombre=res.data.data.empresacorta;
+                    this.ciudad=res.data.data.lugar;
                     this.pais=res.data.data.pais;
                     this.telefono=res.data.data.telefono;
                     this.direccion=res.data.data.direccion;
-                    this.tipo_empresa=res.data.data.tipo_empresa;
+                    this.emailempre=res.data.data.email;
+                    this.urlempre=res.data.data.url;
+                    this.titulorepre=res.data.data.titulo;
+                    this.nombrerepre=res.data.data.representante;
+                    this.cargorepre=res.data.data.cargo;
+                    this.tipo_empre=res.data.data.tipo;
                     this.mision=res.data.data.mision;
                     this.vision=res.data.data.vision;
-                    this.descripcion=res.data.data.descripcion;
                     this.usuario_id=res.data.data.usuario_id;
                 }
             );
@@ -51,45 +61,65 @@ export default {
             
             event.preventDefault();
            
-            if(this.nombre.trim()==''){
-                mostraralertas('Ingrese Nombre de la Empresa','warning','nombre');
+           if(this.ruc==''){
+                mostraralertas('Ingrese ruc de la empresa','warning','ruc');
             }
-            else if(this.ciudad.trim()==''){
-                mostraralertas('Ingrese la ciudad de la Empres','warning','ciudad');
+            else if(this.nombre==''){
+                mostraralertas('Ingrese nombre de la empresa','warning','nombre');
             }
-            else if(this.pais.trim()==''){
-                mostraralertas('Ingrese pais de Contacto de la Empresa','warning','pais');
+            else if(this.ciudad==''){
+                mostraralertas('Ingrese ciudad','warning','ciudad');
+            }
+            else if(this.pais==''){
+                mostraralertas('Ingrese pais','warning','pais');
             }
             
-            else if(this.telefono.trim()==''){
-                mostraralertas('Ingrese Telf de la Empresa','warning','telefono');
+            else if(this.telefono==''){
+                mostraralertas('Ingrese telf de la empresa','warning','telefono');
             }
-            else if(this.direccion.trim()==''){
-                mostraralertas('Ingrese Dirección de la Empresa','warning','direccion');
+            else if(this.direccion==''){
+                mostraralertas('Ingrese dirección de la empresa','warning','direccion');
             }
-            else if(this.tipo_empresa.trim()==''){
-                mostraralertas('Ingrese tipo de empresa de la Empresa','warning','tipo_empresa');
+            else if(this.emailempre==''){
+                mostraralertas('Ingrese e-mail de la empresa','warning','emailempre');
             }
-            else if(this.mision.trim()==''){
-                mostraralertas('Ingrese misión de la Empresa','warning','mision');
+            else if(this.urlempre==''){
+                mostraralertas('Ingrese url de la empresa','warning','urlempre');
             }
-            else if(this.vision.trim()==''){
-                mostraralertas('Ingrese visión de la Empresa','warning','vision');
+            else if(this.titulorepre==''){
+                mostraralertas('Ingrese titulo del representante de la empresa','warning','titulorepre');
             }
-            else if(this.descripcion.trim()==''){
-                mostraralertas('Ingrese descripción de la Empresa','warning','descripcion');
+            else if(this.nombrerepre==''){
+                mostraralertas('Ingrese nombre del representante de la empresa','warning','nombrerepre');
+            }
+            else if(this.cargorepre==''){
+                mostraralertas('Ingrese cargo del representante de la empresa','warning','cargorepre');
+            }
+            else if(this.tipo_empresa==''){
+                mostraralertas('Ingrese tipo de empres','warning','tipo_empresa');
+            }
+            else if(this.mision==''){
+                mostraralertas('Ingrese la misión de la empresa','warning','mision');
+            }
+            else if(this.vision==''){
+                mostraralertas('Ingrese la visión de la empresa','warning','vision');
             }
             else{
                 var parametros = {
-                    nombre:this.nombre.trim(),
-                    ciudad:this.ciudad.trim(),
-                    pais:this.pais.trim(),
-                    telefono:this.telefono.trim(),
-                    direccion:this.direccion.trim(),
-                    tipo_empresa:this.tipo_empresa.trim(),
-                    mision:this.mision.trim(),
-                    vision:this.vision.trim(),
-                    descripcion:this.descripcion.trim(),
+                   ruc:this.ruc,
+                    empresacorta:this.nombre,
+                    lugar:this.ciudad,
+                    pais:this.pais,
+                    telefono:this.telefono,
+                    direccion:this.direccion,
+                    email:this.emailempre,
+                    url:this.urlempre,
+                    titulo:this.titulorepre,
+                    representante:this.nombrerepre,
+                    cargo:this.cargorepre,
+                    tipo:this.tipo_empre,
+                    mision:this.mision,
+                    vision:this.vision,
                     usuario_id:this.usuario_id
                 }
                 var response = await enviarsoliedit('PUT',parametros,this.ur3,'Actualizado');

@@ -52,7 +52,7 @@
                             <div class="text-center" v-if="si_cvn">
                                 <h4 class="mb-4">Parece que si tienes registrado tu hoja de vida en la página del CVN de
                                     la UTLVTE, puedes visualizarlo en el botón de abajo <br>
-                                    Si deseas puedes editar tu CVN dando clic <a href="http://http://192.168.1.110/cvn/" target="_blank"
+                                    Si deseas puedes editar tu CVN dando clic <a href="http://vinculacionconlasociedad.utelvt.edu.ec/cvn/" target="_blank"
                                         rel="noopener noreferrer">aquí</a> </h4>
                             </div>
                         </div>
@@ -76,18 +76,13 @@
                 <div class="row g-5">
                     <div class="col-md-12 col-lg-6 col-xl-7">
                         <div class="row">
-                            <div class="col-md-12 col-lg-6">
+                            <div class="col-md-12 col-lg-12">
                                 <div class="form-item w-100">
-                                    <label class="form-label my-3 text-dark">Nombres<sup>*</sup></label>
+                                    <label class="form-label my-3 text-dark">Nombres de Usuario<sup>*</sup></label>
                                     <input type="text" class="form-control text-dark" v-model="nombre" id="nombre" required>
                                 </div>
                             </div>
-                            <div class="col-md-12 col-lg-6">
-                                <div class="form-item w-100">
-                                    <label class="form-label my-3 text-dark">Apellidos<sup>*</sup></label>
-                                    <input type="text" class="form-control text-dark" v-model="apellido" id="apellido" required>
-                                </div>
-                            </div>
+                            
                         </div>
                         <div class="form-item">
                             <label class="form-label my-3 text-dark">Email<sup>*</sup></label>
@@ -103,14 +98,7 @@
                             <input type="text" class="form-control text-dark" v-model="rol" id="rol" disabled>
                         </div>
                         
-                        <div class="form-item">
-                            <label class="form-label my-3 text-dark">Direccion<sup>*</sup></label>
-                            <input type="text" class="form-control text-dark" v-model="direccion" id="direccion" required>
-                        </div>
-                        <div class="form-item">
-                            <label class="form-label my-3 text-dark">Telefono<sup>*</sup></label>
-                            <input type="tel" class="form-control text-dark" v-model="telf" id="telf" required>
-                        </div>
+                       
 
                     </div>
                     <div class="col-md-12 col-lg-6 col-xl-5">

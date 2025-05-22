@@ -28,7 +28,7 @@ export default {
             no_cvn: true,
             cargando: false,
             //Datos Personales
-            urlinformacionpersonal: "http://10.11.14.110/cvn/api/cvn/v1/informacionpersonal",
+            urlinformacionpersonal: "http://190.15.134.90/cvn/api/cvn/v1/informacionpersonal",
             iddatos_personales: 0,
             datos_personales: null,
             CIInfPer: "",
@@ -45,8 +45,8 @@ export default {
             mailPer: "",
             edad: "",
             //Formacion Academica
-            urlformacion_academica: "http://10.11.14.110/cvn/api/cvn/v1/formacion_academica",
-            urlfichasocioeconomica: "http://10.11.14.110/cvn/api/cvn/v1/fichasocioeconomica",
+            urlformacion_academica: "http://190.15.134.90/cvn/api/cvn/v1/formacion_academica",
+            urlfichasocioeconomica: "http://190.15.134.90/cvn/api/cvn/v1/fichasocioeconomica",
             idformacion_academica: 0,
             idfichasocioeconomica: 0,
             formacion_academica: null,
@@ -78,7 +78,7 @@ export default {
             estudios_posgrado_culminados: "",
             estudios_bachiller_culminados: "",
             //Experiencias Profesionales
-            urlexperiencia_profesionale: "http://10.11.14.110/cvn/api/cvn/v1/experiencia_profesionale",
+            urlexperiencia_profesionale: "http://190.15.134.90/cvn/api/cvn/v1/experiencia_profesionale",
             idexperiencias_profesionales: 0,
             experiencias_profesionales: null,
             mostrarexperienciasprofesionales: true,
@@ -113,7 +113,7 @@ export default {
             fechacursos: "",
             fechaFinLabelCursos: "",
             //Investigacion y publicaciones
-            urlinvestigacion_publicacione: "http://10.11.14.110/cvn/api/cvn/v1/investigacion_publicacione",
+            urlinvestigacion_publicacione: "http://190.15.134.90/cvn/api/cvn/v1/investigacion_publicacione",
             idinvestigacion_publicaciones: 0,
             investigacion_publicaciones: null,
             publicaciones: "",
@@ -126,7 +126,7 @@ export default {
                 congreso_evento: "",
             },
             //Idiom
-            urlidioma: "http://10.11.14.110/cvn/api/cvn/v1/idioma",
+            urlidioma: "http://190.15.134.90/cvn/api/cvn/v1/idioma",
             idlenguaje: 0,
             lenguaje: null,
             idiomasarray: [],
@@ -141,7 +141,7 @@ export default {
                 certificado: "",
             },
             //SW
-            urlhabilidades_informatica: "http://10.11.14.110/cvn/api/cvn/v1/habilidades_informatica",
+            urlhabilidades_informatica: "http://190.15.134.90/cvn/api/cvn/v1/habilidades_informatica",
             idhabilidades_informaticas: 0,
             habilidades_informaticas: null,
             habilidades_comunicativas_array: [],
@@ -190,7 +190,7 @@ export default {
             habi_oficios: "",
             habi_otros_habi: "",
             //Cursos Capacitaciones
-            urlcursoscapacitacion: "http://10.11.14.110/cvn/api/cvn/v1/cursoscapacitacion",
+            urlcursoscapacitacion: "http://190.15.134.90/cvn/api/cvn/v1/cursoscapacitacion",
             idcursoscapacitaciones: 0,
             curso_capacitacion: null,
             curso_capacitacionarray: [],
@@ -208,7 +208,7 @@ export default {
                 horas_curso: "",
             },
             //Datos Relevantes
-            urlotros_datos_relevante: "http://10.11.14.110/cvn/api/cvn/v1/otros_datos_relevante",
+            urlotros_datos_relevante: "http://190.15.134.90/cvn/api/cvn/v1/otros_datos_relevante",
             idotros_datos_personales: 0,
             otros_datos_personales: null,
             otros_datos_personalesarray: [],
@@ -219,7 +219,7 @@ export default {
                 descripcion_fracasos: "",
             },
             //Informacion de Contacto
-            urlinformacion_contacto: "http://10.11.14.110/cvn/api/cvn/v1/informacion_contacto",
+            urlinformacion_contacto: "http://190.15.134.90/cvn/api/cvn/v1/informacion_contacto",
             idinformacion_contacto: 0,
             informacion_contacto: null,
             informacion_contactoarray: [],
@@ -231,12 +231,12 @@ export default {
                 referencia_telefono: "",
             },
             //Declaracion Personal
-            urldeclaracion_personal: "http://10.11.14.110/cvn/api/cvn/v1/declaracion_personal",
-            urlDeclaracionPersonal: "http://10.11.14.110/cvn/api/cvn/v1/sicvn",
+            urldeclaracion_personal: "http://190.15.134.90/cvn/api/cvn/v1/declaracion_personal",
+            urlDeclaracionPersonal: "http://190.15.134.90/cvn/api/cvn/v1/sicvn",
             iddeclaracion_personal: 0,
             declaracion_personal: null,
             texto: "",
-            apiBaseUrl: "http://10.11.14.110/cvn/api/cvn/v1",
+            apiBaseUrl: "http://190.15.134.90/cvn/api/cvn/v1",
             urls: {
 
                 formacion: '', // URL de formación académica
@@ -1444,14 +1444,10 @@ export default {
         getUsuairoSS() {
             axios.get(this.url).then(
                 res => {
-                    this.nombre = res.data.data.firts_name;
-                    this.apellido = res.data.data.last_name;
+                    this.nombre = res.data.data.name;
                     this.email = res.data.data.email;
                     this.password = res.data.data.password;
-                    this.rol = res.data.data.rol;
-                    this.link = res.data.data.link;
-                    this.telf = res.data.data.telefono;
-                    this.direccion = res.data.data.direccion;
+                    this.rol = res.data.data.role;
                     this.imagen = res.data.data.imagen;
                 }
             );

@@ -6,11 +6,11 @@
       <div class="d-flex justify-content-between">
         <div class="top-info ps-2">
           <small class="me-3"><i class="fas fa-building me-2 text-white"></i> <a href="#" class="text-white">{{ role
-              }}</a></small>
+          }}</a></small>
           <small class="me-3"><i class="fas fa-envelope me-2 text-white"></i><a href="#" class="text-white">{{ emaile
-              }}</a></small>
+          }}</a></small>
           <small class="me-3"><i class="fas fa-user me-2 text-white"></i><a href="#" class="text-white">{{ idus
-              }}</a></small>
+          }}</a></small>
         </div>
 
       </div>
@@ -81,7 +81,7 @@
                             </a>
                           </h5>
                           <small>{{ post.Oferta }}</small>
-                          <router-link :to="{ path: '/perfilpostulados/'+ post.id +'/'+post.CIInfPer}"
+                          <router-link :to="{ path: '/perfilpostulados/' + post.id + '/' + post.CIInfPer }"
                             class="d-block fw-medium text-capitalize mt-2" @click="marcarComoVista(post.id)">Ver detalle
                             completo</router-link>
                         </div>
@@ -112,12 +112,13 @@
                         class="list-group-item bg-transparent d-flex justify-content-between lh-sm">
                         <div>
                           <h5>
-                            <a > {{ est.Empresa }}</a>
+                            <a> {{ est.Empresa }}</a>
                           </h5>
                           <small>{{ est.Oferta }}</small>
-                          <div v-if="est.estado=='Aceptada'">
+                          <div v-if="est.estado == 'Aceptada'">
                             <router-link :to="{ path: '/aceptacionview/' + est.IDEmpresa + '/' + est.IDOferta }"
-                              class="d-block fw-medium text-capitalize mt-2" @click="marcarComoVista(est.id)">Ver detalle
+                              class="d-block fw-medium text-capitalize mt-2" @click="marcarComoVista(est.id)">Ver
+                              detalle
                               completo</router-link>
                           </div>
                         </div>
@@ -127,7 +128,9 @@
 
                     </ul>
                     <div class="d-flex flex-wrap justify-content-center">
-                      <router-link :to="{ path: '/mispostulacionesestado/' + idus}" class="w-100 btn btn-primary text-white" type="submit">Ver estados de mis postulaciones</router-link>
+                      <router-link :to="{ path: '/mispostulacionesestado/' + idus }"
+                        class="w-100 btn btn-primary text-white" type="submit">Ver estados de mis
+                        postulaciones</router-link>
                     </div>
                   </div>
                 </li>
@@ -155,6 +158,7 @@ import { useRoute } from 'vue-router';
 import store from '@/store';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime'; // Para el tiempo relativo
+
 dayjs.extend(relativeTime);
 export default {
   data() {
@@ -170,15 +174,15 @@ export default {
     }
   },
   watch: {
-    
+
     '$route'() {
-      if(customscript.computed.rolUsuario()=='Estudiante'){
-      
+      if (customscript.computed.rolUsuario() == 'Estudiante') {
+
         this.idus2 = this.$route.params.id;
-  
+
         if (this.idus2) {
           this.url214 = 'http://backendbolsaempleo.test/api/b_e/vin/estadopostuser/' + this.idus2;
-          
+
           this.getPostulacionesAcept();
         }
       }
@@ -186,40 +190,26 @@ export default {
   },
   mounted() {
     this.getPostulaciones();
-    if(customscript.computed.rolUsuario()=='Estudiante'){
+    if (customscript.computed.rolUsuario() == 'Estudiante') {
       this.idus2 = this.$route.params.id;
-      
+
       if (this.idus2) {
         this.url214 = 'http://backendbolsaempleo.test/api/b_e/vin/estadopostuser/' + this.idus2;
-        
-        
+
+
         this.getPostulacionesAcept();
       }
-    }else{
+    } else {
       this.getPostulaciones();
     }
-    
-    
+
+
   },
   methods: {
     cerrarsesion() {
-      localStorage.clear();  
-      sessionStorage.clear(); 
       console.clear();
-      var rol = '';
-      var email = '';
-      var id = '';
-      var name = '';
-      store.commit('setRol', null);
-      store.commit('setemail', null);
-      store.commit('setid', null);
-      store.commit('setname', null);
-
-      store.commit('setAnotherState', null); 
-
-      this.$router.replace('/'); 
-      
-      window.location.reload();
+      localStorage.clear();
+      window.location.replace('/');
     },
     getPostulaciones() {
       this.cargando = true;

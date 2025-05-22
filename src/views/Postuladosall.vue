@@ -61,6 +61,7 @@
     import axios from 'axios';
     import { useRoute } from 'vue-router';
     import { confimar } from '@/assets/scripts/scriptfunciones/funciones';
+    
     export default{
         data(){
             return{

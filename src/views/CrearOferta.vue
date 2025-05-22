@@ -16,6 +16,12 @@
                             <div class="row gx-4 gy-3">
                                 <div class="col-lg-6 wow fadeIn" data-wow-delay="0.1s">
                                     <div class="form-group">
+                                        <label for="Examplename" class="form-label text-dark">Ruc</label>
+                                        <input type="text" v-model="ruce" class="form-control py-3 border-0 text-dark" id="Examplename" disabled>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 wow fadeIn" data-wow-delay="0.1s">
+                                    <div class="form-group">
                                         <label for="Examplename" class="form-label text-dark">Nombre</label>
                                         <input type="text" v-model="nombree" class="form-control py-3 border-0 text-dark" id="Examplename" disabled>
                                     </div>
@@ -41,18 +47,47 @@
                                         disabled>
                                     </div>
                                 </div>
-                                <div class="col-lg-6 wow fadeIn" data-wow-delay="0.1s">
-                                    <div class="form-group">
-                                        <label for="Examplename" class="form-label text-dark">Tipo de Empresa</label>
-                                        <input type="text" v-model="tipo_empresae" class="form-control py-3 border-0 text-dark" id="Examplename"
-                                        disabled>
-                                    </div>
-                                </div>
+                                
                                
                                 <div class="col-lg-6 wow fadeIn" data-wow-delay="0.1s">
                                     <div class="form-group">
                                         <label for="Examplename" class="form-label text-dark">Telefono</label>
                                         <input type="text" v-model="telefonoe" class="form-control py-3 border-0 text-dark" id="Examplename"
+                                        disabled>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 wow fadeIn" data-wow-delay="0.1s">
+                                    <div class="form-group">
+                                        <label for="Examplename" class="form-label text-dark">Email</label>
+                                        <input type="text" v-model="emailempree" class="form-control py-3 border-0 text-dark" id="Examplename"
+                                        disabled>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 wow fadeIn" data-wow-delay="0.1s">
+                                    <div class="form-group">
+                                        <label for="Examplename" class="form-label text-dark">Url</label>
+                                        <input type="text" v-model="urlempree" class="form-control py-3 border-0 text-dark" id="Examplename"
+                                        disabled>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 wow fadeIn" data-wow-delay="0.1s">
+                                    <div class="form-group">
+                                        <label for="Examplename" class="form-label text-dark">Titulo del Representante de la Empresa</label>
+                                        <input type="text" v-model="titulorepree" class="form-control py-3 border-0 text-dark" id="Examplename"
+                                        disabled>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 wow fadeIn" data-wow-delay="0.1s">
+                                    <div class="form-group">
+                                        <label for="Examplename" class="form-label text-dark">Nombre del Representante de la Empresa</label>
+                                        <input type="text" v-model="nombrerepree" class="form-control py-3 border-0 text-dark" id="Examplename"
+                                        disabled>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 wow fadeIn" data-wow-delay="0.1s">
+                                    <div class="form-group">
+                                        <label for="Examplename" class="form-label text-dark">Cargo del Representante de la Empresa</label>
+                                        <input type="text" v-model="cargorepree" class="form-control py-3 border-0 text-dark" id="Examplename"
                                         disabled>
                                     </div>
                                 </div>
@@ -78,13 +113,7 @@
                                             rows="5" disabled></textarea>
                                     </div>
                                 </div>
-                                <div class="col-12 wow fadeIn" data-wow-delay="0.1s">
-                                    <div class="form-group">
-                                        <label for="exampletextarea" class="form-label text-dark">Descripción</label>
-                                        <textarea name="text" v-model="descripcione" class="form-control border-0 text-dark" id="exampletextarea" cols="30"
-                                            rows="5" disabled></textarea>
-                                    </div>
-                                </div>
+                               
                                 <div class="col-12 wow fadeIn" data-wow-delay="0.1s">
                                     <div class="text-center border border-secondary p-4 my-4 position-relative">
                                         <div class="fw-bold text-primary bg-white d-flex align-items-center justify-content-center position-absolute border-secondary p-2"
@@ -124,6 +153,7 @@ export default {
    data(){
         return{
             ide:0,
+            ruce:'',
             nombree:'',
             ciudade:'',
             paise:'',
@@ -132,7 +162,11 @@ export default {
             tipo_empresae:'',
             misione:'',
             visione:'',
-            descripcione:'',
+            emailempree:'',
+            urlempree:'',
+            titulorepree:'',
+            nombrerepree:'',
+            cargorepree:'',
             usuario_id:'',
             urk3:'http://backendbolsaempleo.test/api/b_e/vin/consultaredir',
             cargando: false,
@@ -149,15 +183,20 @@ export default {
         getEmpresa(){
            axios.get(this.urk3).then(
                 res=>{
-                    this.nombree=res.data.data.nombre;
-                    this.ciudade=res.data.data.ciudad;
+                    this.ruce=res.data.data.ruc;
+                    this.nombree=res.data.data.empresacorta;
+                    this.ciudade=res.data.data.lugar;
                     this.paise=res.data.data.pais;
                     this.telefonoe=res.data.data.telefono;
                     this.direccione=res.data.data.direccion;
-                    this.tipo_empresae=res.data.data.tipo_empresa;
+                    this.tipo_empresae=res.data.data.tipo;
                     this.misione=res.data.data.mision;
                     this.visione=res.data.data.vision;
-                    this.descripcione=res.data.data.descripcion;
+                    this.emailempree=res.data.data.email;
+                    this.urlempree=res.data.data.url;
+                    this.titulorepree=res.data.data.titulo;
+                    this.nombrerepree=res.data.data.representante;
+                    this.cargorepree=res.data.data.cargo;
                     this.usuario_id=res.data.data.usuario_id;
                 }
             );

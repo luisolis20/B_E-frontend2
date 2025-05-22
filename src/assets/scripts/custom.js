@@ -13,19 +13,9 @@ export default {
   },
   computed: { 
     cerrarsesion() {
-      console.clear();
-      var rol = '';
-      var email = '';
-      var id = '';
-      var name = '';
-      // Limpiar el estado de Vuex
-      store.commit('setRol', null);
-      store.commit('setemail', null);
-      store.commit('setid', null);
-      store.commit('setname', null);
-      
-      
-      this.$router.replace('/');
+     console.clear();
+      localStorage.clear();
+      window.location.replace('/');
     },
     showNavbar() {
       // Lógica para determinar si mostrar o no el navbar

@@ -10,36 +10,59 @@ export async function enviarsolilogin(method, parametros, url, mensaje) {
 
     if (response.data && response.data.token) {
       // ✅ Guardar token y tipo en Vuex (y localStorage automáticamente)
-      store.commit("setToken", response.data.token);
-      store.commit("setTokenType", response.data.token_type || "Bearer");
-
+      
       // ✅ Guardar datos del usuario en Vuex
-      store.commit("setRol", response.data.Rol || "");
+      /*store.commit("setRol", response.data.Rol || "");
       store.commit("setemail", response.data.email || "");
       store.commit("setid", response.data.id || "");
-      store.commit("setname", response.data.name || "");
+      store.commit("setname", response.data.name || "");*/
 
       // ✅ (Opcional) Guardar toda la info del usuario si la necesitas
-      localStorage.setItem("user", JSON.stringify(response.data.user || {}));
+      //localStorage.setItem("user", JSON.stringify(response.data.user || {}));
+      //console.log(JSON.stringify(response.data.user || {}));
       //console.log(response.data);
       // ✅ Guardar el token en el store
 
       if (response.data.Rol === "Estudiante") {
+        //console.log(response.data);
+        store.commit("setRol", response.data.Rol);
+        store.commit("setemail", response.data.mailPer);
+        store.commit("setid", response.data.CIInfPer);
+
+        store.commit("setname", response.data.ApellInfPer);
+        store.commit("setToken", response.data.token);
+        store.commit("setTokenType", response.data.token_type || "Bearer");
         return {
           token: response.data.token,
           role: response.data.Rol,
           CIInfPer: response.data.CIInfPer,
           ApellInfPer: response.data.ApellInfPer,
           Graduado: response.data.Graduado,
+          mailPer: response.data.mailPer,
         };
       } else if (response.data.Rol === "Administrador") {
+        store.commit("setRol", response.data.Rol);
+        store.commit("setemail", response.data.email);
+        store.commit("setid", response.data.id);
+
+        store.commit("setname", response.data.name);
+        store.commit("setToken", response.data.token);
+        store.commit("setTokenType", response.data.token_type || "Bearer");
+        //console.log(response.data);
         return {
           token: response.data.token,
           role: response.data.Rol,
-          CIInfPer: response.data.id,
+          id: response.data.id,
           name: response.data.name,
         };
-      }else if (response.data.Rol === "Empresa") {
+      } else if (response.data.Rol === "Empresa") {
+        store.commit("setRol", response.data.Rol);
+        store.commit("setemail", response.data.email);
+        store.commit("setid", response.data.id);
+
+        store.commit("setname", response.data.name);
+        store.commit("setToken", response.data.token);
+        store.commit("setTokenType", response.data.token_type || "Bearer");
         return {
           token: response.data.token,
           role: response.data.Rol,
@@ -48,10 +71,8 @@ export async function enviarsolilogin(method, parametros, url, mensaje) {
         };
       }
     } else {
-      return {
-        error: true,
-        mensaje: response.data.message || "Credenciales incorrectas",
-      };
+      console.error("Respuesta inesperada:", response);
+      return null;
     }
     /*if (response.data) {
       //console.log(mensaje + ': ' + response.data.mensaje);
@@ -74,7 +95,7 @@ export async function enviarsolilogin(method, parametros, url, mensaje) {
           localStorage.setItem('idusu', response.data.id);
           localStorage.setItem('name', response.data.name);
           console.log(localStorage);*/
-        /*return {
+    /*return {
           token: response.data.token,
           email: response.data.email,
           id: response.data.id,
@@ -94,7 +115,7 @@ export async function enviarsolilogin(method, parametros, url, mensaje) {
             localStorage.setItem('idusu', response.data.CIInfPer);
             localStorage.setItem('name', response.data.ApellInfPer);
             console.log(localStorage);*/
-       /* return {
+    /* return {
           mailPer: response.data.mailPer,
           CIInfPer: response.data.CIInfPer,
           Rol: response.data.Rol,
@@ -114,7 +135,7 @@ export async function enviarsolilogin(method, parametros, url, mensaje) {
             localStorage.setItem('idusu', response.data.CIInfPer);
             localStorage.setItem('name', response.data.ApellInfPer);
             console.log(localStorage);*/
-        /*return {
+    /*return {
           token: response.data.token,
           email: response.data.email,
           id: response.data.id,

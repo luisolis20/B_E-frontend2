@@ -8,12 +8,12 @@
                 <table class="table table-hover">
                     <thead>
                         <tr>
-                            <th scope="col">Id</th>
+                           <th scope="col">Id</th>
                             <th scope="col">Empresa</th>
                             <th scope="col">Ciudad</th>
-                            <th scope="col">País</th>
+                            <th scope="col">Representante</th>
                             <th scope="col">Telefono</th>
-                            <th scope="col">tipo_empresa</th>
+                            <th scope="col">Direccion</th>
                             <th scope="col">Registrado</th>
                             <th scope="col">Acciones</th>
                         </tr>
@@ -24,23 +24,23 @@
                        </tr>
                        <tr v-else v-for="emp,  in this.empresas" :key="emp.id">
                             
-                            <td v-text="emp.id"></td>
-                            <td v-text="emp.nombre"></td>
-                            <td v-text="emp.ciudad"></td>
-                            <td v-text="emp.pais"></td>
+                            <td v-text="emp.idempresa"></td>
+                            <td v-text="emp.empresacorta"></td>
+                            <td v-text="emp.lugar"></td>
+                            <td v-text="emp.representante"></td>
                             <td v-text="emp.telefono"></td>
-                            <td v-text="emp.tipo_empresa"></td>
+                            <td v-text="emp.direccion"></td>
                             <td v-text="new Date(emp.created_at).toLocaleDateString('en-US')"></td>
                             <td>
-                                <router-link :to="{path:'/viewE/'+emp.id}" class="btn btn-info">
+                                <router-link :to="{path:'/viewE/'+emp.idempresa}" class="btn btn-info">
                                     <i class="fa-solid fa-eye"></i>
                                 </router-link>
                                 &nbsp;
-                                <router-link :to="{path:'/editE/'+emp.id}" class="btn btn-warning">
+                                <router-link :to="{path:'/editE/'+emp.idempresa}" class="btn btn-warning">
                                     <i class="fa-solid fa-edit"></i>
                                 </router-link>
                                 &nbsp;
-                                <button class="btn btn-danger" v-on:click="eliminar(emp.id,emp.Empresa)">
+                                <button class="btn btn-danger" v-on:click="eliminar(emp.idempresa,emp.empresacorta)">
                                     <i class="fa-solid fa-trash"></i>
                                 </button>
 
