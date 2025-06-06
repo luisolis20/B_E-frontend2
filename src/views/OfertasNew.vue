@@ -167,7 +167,7 @@ export default {
 
                 }
                
-                enviarsolig('POST',parametros,'http://backendbolsaempleo.test/api/b_e/vin/oferta__empleos','Oferta Creada');
+                enviarsolig('POST',parametros,'http://190.15.134.90/b_e/api/b_e/vin/oferta__empleos','Oferta Creada');
                 this.$router.push('/empresas/'+store.state.idusu);
             }
         },

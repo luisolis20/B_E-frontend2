@@ -164,8 +164,8 @@ export default {
   data() {
     return {
       idus2: 0,
-      url213: 'http://backendbolsaempleo.test/api/b_e/vin/postulacions',
-      url214: 'http://backendbolsaempleo.test/api/b_e/vin/estadopostuser',
+      url213: 'http://190.15.134.90/b_e/api/b_e/vin/postulacions',
+      url214: 'http://190.15.134.90/b_e/api/b_e/vin/estadopostuser',
       postulaciones: [], // Lista de postulaciones
       postulacionesacepta: [], // Lista de postulaciones
       vistos: JSON.parse(localStorage.getItem('postulacionesVistas')) || [], // Recupera los vistos desde localStorage
@@ -181,7 +181,7 @@ export default {
         this.idus2 = this.$route.params.id;
 
         if (this.idus2) {
-          this.url214 = 'http://backendbolsaempleo.test/api/b_e/vin/estadopostuser/' + this.idus2;
+          this.url214 = 'http://190.15.134.90/b_e/api/b_e/vin/estadopostuser/' + this.idus2;
 
           this.getPostulacionesAcept();
         }
@@ -194,7 +194,7 @@ export default {
       this.idus2 = this.$route.params.id;
 
       if (this.idus2) {
-        this.url214 = 'http://backendbolsaempleo.test/api/b_e/vin/estadopostuser/' + this.idus2;
+        this.url214 = 'http://190.15.134.90/b_e/api/b_e/vin/estadopostuser/' + this.idus2;
 
 
         this.getPostulacionesAcept();

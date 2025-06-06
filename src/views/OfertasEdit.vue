@@ -126,7 +126,7 @@ export default {
             tipo_contrato:'',
             modalidad:'',
             categoriaSeleccionada:'',
-            ur3:'http://backendbolsaempleo.test/api/b_e/vin/oferta__empleos2',
+            ur3:'http://190.15.134.90/b_e/api/b_e/vin/oferta__empleos2',
             empresa_id:'',
             cargando: false,
         }

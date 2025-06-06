@@ -22,7 +22,7 @@ export default {
             telf: '',
             direccion: '',
             imagen: '',
-            url: 'http://backendbolsaempleo.test/api/b_e/vin/users',
+            url: 'http://190.15.134.90/b_e/api/b_e/vin/users',
 
             si_cvn: false,
             no_cvn: true,

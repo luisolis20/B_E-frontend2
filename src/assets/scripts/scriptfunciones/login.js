@@ -7,7 +7,7 @@ export default {
     return {
       usuariologin: "",
       clavelogin: "",
-      url_login: "http://backendbolsaempleo.test/api/b_e/login2",
+      url_login: "http://190.15.134.90/b_e/api/b_e/login2",
     };
   },
   methods: {

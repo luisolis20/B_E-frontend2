@@ -244,7 +244,7 @@ export default {
   data() {
     return {
       idus: 0,
-      url255: 'http://backendbolsaempleo.test/api/b_e/vin/consultanopostofert',
+      url255: 'http://190.15.134.90/b_e/api/b_e/vin/consultanopostofert',
       ofertas: [],
       categoriaSeleccionada: '',
       cargando: false,

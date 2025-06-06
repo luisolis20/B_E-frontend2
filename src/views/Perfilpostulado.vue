@@ -283,7 +283,7 @@ export default {
             iddeclaracion_personal: 0,
             declaracion_personal: null,
             texto: "",
-            url44: 'http://backendbolsaempleo.test/api/b_e/vin/consultapost',
+            url44: 'http://190.15.134.90/b_e/api/b_e/vin/consultapost',
             cargando: false,
             
         }
@@ -1379,7 +1379,7 @@ export default {
            
             try {
                     // Enviar el correo electrónico
-                    const responseCorreo = await axios.post("http://backendbolsaempleo.test/api/b_e/vin/enviar-aceptacion-postulacion", {
+                    const responseCorreo = await axios.post("http://190.15.134.90/b_e/api/b_e/vin/enviar-aceptacion-postulacion", {
                     
                         email: this.email.trim(),
                         firts_name:this.nombre.trim(),
@@ -1389,7 +1389,7 @@ export default {
                     if (responseCorreo.status === 200) {
                         // Si el correo se envió correctamente, proceder a eliminar la postulación
                     
-                        const responseEliminar = await axios.delete('http://backendbolsaempleo.test/api/b_e/vin/postulacions/' + this.id);
+                        const responseEliminar = await axios.delete('http://190.15.134.90/b_e/api/b_e/vin/postulacions/' + this.id);
 
                         // Verificar si la postulación se eliminó correctamente
                         if (responseEliminar.status === 200) {
@@ -1411,7 +1411,7 @@ export default {
             
          /*   try {
 
-                const responseCorreo = await axios.post("http://backendbolsaempleo.test/api/b_e/vin/enviar-aceptacion-postulacion",
+                const responseCorreo = await axios.post("http://190.15.134.90/b_e/api/b_e/vin/enviar-aceptacion-postulacion",
                     {
                         email: this.email.trim(),
                         firts_name:this.nombre.trim(),
@@ -1435,7 +1435,7 @@ export default {
                 fecha: this.fechane
 
             }
-            enviarsolig('POST', parametros, 'http://backendbolsaempleo.test/api/b_e/vin/estadopostuser', 'Postulación Aceptada');
+            enviarsolig('POST', parametros, 'http://190.15.134.90/b_e/api/b_e/vin/estadopostuser', 'Postulación Aceptada');
             this.$router.push('/principal/' + this.id);
             
         },
@@ -1447,7 +1447,7 @@ export default {
                 fecha: this.fechane
 
             }
-            enviarsolig('POST', parametros, 'http://backendbolsaempleo.test/api/b_e/vin/estadopostuser', 'Postulación Rechazada');
+            enviarsolig('POST', parametros, 'http://190.15.134.90/b_e/api/b_e/vin/estadopostuser', 'Postulación Rechazada');
             this.$router.push('/principal/' + this.id);
             
         },

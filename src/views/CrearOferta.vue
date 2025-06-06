@@ -168,7 +168,7 @@ export default {
             nombrerepree:'',
             cargorepree:'',
             usuario_id:'',
-            urk3:'http://backendbolsaempleo.test/api/b_e/vin/consultaredir',
+            urk3:'http://190.15.134.90/b_e/api/b_e/vin/consultaredir',
             cargando: false,
         }
     },

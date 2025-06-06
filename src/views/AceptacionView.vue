@@ -123,7 +123,7 @@ export default {
             modalidad:'',
             categoria:'',
             jefe:'',
-            urk32:'http://backendbolsaempleo.test/api/b_e/vin/consultaofert',
+            urk32:'http://190.15.134.90/b_e/api/b_e/vin/consultaofert',
             
             cargando: false,
         }

@@ -4,7 +4,7 @@ import store from "@/store";
 
 const logged = ref(false);
 const user = ref('');
-const meURL = 'http://backendbolsaempleo.test/api/b_e/me'; // ajusta la URL según tu backend
+const meURL = 'http://190.15.134.90/b_e/api/b_e/me'; // ajusta la URL según tu backend
 
 const apiClient = axios.create({
   baseURL: meURL,

@@ -71,7 +71,7 @@
         data(){
             return{
                 idus:0,
-                url2:'http://backendbolsaempleo.test/api/b_e/vin/empresas',
+                url2:'http://190.15.134.90/b_e/api/b_e/vin/empresas',
                 empresas:null,
                 cargando:false
             }
@@ -94,7 +94,7 @@
                 );
             },
             eliminar(id,nombre){
-                confimar('http://backendbolsaempleo.test/api/b_e/vin/empresas/',id,'Eliminar registro','¿Realmente desea eliminar a '+nombre+'?');
+                confimar('http://190.15.134.90/b_e/api/b_e/vin/empresas/',id,'Eliminar registro','¿Realmente desea eliminar a '+nombre+'?');
                 this.cargando = false;
                 this.$router.push('/principal/'+this.idus);
 
