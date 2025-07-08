@@ -20,7 +20,7 @@ module.exports = defineConfig({
   devServer: {
     proxy: {
       '/api': {
-        target: 'http://190.15.134.90/b_e',
+        target: 'http://vinculacionconlasociedad.utelvt.edu.ec/backendbolsaempleo',
         changeOrigin: true,
         pathRewrite: { '^/api': '' },
       },
