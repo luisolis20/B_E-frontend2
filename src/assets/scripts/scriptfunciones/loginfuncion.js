@@ -2,28 +2,23 @@ import axios from "axios";
 import store from "@/store";
 export async function enviarsolilogin(method, parametros, url, mensaje) {
   try {
-    var response = await axios({
+    const response = await axios({
       method: method,
       url: url,
       data: parametros,
     });
-
+    //console.log(response.data.error)
     if (response.data && response.data.token) {
-      // ✅ Guardar token y tipo en Vuex (y localStorage automáticamente)
       
-      // ✅ Guardar datos del usuario en Vuex
-      /*store.commit("setRol", response.data.Rol || "");
-      store.commit("setemail", response.data.email || "");
-      store.commit("setid", response.data.id || "");
-      store.commit("setname", response.data.name || "");*/
+      if (response.data.error) {
+        return {
+          error: response.data.error,
+          clave: response.data.clave,
+          mensaje: response.data.mensaje,
+        };
+      }
 
-      // ✅ (Opcional) Guardar toda la info del usuario si la necesitas
-      //localStorage.setItem("user", JSON.stringify(response.data.user || {}));
-      //console.log(JSON.stringify(response.data.user || {}));
-      //console.log(response.data);
-      // ✅ Guardar el token en el store
-
-      if (response.data.Rol === "Estudiante") {
+      else if (response.data.Rol === "Estudiante") {
         //console.log(response.data);
         store.commit("setRol", response.data.Rol);
         store.commit("setemail", response.data.mailPer);
@@ -54,6 +49,7 @@ export async function enviarsolilogin(method, parametros, url, mensaje) {
           role: response.data.Rol,
           id: response.data.id,
           name: response.data.name,
+          email: response.data.email,
         };
       } else if (response.data.Rol === "Empresa") {
         store.commit("setRol", response.data.Rol);
@@ -68,11 +64,16 @@ export async function enviarsolilogin(method, parametros, url, mensaje) {
           role: response.data.Rol,
           CIInfPer: response.data.id,
           name: response.data.name,
+          email: response.data.email,
         };
       }
     } else {
-      console.error("Respuesta inesperada:", response);
-      return null;
+      //console.error("Respuesta inesperada:", response);
+      return {
+          error: response.data.error,
+          mensaje: response.data.mensaje,
+          Graduado: response.data.Graduado,
+        };
     }
     /*if (response.data) {
       //console.log(mensaje + ': ' + response.data.mensaje);

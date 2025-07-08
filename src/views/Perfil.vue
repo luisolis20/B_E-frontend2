@@ -4,7 +4,7 @@
         <div class="container-fluid py-3" v-if="mostrarOpciones2">
             <h1 class="mb-4">Perfil</h1>
             <h5 class="text-danger">Este es el apartado de su perfil. Aquí visualizará la información que usted tiene en el sistema SIAD de la UTLVTE. Si su información no carga pruebe ingresando al sistema 
-            <a href="http://sistemas.utelvt.edu.ec/socioeconomica/login.aspx" target="_blank" rel="noopener noreferrer">SIAD</a> para revisar su información</h5>
+            <a href="https://estudiante.utelvt.edu.ec/login" target="_blank" rel="noopener noreferrer">SIAD</a> para revisar su información</h5>
             <div class="formperfil" action="">
                 <div class="row g-5">
                     <div class="col-md-12 col-lg-6 col-xl-7">
@@ -45,14 +45,14 @@
                         <div class="row g-4 text-center align-items-center justify-content-center pt-4">
                             <div class="text-center" v-if="!si_cvn">
                                 <h4 class="mb-4">¡Vaya! parece que no tienes una hoja de vida. Si aún no has realizado
-                                    tu hoja de vida, puedes dar ir a la página del <a href="" target="_blank">CVN</a>
+                                    tu hoja de vida, puedes dar ir a la página del <a href="http://vinculacionconlasociedad.utelvt.edu.ec/cvn/home" target="_blank">CVN</a>
                                     que la UTLVTE implementó <br>
                                 </h4>
                             </div>
                             <div class="text-center" v-if="si_cvn">
                                 <h4 class="mb-4">Parece que si tienes registrado tu hoja de vida en la página del CVN de
                                     la UTLVTE, puedes visualizarlo en el botón de abajo <br>
-                                    Si deseas puedes editar tu CVN dando clic <a href="http://vinculacionconlasociedad.utelvt.edu.ec/cvn/" target="_blank"
+                                    Si deseas puedes editar tu CVN dando clic <a href="http://vinculacionconlasociedad.utelvt.edu.ec/cvn/home" target="_blank"
                                         rel="noopener noreferrer">aquí</a> </h4>
                             </div>
                         </div>

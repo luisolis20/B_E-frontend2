@@ -7,7 +7,7 @@ export default {
     return {
       usuariologin: "",
       clavelogin: "",
-      url_login: "http://190.15.134.90/b_e/api/b_e/login2",
+      url_login: "http://vinculacionconlasociedad.utelvt.edu.ec/backendbolsaempleo/api/b_e/login2",
     };
   },
   methods: {
@@ -19,19 +19,15 @@ export default {
           codigo_dactilar: this.clavelogin.trim(),
         };
 
-        const response = await enviarsolilogin(
-          "POST",
-          parametros,
-          this.url_login,
-          "Logueado"
-        );
+        const response = await enviarsolilogin('POST',parametros,this.url_login,'Logueado');
         if (response.error) {
           mostraralertas(response.mensaje, "warning");
         }
-        const usuario = await getMe();
-        const role = response.role;
-        const tok = response.token;
-        if (response) {
+
+        else if (response) {
+          const usuario = await getMe();
+          const role = response.role;
+          const tok = response.token;
           if (role === "Administrador") {
             mostraralertas(
               "LE DAMOS LA BIENVENIDA ADMINISTRADOR " + (response.name || ""),
@@ -39,7 +35,7 @@ export default {
             );
             this.$router.push("/principal/" + response.id);
           } else if (role === "Estudiante") {
-            if (response.Graduado=='Si') {
+            if (response.Graduado == 'Si') {
               mostraralertas(
                 "LE DAMOS LA BIENVENIDA ESTUDIANTE " + response.ApellInfPer,
                 "success"
@@ -57,7 +53,7 @@ export default {
               "success"
             );
             this.$router.push("/principal/" + response.id);
-          } 
+          }
         } else {
           mostraralertas("Usuario y/o Contraseñas Incorrectos", "warning");
           console.error("Respuesta inesperada:", response);
@@ -107,7 +103,8 @@ export default {
               console.error('Respuesta inesperada:', response);
             }*/
       } catch (error) {
-        console.error("Error:", error.response.data);
+        mostraralertas(error.response.data.mensaje, 'warning');
+        //console.clear();
       }
     },
   },

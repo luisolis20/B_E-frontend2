@@ -16,7 +16,7 @@ export default {
             telf:'',
             direccion:'',
             imagen:'',
-            url:'http://190.15.134.90/b_e/api/vin/users',
+            url:'http://vinculacionconlasociedad.utelvt.edu.ec/backendbolsaempleo/api/vin/users',
             cargando: false,
         }
     },

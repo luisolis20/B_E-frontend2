@@ -17,22 +17,23 @@
                                 <div class="col-lg-6 wow fadeIn" data-wow-delay="0.1s">
                                     <div class="form-group">
                                         <label for="Examplename" class="form-label text-dark">Titulo de la oferta</label>
-                                        <input type="text" v-model="titulo" class="form-control py-3 border-1 text-dark" id="Examplename" >
+                                        <input type="text" v-model="titulo" class="form-control py-3 border-1 text-dark" id="titulo" >
                                     </div>
                                 </div>
                                 <div class="col-lg-6 wow fadeIn" data-wow-delay="0.1s">
                                     <div class="form-group">
                                         <label for="Examplename" class="form-label text-dark">Jornada</label>
-                                        <input type="text" v-model="jornada" class="form-control py-3 border-1 text-dark" id="Examplename" >
+                                        <input type="text" v-model="jornada" class="form-control py-3 border-1 text-dark" id="jornada" >
                                     </div>
                                 </div>
                                 <div class="col-lg-6 wow fadeIn" data-wow-delay="0.1s">
                                     <div class="form-group">
                                         <label for="Examplename" class="form-label text-dark">Tipo de contrato</label>
-                                        <input type="text" v-model="tipo_contrato" class="form-control py-3 border-1 text-dark" id="Examplename" >
+                                        <input type="text" v-model="tipo_contrato" class="form-control py-3 border-1 text-dark" id="tipo_contrato" >
                                     </div>
                                 </div>
                                 <div class="col-lg-6 wow fadeIn" data-wow-delay="0.1s">
+                                    <label for="Examplename" class="form-label text-dark">Seleccione la categoría de la oferta</label>
                                     <div class="form-group">
                                         <select v-model="this.categoriaSeleccionada" class="form-control py-3 border-0 text-dark"
                                             id="inputPersonOne">
@@ -65,20 +66,26 @@
                                 <div class="col-lg-6 wow fadeIn" data-wow-delay="0.1s">
                                     <div class="form-group">
                                         <label for="Examplename" class="form-label text-dark">Modalidad</label>
-                                        <input type="text" v-model="modalidad" class="form-control py-3 border-1 text-dark" id="Examplename" >
+                                        <input type="text" v-model="modalidad" class="form-control py-3 border-1 text-dark" id="modalidad" >
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 wow fadeIn" data-wow-delay="0.1s">
+                                    <div class="form-group">
+                                        <label for="Examplename" class="form-label text-dark">Fecha de Vigencia de la oferta</label>
+                                        <input type="date" v-model="Fechafinofer" class="form-control py-3 border-1 text-dark" id="Fechafinofer" >
                                     </div>
                                 </div>
                                 <div class="col-12 wow fadeIn" data-wow-delay="0.1s">
                                     <div class="form-group">
                                         <label for="exampletextarea" class="form-label text-dark">Requisitos</label>
-                                        <textarea name="text" v-model="requisistos" class="form-control border-1 text-dark" id="exampletextarea" cols="30"
+                                        <textarea name="text" v-model="requisistos" class="form-control border-1 text-dark" id="requisistos" cols="30"
                                             rows="5" ></textarea>
                                     </div>
                                 </div>
                                 <div class="col-12 wow fadeIn" data-wow-delay="0.1s">
                                     <div class="form-group">
                                         <label for="exampletextarea" class="form-label text-dark">Descripción</label>
-                                        <textarea name="text" v-model="descripcion" class="form-control border-1 text-dark" id="exampletextarea" cols="30"
+                                        <textarea name="text" v-model="descripcion" class="form-control border-1 text-dark" id="descripcion" cols="30"
                                             rows="5" ></textarea>
                                     </div>
                                 </div>
@@ -123,6 +130,7 @@ export default {
             tipo_contrato:'',
             modalidad:'',
             categoriaSeleccionada:'',
+            Fechafinofer:'',
             empresa_id:'',
             cargando: false,
         }
@@ -162,12 +170,13 @@ export default {
                     jornada:this.jornada.trim(),
                     tipo_contrato:this.tipo_contrato.trim(),
                     categoria:this.categoriaSeleccionada,
+                    fechaFinOferta:this.Fechafinofer,
                     modalidad:this.modalidad.trim(),
                     empresa_id:this.idus
 
                 }
                
-                enviarsolig('POST',parametros,'http://190.15.134.90/b_e/api/b_e/vin/oferta__empleos','Oferta Creada');
+                enviarsolig('POST',parametros,'http://vinculacionconlasociedad.utelvt.edu.ec/backendbolsaempleo/api/b_e/vin/oferta__empleos','Oferta Creada');
                 this.$router.push('/empresas/'+store.state.idusu);
             }
         },

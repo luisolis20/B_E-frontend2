@@ -5,43 +5,40 @@
             <small
                 class="d-inline-block fw-bold text-dark text-uppercase bg-light border border-primary rounded-pill px-4 py-1 mb-3">
                 Estas son todas las ofertas de Empleo</small>
-            <div class="col-sm-6 col-md-6 col-xl-5">
-                <label class="text-dark" for="">Filtrar Ofertas Por:</label><br>
-
-            </div>
-            <div class="col-sm-6 col-md-6 col-xl-5">
-                <div class="input-group-icon">
-                    <select v-model="categoriaSeleccionada" class="form-select form-voyage-select input-box text-dark"
-                        id="inputPersonOne">
-                        <option value="" selected>
-                            Categorías / Área
-                        </option>
-                        <option value="Administración y RRHH">Administración y RRHH</option>
-                        <option value="Arquitectura y Producción">Arquitectura y Producción</option>
-                        <option value="Comercial">Comercial</option>
-                        <option value="Comercial, Negocios y Atención al público">Comercial, Negocios y Atención al
-                            público
-                        </option>
-                        <option value="Educación y Docencia">Educación y Docencia</option>
-                        <option value="Hotelería, Gastronomía y Turismo">Hotelería, Gastronomía y Turismo</option>
-                        <option value="Ingenierías">Ingenierías</option>
-                        <option value="Logística y Abastecimiento">Logística y Abastecimiento</option>
-                        <option value="Marketing, Publicidad, Comunicación y Diseño">Marketing, Publicidad, Comunicación
-                            y Diseño
-                        </option>
-                        <option value="Oficios">Oficios</option>
-                        <option value="Producción y Operarios">Producción y Operarios</option>
-                        <option value="Salud, Medicina, Farmacia y Bioquímica">Salud, Medicina, Farmacia y Bioquímica
-                        </option>
-                        <option value="Secretaría y Recepción">Secretaría y Recepción</option>
-                        <option value="Seguridad y Vigilancia">Seguridad y Vigilancia</option>
-                        <option value="Tecnología y Sistemas">Tecnología y Sistemas</option>
-                        <option value="Textil">Textil</option>
-                        <option value="Ventas">Ventas</option>
-                        <option value="Otros">Otros</option>
-                    </select><span class="nav-link-icon text-800 fs--1 input-box-icon"><i class="fas fa-trophy">
-                        </i></span>
-                </div>
+            <div class="row gx-4 gy-3 d-flex">
+                    <div class="mb-3 col-sm-2 col-md-2 col-xl-2">
+                        <label for="filtroEstado" class="form-label fw-bold text-dark">Filtrar por estado de la oferta:</label>
+                        <select v-model="filtroEstado" @change="filtrarOfertas" class="form-select text-dark" id="filtroEstado">
+                            <option value="todas">Todas</option>
+                            <option value="vigente">Oferta Vigente</option>
+                            <option value="caducada">Oferta Caducada</option>
+                        </select>
+                    </div>
+                    <div class="mb-3 col-sm-6 col-md-6 col-xl-5 align-self-center">
+                        <label for="categoriaSeleccionada" class="form-label fw-bold text-dark">Filtrar por categoría:</label>
+                        <select v-model="categoriaSeleccionada" @change="filtrarCaTegirias" class="form-select text-dark" id="categoriaSeleccionada">
+                            <option value="Categorías / Área">Categorías / Área</option>
+                            <option value="Administración y RRHH">Administración y RRHH</option>
+                            <option value="Arquitectura y Producción">Arquitectura y Producción</option>
+                            <option value="Comercial">Comercial</option>
+                            <option value="Comercial, Negocios y Atención al público">Comercial, Negocios y Atención al público</option>
+                            <option value="Educación y Docencia">Educación y Docencia</option>
+                            <option value="Hotelería, Gastronomía y Turismo">Hotelería, Gastronomía y Turismo</option>
+                            <option value="Ingenierías">Ingenierías</option>
+                            <option value="Logística y Abastecimiento">Logística y Abastecimiento</option>
+                            <option value="Marketing, Publicidad, Comunicación y Diseño">Marketing, Publicidad, Comunicación y Diseño</option>
+                            <option value="Oficios">Oficios</option>
+                            <option value="Producción y Operarios">Producción y Operarios</option>
+                            <option value="Salud, Medicina, Farmacia y Bioquímica">Salud, Medicina, Farmacia y Bioquímica</option>
+                            <option value="Secretaría y Recepción">Secretaría y Recepción</option>
+                            <option value="Seguridad y Vigilancia">Seguridad y Vigilancia</option>
+                            <option value="Tecnología y Sistemas">Tecnología y Sistemas</option>
+                            <option value="Textil">Textil</option>
+                            <option value="Ventas">Ventas</option>
+                            <option value="Otros">Otros</option>
+                        </select>
+                    </div>
+             
             </div>
             <div class="table-container">
                 <table class="table table-hover">
@@ -55,6 +52,8 @@
                             <th scope="col">Tipo de Contrato</th>
                             <th scope="col">Jefe</th>
                             <th scope="col">Registrado</th>
+                            <th scope="col">Finalización de la Oferta</th>
+                            <th scope="col">Estado de la Oferta</th>
                             <th scope="col"></th>
                         </tr>
                     </thead>
@@ -64,7 +63,7 @@
                                 <h3>Cargando....</h3>
                             </td>
                         </tr>
-                        <tr v-else v-for="ofe,  in ofertasFiltradas" :key="ofe.id">
+                        <tr v-else v-for="ofe,  in filteredofertas" :key="ofe.id">
 
                             <td v-text="ofe.id"></td>
                             <td v-text="ofe.Empresa"></td>
@@ -74,6 +73,11 @@
                             <td v-text="ofe.tipo_contrato"></td>
                             <td v-text="ofe.Jefe"></td>
                             <td v-text="new Date(ofe.created_at).toLocaleDateString('en-US')"></td>
+                            <td v-text="new Date(ofe.fechaFinOferta).toLocaleDateString('es-EC', {timeZone: 'America/Guayaquil'})"></td>
+                            <td>
+                                <button v-if="new Date(ofe.fechaFinOferta) <= new Date()" class="btn btn-danger fw-bold">Oferta Caducada</button>
+                                <button v-else class="btn btn-success fw-bold">Oferta Vigente</button>
+                            </td>
                             <td>
                                 <router-link :to="{path:'/postularse/'+this.idus+'/'+ofe.id}" v-if="mostrarOpciones2"
                                     class="btn btn-info">
@@ -92,8 +96,24 @@
                     </tbody>
                 </table>
             </div>
+            
+             <div class="d-flex justify-content-center mb-4">
+                <button @click="previousPage" :disabled="currentPage === 1 || buscando" class="btn btn-primary text-white">
+                    Anterior
+                </button>&nbsp;
+                <span class="text-dark">Página {{ currentPage }} de {{ lastPage }}</span>&nbsp;
+                <button @click="nextPage" :disabled="currentPage === lastPage || buscando" class="btn btn-primary text-white">
+                    Siguiente
+                </button>
+            </div>
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            <div class="d-flex justify-content-center">
+                <button class="btn btn-primary text-white" @click="actualizar">Actualizar Datos</button>
+            </div>
 
-
+        </div>
+        <div v-if="filteredofertas.length === 0" class="text-center">
+                <h3>No hay ofertas disponibles</h3>
         </div>
     </div>
     <!-- Cart Page End -->
@@ -111,10 +131,15 @@
         data(){
             return{
                 idus:0,
-                url255:'http://190.15.134.90/b_e/api/b_e/vin/consultanopostofert',
-                ofertas:null,
-                categoriaSeleccionada: '',
-                cargando:false
+                url255:'http://vinculacionconlasociedad.utelvt.edu.ec/backendbolsaempleo/api/b_e/vin/consultanopostofert',
+                ofertas:[],
+                filteredofertas: [],
+                searchQuery: '',
+                cargando:false,
+                currentPage: 1,
+                lastPage: 1,
+                filtroEstado: 'todas',
+                categoriaSeleccionada: 'Categorías / Área',
             }
         },
         mounted(){
@@ -122,33 +147,74 @@
             this.idus = ruta.params.id;
             this.getOFertas();
         },
-        computed: {
-            // Filtrar ofertas por categoría
-            ofertasFiltradas() {
-            if (this.categoriaSeleccionada === '') {
-                // Si no hay categoría seleccionada, mostrar todas las ofertas
-                return this.ofertas;
-            } else {
-                // Si hay una categoría seleccionada, filtrar las ofertas
-                return this.ofertas.filter(oferta => oferta.categoria === this.categoriaSeleccionada);
-            }
-            }
-        },
+        
        
         methods:{
-            getOFertas() {
+            async getOFertas() {
                 this.cargando = true;
-                axios.get(this.url255, {
-                    params: { user_id: this.idus } // Enviar el id del usuario al backend
-                }).then(
-                    res => {
-                    this.ofertas = res.data.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+                try {
+                    const response = await axios.get(`${this.url255}?all=true`, {
+                        params: { user_id: this.idus }
+                    });
+                    const allData = response.data.data;
+
+                    this.ofertas = allData;
+                    this.lastPage = Math.ceil(this.ofertas.length / 10);
+                    this.updateFilteredData();
+                } catch (error) {
+                    console.error("Error al obtener datos:", error);
+                } finally {
                     this.cargando = false;
-                    }
-                );
+                }
+            },
+            updateFilteredData() {
+                let filtradas = this.ofertas;
+
+                if (this.filtroEstado === 'vigente') {
+                    filtradas = filtradas.filter(ofe => new Date(ofe.fechaFinOferta) > new Date());
+                } else if (this.filtroEstado === 'caducada') {
+                    filtradas = filtradas.filter(ofe => new Date(ofe.fechaFinOferta) <= new Date());
+                }else if(this.categoriaSeleccionada !== 'Categorías / Área') {
+                    filtradas = filtradas.filter(ofe => ofe.categoria === this.categoriaSeleccionada);
+                }
+
+                // Aplicar paginación local
+                const startIndex = (this.currentPage - 1) * 10;
+                const endIndex = startIndex + 10;
+                this.filteredofertas = filtradas.slice(startIndex, endIndex);
+
+                // Actualizar total de páginas (si quieres que se actualice también el número de páginas)
+                this.lastPage = Math.ceil(filtradas.length / 10);
+            },
+            filtrarOfertas() {
+                this.currentPage = 1; // Reinicia a la primera página
+                this.updateFilteredData();
+            },
+            filtrarCaTegirias() {
+                this.currentPage = 1; // Reinicia a la primera página
+                this.updateFilteredData();
+            },
+
+            actualizar() {
+                this.cargando = true;
+                this.filtroEstado= 'todas';
+                this.categoriaSeleccionada= 'Categorías / Área';
+                this.getOFertas()
+            },
+             nextPage() {
+                if (this.currentPage < this.lastPage) {
+                    this.currentPage++;
+                    this.updateFilteredData();
+                }
+            },
+            previousPage() {
+                if (this.currentPage > 1) {
+                    this.currentPage--;
+                    this.updateFilteredData();
+                }
             },
             eliminar(id,nombre){
-                confimar('http://190.15.134.90/b_e/api/b_e/vin/oferta__empleos/',id,'Eliminar registro','¿Realmente desea eliminar a '+nombre+'?');
+                confimar('http://vinculacionconlasociedad.utelvt.edu.ec/backendbolsaempleo/api/b_e/vin/oferta__empleos/',id,'Eliminar registro','¿Realmente desea eliminar a '+nombre+'?');
                 this.cargando = false;
                 this.$router.push('/principal/'+this.idus);
 

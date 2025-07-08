@@ -2,7 +2,7 @@
     <div class="container-fluid RSVP-form py-3" id="weddingRsvp">
         <div class="container py-3">
             <div class="mb-5 text-center mx-auto wow fadeIn" data-wow-delay="0.1s" style="max-width: 800px;">
-                <h1 class="display-2 text-primary">Felicidades la Empresa a Aceptado tu postulación!!</h1>
+                <h1 class="display-2 text-primary">Lo sentimos, la empresa rechazó tu postulación</h1>
             </div>
             <div class="row justify-content-center">
                 <div class="col-md-10">
@@ -10,7 +10,7 @@
                         <div class="fw-bold text-primary bg-white d-flex align-items-center justify-content-center position-absolute border-secondary p-2 wow fadeIn"
                             data-wow-delay="0.1s"
                             style="width: 75%; border-style: double; top: 0; left: 50%; transform: translate(-50%, -50%);">
-                            Estos son los datos de la Oferta para que te comuniques con la empresa
+                            Detalles de la Postulación Rechazada
                         </div>
                         <form>
                             <div class="row gx-4 gy-3">
@@ -81,9 +81,11 @@
                                     <div class="text-center border border-secondary p-4 my-4 position-relative">
                                         <div class="fw-bold text-primary bg-white d-flex align-items-center justify-content-center position-absolute border-secondary p-2"
                                             style="width: 50%; border-style: double; top: 0; left: 50%; transform: translate(-50%, -50%);">
-                                            ¡La UTLVTE y la Empresa se comunicarán contigo o puedes comunicarte directamente¡ 
+                                            Explicación del Rechazo
                                         </div>
-                                       
+                                       <label for="" class="text-dark">Estimado: {{ ApellInfPer }} {{ ApellMatInfPer }} {{ NombInfPer }}. Le informamos que la empresa 
+                                       rechazó su postulación por lo siguiente:</label>
+                                       <label for="" class="text-dark">{{ rechazo_detalle }}</label>
                                     </div>
                                 </div>
                                 
@@ -108,6 +110,7 @@ import { useRoute } from 'vue-router';
 import axios from 'axios';
 import store from '@/store';
 import {mostraralertas, enviarsolig, mostraralertas2} from '@/assets/scripts/scriptfunciones/funciones';
+import customscript from '@/assets/scripts/custom.js';
 
 export default {
    data(){
@@ -117,6 +120,10 @@ export default {
             empresa:'',
             titulo:'',
             direccion:'',
+            rechazo_detalle:'',
+            ApellInfPer:'',
+            ApellMatInfPer:'',
+            NombInfPer:'',
             telefono:'',
             jornada:'',
             tipo_contrato:'',
@@ -124,6 +131,7 @@ export default {
             categoria:'',
             jefe:'',
             urk32:'http://vinculacionconlasociedad.utelvt.edu.ec/backendbolsaempleo/api/b_e/vin/consultaofert',
+            url214: '',
             
             cargando: false,
         }
@@ -134,12 +142,13 @@ export default {
         this.idus = ruta.params.secondId;
 
         this.urk32 +=  '/'+this.idus;
-        
+        this.url214 = 'http://vinculacionconlasociedad.utelvt.edu.ec/backendbolsaempleo/api/b_e/vin/estadopostuser/' + customscript.computed.idUsuario();
         Promise.all([
                 this.getEmpresa(),
+                this.getDetalle(),
     
             ])
-        
+        console.log(this.rechazo_detalle);
         
     },
     computed: {
@@ -171,6 +180,28 @@ export default {
                 }
             );
         },
+        getDetalle() {
+            axios.get(this.url214).then(res => {
+                const data = res.data.data;
+
+                // Buscar el registro donde estado es 'Rechazada'
+                const rechazo = data.find(post => post.estado === 'Rechazada');
+
+                // Buscar nombre desde cualquier registro si existe
+                if (data.length > 0) {
+                this.ApellInfPer = data[0].ApellInfPer;
+                this.ApellMatInfPer = data[0].ApellMatInfPer;
+                this.NombInfPer = data[0].NombInfPer;
+                }
+
+                // Asignar el detalle del rechazo si lo hay
+                this.rechazo_detalle = rechazo?.detalle_estado || 'Sin detalles disponibles';
+            }).catch(error => {
+                console.error('Error al obtener detalle:', error);
+                this.rechazo_detalle = 'Error al cargar el detalle';
+            });
+        },
+
        
         
         

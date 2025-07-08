@@ -13,10 +13,12 @@ import OfertasNew from '../views/OfertasNew.vue'
 import OfertasView from '../views/OfertasView.vue'
 import Postulados from '../views/Postulados.vue'
 import Postuladosall from '../views/Postuladosall.vue'
+import Estadopostulacionall from '../views/Estadopostulacionall.vue'
 import Perfilpostulado from '../views/Perfilpostulado.vue'
 import Ofertasall from '../views/Ofertasall.vue'
 import Postularse from '../views/Postularse.vue'
 import AceptacionView from '../views/AceptacionView.vue'
+import RechazoView from '../views/RechazoView.vue'
 import Userall from '../views/Userall.vue'
 import AdminEdit from '../views/AdminEdit.vue'
 import Empresall from '../views/Empresall.vue'
@@ -84,6 +86,11 @@ const routes = [
     component: Postuladosall
   },
   {
+    path: '/estadopostulacionall/:id',
+    name: 'estadopostulacionall',
+    component: Estadopostulacionall
+  },
+  {
     path: '/perfilpostulados/:id/:secondId',
     name: 'perfilpostulados',
     component: Perfilpostulado
@@ -102,6 +109,11 @@ const routes = [
     path: '/aceptacionview/:id/:secondId',
     name: 'aceptacionview',
     component: AceptacionView
+  },
+  {
+    path: '/rechazoview/:id/:secondId',
+    name: 'rechazoview',
+    component: RechazoView
   },
   {
     path: '/mispostulaciones/:id',

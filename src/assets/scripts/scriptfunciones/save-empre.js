@@ -18,7 +18,7 @@ export default {
             tipo_empre:'',
             mision:'',
             vision:'',
-            url:'http://190.15.134.90/b_e/api/b_e/vin/empresas',
+            url:'http://vinculacionconlasociedad.utelvt.edu.ec/backendbolsaempleo/api/b_e/vin/empresas',
             cargando: false,
         }
     },
@@ -98,7 +98,7 @@ export default {
 
                 }
                
-                enviarsolig('POST',parametros,'http://190.15.134.90/b_e/api/b_e/vin/empresas','Empresa Creada');
+                enviarsolig('POST',parametros,'http://vinculacionconlasociedad.utelvt.edu.ec/backendbolsaempleo/api/b_e/vin/empresas','Empresa Creada');
                 this.$router.push('/principal/'+this.idus);
             }
         },

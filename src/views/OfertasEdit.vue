@@ -69,6 +69,12 @@
                                         <input type="text" v-model="modalidad" class="form-control py-3 border-1 text-dark" id="Examplename" >
                                     </div>
                                 </div>
+                                <div class="col-lg-6 wow fadeIn" data-wow-delay="0.1s">
+                                    <div class="form-group">
+                                        <label for="Examplename" class="form-label text-dark">Fecha de Vigencia de la oferta</label>
+                                        <input type="date" v-model="Fechafinofer" class="form-control py-3 border-1 text-dark" id="Examplename" >
+                                    </div>
+                                </div>
                                 <div class="col-12 wow fadeIn" data-wow-delay="0.1s">
                                     <div class="form-group">
                                         <label for="exampletextarea" class="form-label text-dark">Requisitos</label>
@@ -88,7 +94,7 @@
                                        
                                         <div class="mt-4">
                                             <div class="col-12 text-center wow fadeIn" data-wow-delay="0.1s">
-                                                <button v-on:click="guardar" class="btn btn-primary btn-primary-outline-0 py-3 px-5 text-white">Publicar Oferta</button>
+                                                <button v-on:click="guardar" class="btn btn-primary btn-primary-outline-0 py-3 px-5 text-white">Editar y Publicar Oferta</button>
                                             </div>
                                         </div>
                                     </div>
@@ -126,7 +132,8 @@ export default {
             tipo_contrato:'',
             modalidad:'',
             categoriaSeleccionada:'',
-            ur3:'http://190.15.134.90/b_e/api/b_e/vin/oferta__empleos2',
+            Fechafinofer:'',
+            ur3:'http://vinculacionconlasociedad.utelvt.edu.ec/backendbolsaempleo/api/b_e/vin/oferta__empleos2',
             empresa_id:'',
             cargando: false,
         }
@@ -151,6 +158,7 @@ export default {
                     this.jornada= res.data.data[0].jornada;
                     this.tipo_contrato= res.data.data[0].tipo_contrato;
                     this.modalidad= res.data.data[0].modalidad;
+                    this.Fechafinofer= res.data.data[0].fechaFinOferta;
                 }
             );
             
@@ -184,12 +192,13 @@ export default {
                     tipo_contrato:this.tipo_contrato.trim(),
                     categoria:this.categoriaSeleccionada,
                     modalidad:this.modalidad.trim(),
+                    fechaFinOferta:this.Fechafinofer,
                     empresa_id:this.ide
 
                 }
                
                 enviarsoliedit('PUT',parametros,this.ur3,'Oferta Actualizada')
-                this.$router.push('/empresas/'+this.ide);
+                this.$router.push('/empresas/'+store.state.idusu);
             }
         },
         

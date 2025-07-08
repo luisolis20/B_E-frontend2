@@ -12,7 +12,7 @@ export default {
   
   },
   computed: { 
-    cerrarsesion() {
+    cerrarsesion2() {
      console.clear();
       localStorage.clear();
       window.location.replace('/');

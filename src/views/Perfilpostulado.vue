@@ -3,10 +3,11 @@
         <div class="container">
             <div class="row g-5 align-items-center">
                 <div class="col-lg-5 wow bounceInUp" data-wow-delay="0.1s">
+                <!-- Main Post Section Start
                     <img v-if="imagen" :src="imagen" id="fotoimg" class="img-fluid rounded" alt="">
                     <img v-else
                         src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/User_icon_2.svg/768px-User_icon_2.svg.png"
-                        id="fotoimg" class="img-fluid rounded" alt="">
+                        id="fotoimg" class="img-fluid rounded" alt="">-->
                 </div>
                 <div class="col-lg-7 wow bounceInUp" data-wow-delay="0.3s">
                     <small
@@ -36,22 +37,56 @@
                         </div>
                         <div class="col-sm-6">
                             <i class="fas fa-share text-primary me-2"></i>Hoja de Vida:
-                            <br>
+                            <br><br><br>
                             <button v-on:click="visualizarCV" type="button"
                                 class="btn border-secondary py-3 px-4 text-uppercase w-100 text-primary">Visualizar
                                 hoja de Vida</button>
                         </div>
 
                     </div>
-                    <div class="row g-5 align-items-center">
+                    <div class="row g-5 align-items-center" v-if="si_postula">
+                        <div class="col-12">
+                           <label class="text-danger" >Esta postulación ya ha sido {{ detalle_si }}</label>
+                            
+                        </div>
+                        
+                    </div>
+                    <div class="row g-5 align-items-center" v-else>
                         <div class="col-6">
                             <a v-on:click="aceptarpost" class="btn btn-primary py-3 px-5 rounded-pill text-white">Aceptar Postulación<i
                                     class="fas fa-arrow-right ps-2"></i></a>
                             
                         </div>
                         <div class="col-6">
-                            <a v-on:click="rechazarpost" class="btn btn-primary py-3 px-5 rounded-pill text-white">Rechazar<i
+                            <a v-on:click="rechazarpost" class="btn btn-primary py-3 px-5 rounded-pill text-white">Rechazar Postulación<i
                                     class="fas fa-arrow-right ps-2"></i></a>
+                            
+                        </div>
+                    </div>
+                    <br><br>
+                    <div class="col-12 wow fadeIn" data-wow-delay="0.1s" v-if="aceptado_post">
+                        <div class="form-group">
+                            <label for="exampletextarea" class="form-label text-dark">Detalle el motivo por el cual aceptó la Postulación</label>
+                            <textarea name="text" v-model="detalle_estadio" class="form-control border-1 text-dark" id="detalle_estadio" cols="30"
+                            rows="5" ></textarea>
+                        </div>
+                        <br><br>
+                         <div class="col-6">
+                            <a v-on:click="aceptarpost2" class="btn btn-primary py-3 px-5 rounded-pill text-white">Enviar<i
+                                    class="fas fa-paper-plane ps-2"></i></a>
+                            
+                        </div>
+                    </div>
+                    <div class="col-12 wow fadeIn" data-wow-delay="0.1s" v-if="rechazado_post">
+                        <div class="form-group">
+                            <label for="exampletextarea" class="form-label text-dark">Detalle el motivo por el cual rechazó la Postulación</label>
+                            <textarea name="text" v-model="detalle_estadio" class="form-control border-1 text-dark" id="detalle_estadio" cols="30"
+                            rows="5" ></textarea>
+                        </div>
+                        <br><br>
+                         <div class="col-6">
+                            <a v-on:click="rechazarpost2" class="btn btn-primary py-3 px-5 rounded-pill text-white">Enviar<i
+                                    class="fas fa-paper-plane ps-2"></i></a>
                             
                         </div>
                     </div>
@@ -69,14 +104,22 @@ import { useRoute } from 'vue-router';
 import axios from 'axios';
 import store from '@/store';
 import jsPDF from 'jspdf';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 export default {
     data() {
         return {
             id: 0,
             idus: 0,
+            aceptado_post: false,
+            rechazado_post: false,
+            detalle_estadio: "",
            //Datos Personales
-           urlinformacionpersonal: "http://190.15.134.90/cvn/api/cvn/v1/informacionpersonal",
+            urlinformacionpersonal: "http://vinculacionconlasociedad.utelvt.edu.ec/cvubackendv2/api/cvn/v1/informacionpersonal",
             iddatos_personales: 0,
             datos_personales: null,
             CIInfPer: "",
@@ -93,8 +136,8 @@ export default {
             mailPer: "",
             edad: "",
             //Formacion Academica
-            urlformacion_academica: "http://190.15.134.90/cvn/api/cvn/v1/formacion_academica",
-            urlfichasocioeconomica: "http://190.15.134.90/cvn/api/cvn/v1/fichasocioeconomica",
+            urlformacion_academica: "http://vinculacionconlasociedad.utelvt.edu.ec/cvubackendv2/api/cvn/v1/formacion_academica",
+            urlfichasocioeconomica: "http://vinculacionconlasociedad.utelvt.edu.ec/cvubackendv2/api/cvn/v1/fichasocioeconomica",
             idformacion_academica: 0,
             idfichasocioeconomica: 0,
             formacion_academica: null,
@@ -126,11 +169,11 @@ export default {
             estudios_posgrado_culminados: "",
             estudios_bachiller_culminados: "",
             //Experiencias Profesionales
-            urlexperiencia_profesionale: "http://190.15.134.90/cvn/api/cvn/v1/experiencia_profesionale",
+            urlexperiencia_profesionale: "http://vinculacionconlasociedad.utelvt.edu.ec/cvubackendv2/api/cvn/v1/experiencia_profesionale",
             idexperiencias_profesionales: 0,
             experiencias_profesionales: null,
             mostrarexperienciasprofesionales: true,
-           
+
             //Estructura para las tablas
             cargosEmpresas: [],
             cargosPasantias: [],
@@ -143,7 +186,7 @@ export default {
                 descripcion_funciones_empresa: "",
                 logros_resultados_empresa: "",
             },
-           
+
             // Practicas
             nuevocargosPasantias: {
                 empresa_institucion_practicas: "",
@@ -152,7 +195,7 @@ export default {
                 area_trabajo_practicas: "",
                 descripcion_funciones_practicas: "",
             },
-            
+
             cargos_desempenados: "",
             practicas_profesionales: "",
             fechacargos: "",
@@ -161,7 +204,7 @@ export default {
             fechacursos: "",
             fechaFinLabelCursos: "",
             //Investigacion y publicaciones
-            urlinvestigacion_publicacione: "http://190.15.134.90/cvn/api/cvn/v1/investigacion_publicacione",
+            urlinvestigacion_publicacione: "http://vinculacionconlasociedad.utelvt.edu.ec/cvubackendv2/api/cvn/v1/investigacion_publicacione",
             idinvestigacion_publicaciones: 0,
             investigacion_publicaciones: null,
             publicaciones: "",
@@ -174,7 +217,7 @@ export default {
                 congreso_evento: "",
             },
             //Idiom
-            urlidioma: "http://190.15.134.90/cvn/api/cvn/v1/idioma",
+            urlidioma: "http://vinculacionconlasociedad.utelvt.edu.ec/cvubackendv2/api/cvn/v1/idioma",
             idlenguaje: 0,
             lenguaje: null,
             idiomasarray: [],
@@ -189,7 +232,7 @@ export default {
                 certificado: "",
             },
             //SW
-            urlhabilidades_informatica: "http://190.15.134.90/cvn/api/cvn/v1/habilidades_informatica",
+            urlhabilidades_informatica: "http://vinculacionconlasociedad.utelvt.edu.ec/cvubackendv2/api/cvn/v1/habilidades_informatica",
             idhabilidades_informaticas: 0,
             habilidades_informaticas: null,
             habilidades_comunicativas_array: [],
@@ -213,24 +256,24 @@ export default {
                 habilidades_liderazgo: "",
                 descripcion_habilidades_liderazgo: "",
             },
-            
+
             //  Habilidades Infotm
             nuevashabilidades_informaticas_cv: {
                 habilidades_informaticas_cv: "",
                 descripcion_habilidades_informaticas_cv: "",
             },
-           
+
             //  Habilidades Oficios
             nuevasoficios_subactividades: {
                 oficios_subactividades: "",
                 descripcion_oficios_subactividades: "",
             },
-           
+
             //  Habilidades Oficios
             nuevasotro_habilidades: {
                 otro_habilidades: "",
             },
-           
+
             habi_comunicacion: "",
             habi_creacion: "",
             habi_liderazgo: "",
@@ -238,7 +281,7 @@ export default {
             habi_oficios: "",
             habi_otros_habi: "",
             //Cursos Capacitaciones
-            urlcursoscapacitacion: "http://190.15.134.90/cvn/api/cvn/v1/cursoscapacitacion",
+            urlcursoscapacitacion: "http://vinculacionconlasociedad.utelvt.edu.ec/cvubackendv2/api/cvn/v1/cursoscapacitacion",
             idcursoscapacitaciones: 0,
             curso_capacitacion: null,
             curso_capacitacionarray: [],
@@ -256,7 +299,7 @@ export default {
                 horas_curso: "",
             },
             //Datos Relevantes
-            urlotros_datos_relevante: "http://190.15.134.90/cvn/api/cvn/v1/otros_datos_relevante",
+            urlotros_datos_relevante: "http://vinculacionconlasociedad.utelvt.edu.ec/cvubackendv2/api/cvn/v1/otros_datos_relevante",
             idotros_datos_personales: 0,
             otros_datos_personales: null,
             otros_datos_personalesarray: [],
@@ -267,7 +310,7 @@ export default {
                 descripcion_fracasos: "",
             },
             //Informacion de Contacto
-            urlinformacion_contacto: "http://190.15.134.90/cvn/api/cvn/v1/informacion_contacto",
+            urlinformacion_contacto: "http://vinculacionconlasociedad.utelvt.edu.ec/cvubackendv2/api/cvn/v1/informacion_contacto",
             idinformacion_contacto: 0,
             informacion_contacto: null,
             informacion_contactoarray: [],
@@ -279,12 +322,29 @@ export default {
                 referencia_telefono: "",
             },
             //Declaracion Personal
-            urldeclaracion_personal: "http://190.15.134.90/cvn/api/cvn/v1/declaracion_personal",
+            urldeclaracion_personal: "http://vinculacionconlasociedad.utelvt.edu.ec/cvubackendv2/api/cvn/v1/declaracion_personal",
+            urlDeclaracionPersonal: "http://vinculacionconlasociedad.utelvt.edu.ec/cvubackendv2/api/cvn/v1/sicvn",
             iddeclaracion_personal: 0,
             declaracion_personal: null,
             texto: "",
-            url44: 'http://190.15.134.90/b_e/api/b_e/vin/consultapost',
+            apiBaseUrl: "http://vinculacionconlasociedad.utelvt.edu.ec/cvubackendv2/api/cvn/v1",
+            urls: {
+
+                formacion: '', // URL de formación académica
+                experiencia: '', // URL de experiencia profesional
+                declaracion: '', // URL de declaración personal
+                habilidades: '', // URL de habilidades informáticas
+                idiomas: '', // URL de idiomas
+                contacto: '', // URL de información de contacto
+                cursos: '', // URL de cursos y capacitaciones
+                investigacion: '', // URL de investigación y publicaciones
+                otrosDatos: '', // URL de otros datos relevantes
+            },
+            url44: 'http://vinculacionconlasociedad.utelvt.edu.ec/backendbolsaempleo/api/b_e/vin/consultapostuserestado2',
             cargando: false,
+            si_postula: false,
+            postulacionespr: [],
+            detalle_si: "",
             
         }
     },
@@ -293,7 +353,6 @@ export default {
         this.id = ruta.params.id;
         this.idus = ruta.params.secondId;
         this.url44 += '/' + this.id;
-        console.log(this.id);
         this.urlinformacionpersonal += '/' + this.idus;
             this.urlformacion_academica += '/' + this.idus;
             this.urlexperiencia_profesionale += '/' + this.idus;
@@ -316,22 +375,47 @@ export default {
                 this.getCursosCapacitaciones(),
                 this.getDatosRelevantes(),
                 this.getInformacionContacto(),
-    
+                this.getPostulaciones(),
+
             ])
     },
     methods: {
-        
+        async getPostulaciones(){
+            this.cargando=true;
+            try{
+                
+                const response = await axios.get(this.url44);
+                // Verifica si la respuesta tiene datos válidos
+                const allData = response.data?.data || [];
+                console.log(allData);
+                if (allData.length > 0) {
+                   
+                    this.si_postula = true;
+                    this.detalle_si = allData[0].estado;
+                }else {
+                    this.si_postula = false;
+                    this.detalle_si = "";
+                }
+                
+            }
+            catch (error) {
+                console.warn("No hay postulaciones para este usuario");
+                this.postulacionespr = []; 
+                this.si_postula = false;
+            }
+            
+        },
         //Datos Personales
         async getDatosPersonales() {
             try {
-                
+
                 const response = await axios.get(this.urlinformacionpersonal);
-                if (response.data && response.data.length > 0) {
-                    const data = response.data[0];
+                if (response.data.data && response.data.data.length > 0) {
+                    const data = response.data.data[0];
                     this.CIInfPer = data.CIInfPer;
                     this.ApellInfPer = data.ApellInfPer;
                     this.ApellMatInfPer = data.ApellMatInfPer;
-                    this.apellidos = this.ApellInfPer+' '+this.ApellMatInfPer;
+                    this.apellidos = this.ApellInfPer + ' ' + this.ApellMatInfPer;
                     this.NombInfPer = data.NombInfPer;
                     //this.NacionalidadPer = data.NacionalidadPer;
                     if (data.NacionalidadPer = "EC") {
@@ -347,7 +431,7 @@ export default {
                     } else if (data.GeneroPer = "M") {
                         this.GeneroPer = "MUJER";
                     }
-                    this.CiudadPer = data.CiudadPer.toUpperCase();
+                    this.CiudadPer = data.CiudadPer;
                     this.DirecDomicilioPer = data.DirecDomicilioPer;
                     this.Telf1InfPer = data.Telf1InfPer;
                     this.mailPer = data.mailPer;
@@ -355,15 +439,22 @@ export default {
                     const añoActual = new Date().getFullYear();
                     const añoNacimiento = new Date(data.FechNacimPer).getFullYear();
                     this.edad = añoActual - añoNacimiento;
-                   
-                }else{
+
+                } else {
                     console.log("usuario sin Datos");
-                } 
+                }
                 return response;
 
             } catch (error) {
-                console.log('Error '+ error, 'warning')
-
+                if (error.response?.status === 404) {
+                    // ✅ Se controla el error y NO se imprime en consola como un error
+                    // ⚠️ Importante: No lanzamos el error ni usamos console.error
+                    console.warn("El estudiante no poseee información personal.");
+                } else {
+                    // ⚠️ Solo mostramos otros errores reales
+                    console.error("Error inesperado al obtener la información personal:", error.message);
+                }
+                return null;
 
             }
         },
@@ -371,11 +462,12 @@ export default {
         async getFormacionAcademica() {
             try {
                 const response = await axios.get(this.urlformacion_academica);
-                console.log(this.estudioactualmentefacultadcarreras);
+                //console.log(this.estudioactualmentefacultadcarreras);
+                
 
-
-                if (response.data && response.data.length > 0) {
-                    const data = response.data;
+                if (response.data.data && response.data.data.length > 0) {
+                    const data = response.data.data;
+                    this.formacion_academicas2= data;
 
                     // Limpiamos los arreglos existentes
                     this.titulosBachiller = [];
@@ -433,14 +525,22 @@ export default {
                         }
                     });
 
-                    
-                }else{
+
+                } else {
                     console.log("usuario sin Datos");
-                }  
+                }
                 return response;
 
             } catch (error) {
-                console.log('Error '+ error, 'warning')
+                if (error.response?.status === 404) {
+                    // ✅ Se controla el error y NO se imprime en consola como un error
+                    // ⚠️ Importante: No lanzamos el error ni usamos console.error
+                    console.warn("El estudiante no ha llenado la formación académica y es su primera vez (404).");
+                } else {
+                    // ⚠️ Solo mostramos otros errores reales
+                    console.error("Error inesperado al obtener la formación académica:", error.message);
+                }
+                return null;
 
 
             }
@@ -449,8 +549,9 @@ export default {
         async getExperienciasProfesionales() {
             try {
                 const response = await axios.get(this.urlexperiencia_profesionale);
-                if (response.data && response.data.length > 0) {
-                    const data = response.data;
+                if (response.data.data && response.data.data.length > 0) {
+                    const data = response.data.data;
+                    this.experiencia_profesionales2= data;
                     this.cargosEmpresas = [];
                     this.cargosPasantias = [];
 
@@ -491,16 +592,23 @@ export default {
 
                     });
 
-                    
 
-                }else{
+
+                } else {
                     console.log("usuario sin Datos");
-                }  
+                }
                 return response;
 
             } catch (error) {
-                console.log('Error '+ error, 'warning')
-
+                 if (error.response?.status === 404) {
+                    // ✅ Se controla el error y NO se imprime en consola como un error
+                    // ⚠️ Importante: No lanzamos el error ni usamos console.error
+                    console.warn("El estudiante no ha llenado la experiencia profesional y es su primera vez (404).");
+                } else {
+                    // ⚠️ Solo mostramos otros errores reales
+                    console.error("Error inesperado al obtener la experiencia profesional:", error.message);
+                }
+                return null;
 
             }
         },
@@ -508,8 +616,9 @@ export default {
         async getInvestigacionPublicaciones() {
             try {
                 const response = await axios.get(this.urlinvestigacion_publicacione);
-                if (response.data && response.data.length > 0) {
-                    const data = response.data;
+                if (response.data.data && response.data.data.length > 0) {
+                    const data = response.data.data;
+                    this.filteredpublicacion2=data;
                     this.publicacionesarray = [];
 
                     data.forEach(item => {
@@ -526,16 +635,23 @@ export default {
 
 
                     });
-                   
 
-                }else{
+
+                } else {
                     console.log("usuario sin Datos");
-                }  
+                }
                 return response;
 
             } catch (error) {
-                console.log('Error '+ error, 'warning')
-
+                if (error.response?.status === 404) {
+                    // ✅ Se controla el error y NO se imprime en consola como un error
+                    // ⚠️ Importante: No lanzamos el error ni usamos console.error
+                    console.warn("El estudiante no ha llenado investigaciones/Publicaciones y es su primera vez (404).");
+                } else {
+                    // ⚠️ Solo mostramos otros errores reales
+                    console.error("Error inesperado al obtener investigaciones/Publicaciones:", error.message);
+                }
+                return null;
 
             }
         },
@@ -543,8 +659,9 @@ export default {
         async getIdiomas() {
             try {
                 const response = await axios.get(this.urlidioma);
-                if (response.data && response.data.length > 0) {
-                    const data = response.data;
+                if (response.data.data && response.data.data.length > 0) {
+                    const data = response.data.data;
+                    this.filteredidiomas2 = data;
                     this.idiomasarray = [];
 
                     data.forEach(item => {
@@ -564,15 +681,22 @@ export default {
 
                     });
 
-                    
-                }else{
+
+                } else {
                     console.log("usuario sin Datos");
-                }  
+                }
                 return response;
 
             } catch (error) {
-                console.log('Error '+ error, 'warning')
-
+                 if (error.response?.status === 404) {
+                    // ✅ Se controla el error y NO se imprime en consola como un error
+                    // ⚠️ Importante: No lanzamos el error ni usamos console.error
+                    console.warn("El estudiante no ha llenado Idiomas y es su primera vez (404).");
+                } else {
+                    // ⚠️ Solo mostramos otros errores reales
+                    console.error("Error inesperado al obtener Idiomas:", error.message);
+                }
+                return null;
 
             }
         },
@@ -580,8 +704,9 @@ export default {
         async getHabilidadesInformaticas() {
             try {
                 const response = await axios.get(this.urlhabilidades_informatica);
-                if (response.data && response.data.length > 0) {
-                    const data = response.data;
+                if (response.data.data && response.data.data.length > 0) {
+                    const data = response.data.data;
+                    this.habilidades_informaticas2=data;
                     this.habilidades_comunicativas_array = [];
                     this.habilidades_creativas_array = [];
                     this.habilidades_informaticas_array = [];
@@ -640,14 +765,22 @@ export default {
                         }
                     });
 
-                   
-                } else{
+
+                } else {
                     console.log("usuario sin Datos");
-                } 
+                }
                 return response;
 
             } catch (error) {
-                console.log('Error '+ error, 'warning')
+                 if (error.response?.status === 404) {
+                    // ✅ Se controla el error y NO se imprime en consola como un error
+                    // ⚠️ Importante: No lanzamos el error ni usamos console.error
+                    console.warn("El estudiante no ha llenado Habilidades y es su primera vez (404).");
+                } else {
+                    // ⚠️ Solo mostramos otros errores reales
+                    console.error("Error inesperado al obtener Habilidades:", error.message);
+                }
+                return null;
 
 
             }
@@ -656,8 +789,9 @@ export default {
         async getCursosCapacitaciones() {
             try {
                 const response = await axios.get(this.urlcursoscapacitacion);
-                if (response.data && response.data.length > 0) {
-                    const data = response.data;
+                if (response.data.data && response.data.data.length > 0) {
+                    const data = response.data.data;
+                    this.filteredcursos2=data;
                     this.curso_capacitacionarray = [];
 
                     data.forEach(item => {
@@ -682,14 +816,22 @@ export default {
 
                     });
 
-                   
-                } else{
+
+                } else {
                     console.log("usuario sin Datos");
-                } 
+                }
                 return response;
 
             } catch (error) {
-                console.log('Error '+ error, 'warning')
+                 if (error.response?.status === 404) {
+                    // ✅ Se controla el error y NO se imprime en consola como un error
+                    // ⚠️ Importante: No lanzamos el error ni usamos console.error
+                    console.warn("El estudiante no ha llenado Cursos y es su primera vez (404).");
+                } else {
+                    // ⚠️ Solo mostramos otros errores reales
+                    console.error("Error inesperado al obtener Cursos:", error.message);
+                }
+                return null;
 
 
             }
@@ -698,8 +840,9 @@ export default {
         async getDatosRelevantes() {
             try {
                 const response = await axios.get(this.urlotros_datos_relevante);
-                if (response.data && response.data.length > 0) {
-                    const data = response.data;
+                if (response.data.data && response.data.data.length > 0) {
+                    const data = response.data.data;
+                    this.otros_datos_relevantes2=data;
                     this.otros_datos_personalesarray = [];
 
                     data.forEach(item => {
@@ -717,14 +860,22 @@ export default {
 
                     });
 
-                    
-                } else{
+
+                } else {
                     console.log("usuario sin Datos");
-                } 
+                }
                 return response;
 
             } catch (error) {
-                console.log('Error '+ error, 'warning')
+                 if (error.response?.status === 404) {
+                    // ✅ Se controla el error y NO se imprime en consola como un error
+                    // ⚠️ Importante: No lanzamos el error ni usamos console.error
+                    console.warn("El estudiante no ha llenado Datos Relevantes y es su primera vez (404).");
+                } else {
+                    // ⚠️ Solo mostramos otros errores reales
+                    console.error("Error inesperado al obtener Datos Relevantes :", error.message);
+                }
+                return null;
 
 
             }
@@ -733,8 +884,9 @@ export default {
         async getInformacionContacto() {
             try {
                 const response = await axios.get(this.urlinformacion_contacto);
-                if (response.data && response.data.length > 0) {
-                    const data = response.data;
+                if (response.data.data && response.data.data.length > 0) {
+                    const data = response.data.data;
+                    this.filteredreferencias2=data;
                     this.informacion_contactoarray = [];
 
                     data.forEach(item => {
@@ -754,14 +906,22 @@ export default {
                     });
 
 
-                    
-                } else{
+
+                } else {
                     console.log("usuario sin Datos");
-                } 
+                }
                 return response;
 
             } catch (error) {
-                console.log('Error '+ error, 'warning')
+                if (error.response?.status === 404) {
+                    // ✅ Se controla el error y NO se imprime en consola como un error
+                    // ⚠️ Importante: No lanzamos el error ni usamos console.error
+                    console.warn("El estudiante no ha llenado Información de Contacto y es su primera vez (404).");
+                } else {
+                    // ⚠️ Solo mostramos otros errores reales
+                    console.error("Error inesperado al obtener Información de Contacto:", error.message);
+                }
+                return null;
 
 
             }
@@ -770,19 +930,28 @@ export default {
         async getDeclaracionPersonal() {
             try {
                 const response = await axios.get(this.urldeclaracion_personal);
-                if (response.data && response.data.length > 0) {
-                    const data = response.data[0];
+                if (response.data.data && response.data.data.length > 0) {
+                    const data = response.data.data[0];
+                    this.filtereddeclaracion_personals2=data;
                     this.iddeclaracion_personal = data.id;
                     this.texto = data.texto;
 
-                    
-                } else{
+
+                } else {
                     console.log("usuario sin Datos");
-                } 
+                }
                 return response;
 
             } catch (error) {
-                console.log('Error '+ error, 'warning')
+               if (error.response?.status === 404) {
+                    // ✅ Se controla el error y NO se imprime en consola como un error
+                    // ⚠️ Importante: No lanzamos el error ni usamos console.error
+                    console.warn("El estudiante no ha llenado la declaración personal y es su primera vez (404).");
+                } else {
+                    // ⚠️ Solo mostramos otros errores reales
+                    console.error("Error inesperado al obtener la declaración personal:", error.message);
+                }
+                return null;
 
 
             }
@@ -1352,9 +1521,11 @@ export default {
 
             // Visualizar el PDF
             const pdfUrl = doc.output('bloburl');  // Obtiene la URL temporal del PDF
-            window.open(pdfUrl); 
+            window.open(pdfUrl);
             //doc.save(`CVN-${this.CIInfPer}-${this.NombInfPer} ${this.ApellInfPer} ${this.ApellMatInfPer}.pdf`);
         },
+
+
         toDataURL(url) {
             return new Promise((resolve, reject) => {
                 const img = new Image();
@@ -1379,7 +1550,7 @@ export default {
            
             try {
                     // Enviar el correo electrónico
-                    const responseCorreo = await axios.post("http://190.15.134.90/b_e/api/b_e/vin/enviar-aceptacion-postulacion", {
+                    const responseCorreo = await axios.post("http://vinculacionconlasociedad.utelvt.edu.ec/backendbolsaempleo/api/b_e/vin/enviar-aceptacion-postulacion", {
                     
                         email: this.email.trim(),
                         firts_name:this.nombre.trim(),
@@ -1389,7 +1560,7 @@ export default {
                     if (responseCorreo.status === 200) {
                         // Si el correo se envió correctamente, proceder a eliminar la postulación
                     
-                        const responseEliminar = await axios.delete('http://190.15.134.90/b_e/api/b_e/vin/postulacions/' + this.id);
+                        const responseEliminar = await axios.delete('http://vinculacionconlasociedad.utelvt.edu.ec/backendbolsaempleo/api/b_e/vin/postulacions/' + this.id);
 
                         // Verificar si la postulación se eliminó correctamente
                         if (responseEliminar.status === 200) {
@@ -1411,7 +1582,7 @@ export default {
             
          /*   try {
 
-                const responseCorreo = await axios.post("http://190.15.134.90/b_e/api/b_e/vin/enviar-aceptacion-postulacion",
+                const responseCorreo = await axios.post("http://vinculacionconlasociedad.utelvt.edu.ec/backendbolsaempleo/api/b_e/vin/enviar-aceptacion-postulacion",
                     {
                         email: this.email.trim(),
                         firts_name:this.nombre.trim(),
@@ -1428,26 +1599,43 @@ export default {
            
         },
         aceptarpost() {
-            let fechane = new Date().toISOString();
-            var parametros = {
+            this.aceptado_post = true;
+            if(this.rechazado_post){
+                this.rechazado_post = false;
+            }
+            
+        },
+        aceptarpost2() {
+            const fechaEcuador = dayjs().tz('America/Guayaquil').format('YYYY-MM-DDTHH:mm:ss');
+
+            const parametros = {
                 postulacion_id: this.id,
                 estado: "Aceptada",
-                fecha: this.fechane
-
-            }
-            enviarsolig('POST', parametros, 'http://190.15.134.90/b_e/api/b_e/vin/estadopostuser', 'Postulación Aceptada');
+                fecha: fechaEcuador,
+                detalle_estado: this.detalle_estadio,
+            };
+            enviarsolig('POST', parametros, 'http://vinculacionconlasociedad.utelvt.edu.ec/backendbolsaempleo/api/b_e/vin/estadopostuser', 'Postulación Aceptada');
             this.$router.push('/principal/' + this.id);
             
         },
         rechazarpost() {
-            let fechane = new Date().toISOString();
-            var parametros = {
+            this.rechazado_post = true;
+            if(this.aceptado_post){
+                this.aceptado_post = false;
+            }
+
+            
+        },
+        rechazarpost2() {
+            const fechaEcuador = dayjs().tz('America/Guayaquil').format('YYYY-MM-DDTHH:mm:ss');
+
+            const parametros = {
                 postulacion_id: this.id,
                 estado: "Rechazada",
-                fecha: this.fechane
-
-            }
-            enviarsolig('POST', parametros, 'http://190.15.134.90/b_e/api/b_e/vin/estadopostuser', 'Postulación Rechazada');
+                fecha: fechaEcuador,
+                detalle_estado: this.detalle_estadio,
+            };
+            enviarsolig('POST', parametros, 'http://vinculacionconlasociedad.utelvt.edu.ec/backendbolsaempleo/api/b_e/vin/estadopostuser', 'Postulación Rechazada');
             this.$router.push('/principal/' + this.id);
             
         },

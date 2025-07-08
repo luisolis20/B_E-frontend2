@@ -18,7 +18,7 @@ export default {
             telf:'',
             direccion:'',
             imagen:'',
-            url:'http://190.15.134.90/b_e/api/b_e/vin/users',
+            url:'http://vinculacionconlasociedad.utelvt.edu.ec/backendbolsaempleo/api/b_e/vin/users',
             showPassword: false,
             cargando: false,
         }
@@ -90,7 +90,7 @@ export default {
               };
             enviarsolig("POST", parametros, "http://bolsaempleobackend.test/api/vin/enviar-correo", "Codigo de Verificacion Enviado al Correo");
             */
-            const response = await axios.post("http://190.15.134.90/b_e/api/b_e/vin/enviar-correo",
+            const response = await axios.post("http://vinculacionconlasociedad.utelvt.edu.ec/backendbolsaempleo/api/b_e/vin/enviar-correo",
               {
                 email: this.email.trim(),
               }
