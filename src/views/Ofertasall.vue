@@ -46,7 +46,7 @@
                         <tr>
                             <th scope="col">Id</th>
                             <th scope="col">Empresa</th>
-                            <th scope="col">Titulo</th>
+                            <th scope="col">Título</th>
                             <th scope="col">Categorías</th>
                             <th scope="col">Modalidad</th>
                             <th scope="col">Tipo de Contrato</th>
@@ -131,7 +131,7 @@
         data(){
             return{
                 idus:0,
-                url255:'http://vinculacionconlasociedad.utelvt.edu.ec/backendbolsaempleo/api/b_e/vin/consultanopostofert',
+                url255:'http://backendbolsaempleo.test/api/b_e/vin/consultanopostofert',
                 ofertas:[],
                 filteredofertas: [],
                 searchQuery: '',
@@ -214,7 +214,7 @@
                 }
             },
             eliminar(id,nombre){
-                confimar('http://vinculacionconlasociedad.utelvt.edu.ec/backendbolsaempleo/api/b_e/vin/oferta__empleos/',id,'Eliminar registro','¿Realmente desea eliminar a '+nombre+'?');
+                confimar('http://backendbolsaempleo.test/api/b_e/vin/oferta__empleos/',id,'Eliminar registro','¿Realmente desea eliminar a '+nombre+'?');
                 this.cargando = false;
                 this.$router.push('/principal/'+this.idus);
 

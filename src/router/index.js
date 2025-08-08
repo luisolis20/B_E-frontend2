@@ -22,6 +22,7 @@ import RechazoView from '../views/RechazoView.vue'
 import Userall from '../views/Userall.vue'
 import AdminEdit from '../views/AdminEdit.vue'
 import Empresall from '../views/Empresall.vue'
+import MisEmprendimientos from '../views/MisEmprendimientos.vue'
 
 const routes = [
   {
@@ -119,6 +120,11 @@ const routes = [
     path: '/mispostulaciones/:id',
     name: 'mispostulaciones',
     component: Mispostulaciones
+  },
+  {
+    path: '/misemprendimientos/:id',
+    name: 'misemprendimientos',
+    component: MisEmprendimientos
   },
   {
     path: '/mispostulacionesestado/:id',

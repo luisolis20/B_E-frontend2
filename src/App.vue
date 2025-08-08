@@ -11,6 +11,10 @@
           }}</a></small>
           <small class="me-3"><i class="fas fa-user me-2 text-white"></i><a href="#" class="text-white">{{ idus
           }}</a></small>
+          <small class="me-3"><i class="fas fa-map-marker-alt me-2 text-secondary"></i> <a href="#Comentario"
+                  class="text-white">Universidad Técnica "Luis Vargas Torres" de Esmeraldas, Nuevos Horizontes, Esmeraldas, Ecuador</a></small>
+              <small class="me-3"><i class="fas fa-envelope me-2 text-secondary"></i><a href="#Comentario"
+                  class="text-white">vinculacion@utelvt.edu.ec</a></small>
         </div>
 
       </div>
@@ -42,6 +46,8 @@
                 :class="{ 'active': $route.path === '/estadopostulacionall/' + idus }">Estado de Postulaciones</router-link>
               <router-link :to="{ path: '/mispostulaciones/' + idus }" class="nav-item nav-link" v-if="mostrarOpciones2"
                 :class="{ 'active': $route.path === '/mispostulaciones/' + idus }">Mis Postulaciones</router-link>
+              <router-link :to="{ path: '/misemprendimientos/' + idus }" class="nav-item nav-link" v-if="mostrarOpciones2"
+                :class="{ 'active': $route.path === '/misemprendimientos/' + idus }">Mis Emprendimientos</router-link>
               <router-link :to="{ path: '/mispostulacionesestado/' + idus }" class="nav-item nav-link" v-if="mostrarOpciones2"
                 :class="{ 'active': $route.path === '/mispostulacionesestado/' + idus }">Estado de mis Postulaciones</router-link>
               <router-link :to="{ path: '/ofertasall/' + idus }" class="nav-item nav-link" v-if="mostrarOpciones2"
@@ -212,9 +218,9 @@ export default {
   data() {
     return {
       idus2: 0,
-      url213: 'http://vinculacionconlasociedad.utelvt.edu.ec/backendbolsaempleo/api/b_e/vin/postulacions2',
-      url214: 'http://vinculacionconlasociedad.utelvt.edu.ec/backendbolsaempleo/api/b_e/vin/estadopostuser',
-      url215: 'http://vinculacionconlasociedad.utelvt.edu.ec/backendbolsaempleo/api/b_e/vin/estadopostuser2',
+      url213: 'http://backendbolsaempleo.test/api/b_e/vin/postulacions2',
+      url214: 'http://backendbolsaempleo.test/api/b_e/vin/estadopostuser',
+      url215: 'http://backendbolsaempleo.test/api/b_e/vin/estadopostuser2',
       postulaciones: [], // Lista de postulaciones
       postulacionesacepta: [], // Lista de postulaciones
       vistos: 0,
@@ -232,7 +238,7 @@ export default {
         this.idus2 = this.$route.params.id;
 
         if (this.idus2) {
-          this.url214 = 'http://vinculacionconlasociedad.utelvt.edu.ec/backendbolsaempleo/api/b_e/vin/estadopostuser/' + customscript.computed.idUsuario();
+          this.url214 = 'http://backendbolsaempleo.test/api/b_e/vin/estadopostuser/' + customscript.computed.idUsuario();
 
           this.getPostulacionesAcept();
         }
@@ -249,7 +255,7 @@ export default {
       this.idus2 = this.$route.params.id;
 
       if (this.idus2) {
-        this.url214 = 'http://vinculacionconlasociedad.utelvt.edu.ec/backendbolsaempleo/api/b_e/vin/estadopostuser/' + customscript.computed.idUsuario();
+        this.url214 = 'http://backendbolsaempleo.test/api/b_e/vin/estadopostuser/' + customscript.computed.idUsuario();
 
 
         this.getPostulacionesAcept();

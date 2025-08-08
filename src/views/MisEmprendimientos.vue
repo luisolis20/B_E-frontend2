@@ -1,9 +1,9 @@
 <template>
     <div class="container-fluid py-5">
         <div class="container-fluid py-5">
-            <h1 class="display-5 mb-4" style="text-align: center;"> Personas Postuladas </h1>
+            <h1 class="display-5 mb-4" style="text-align: center;"> Tus Emprendimientos </h1>
             <small class="d-inline-block fw-bold text-dark text-uppercase bg-light border border-primary rounded-pill px-4 py-1 mb-3">
-                    Estos son tus Postulados</small>
+                    Estos son tus Emprendimientos Creados</small>
              &nbsp;&nbsp;&nbsp;&nbsp;
             <div class="row gx-4 gy-3 d-flex justify-content-center">
                 <div class="col-lg-12">
@@ -18,39 +18,31 @@
                     <thead>
                         <tr>
                             <th scope="col">Id</th>
+                            <th scope="col">Ruc Empresa</th>
                             <th scope="col">Empresa</th>
                             <th scope="col">Oferta</th>
-                            <th scope="col">Descripcion</th>
-                            <th scope="col">Céd del Postulante</th>
-                            <th scope="col">Apellidos del Postulante</th>
-                            <th scope="col">Email</th>
+                            <th scope="col">Categoría</th>
                             <th scope="col">Registrado</th>
                         </tr>
                     </thead>
                     <tbody id="contenido">
                        <tr v-if="this.cargando">
-                            <td colspan="9"><h3>Cargando....</h3></td>
+                            <td colspan="5"><h3>Cargando....</h3></td>
                        </tr>
                        <tr v-else v-for="post,  in this.filteredpostulaciones" :key="post.id">
                             
                             <td v-text="post.id"></td>
+                            <td v-text="post.ruc"></td>
                             <td v-text="post.Empresa"></td>
                             <td v-text="post.Oferta"></td>
-                            <td v-text="post.descripcion"></td>
-                            <td v-text="post.CIInfPer"></td>
-                            <td v-text="post.ApellInfPer"></td>
-                            <td v-text="post.mailPer"></td>
-                            <!-- Cédula
-                            <td>
-                                <img v-if="post.imagen" style="width: 100px !important;" :src="post.imagen" class="img-thumbnail" >
-                                <img v-else style="width: 100px !important;" src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/User_icon_2.svg/480px-User_icon_2.svg.png" class="img-thumbnail" >
-                            </td>-->
+                            <td v-text="post.categoria"></td>
                             <td v-text="new Date(post.created_at).toLocaleDateString('en-US')"></td>
                             <td>
                                 
-                                <router-link :to="{path:'/perfilpostulados/'+post.id+'/'+post.CIInfPer}" class="btn btn-info">
-                                    <i class="fa-solid fa-eye"></i>
-                                </router-link>
+                                
+                                <button class="btn btn-danger" v-on:click="eliminar(post.id,post.Oferta)">
+                                    <i class="fa-solid fa-trash"></i>
+                                </button>
 
                             </td>
                        </tr>
@@ -71,7 +63,6 @@
             <div class="d-flex justify-content-center">
                 <button class="btn btn-primary text-white" @click="actualizar">Actualizar Datos</button>
             </div>
-           
             
         </div>
         <div v-if="filteredpostulaciones.length === 0" class="text-center">
@@ -88,11 +79,12 @@
     import axios from 'axios';
     import { useRoute } from 'vue-router';
     import { confimar } from '@/assets/scripts/scriptfunciones/funciones';
+    
     export default{
         data(){
             return{
                 idus:0,
-                url213:'http://backendbolsaempleo.test/api/b_e/vin/postulacions',
+                url213:'http://backendbolsaempleo.test/api/b_e/vin/consultapostuser',
                 postulacionespr: [],
                 filteredpostulaciones: [],
                 searchQuery: '',
@@ -110,8 +102,8 @@
             this.getPostulaciones();
         },
         methods:{
-            async getPostulaciones() {
-                this.cargando = true;
+            async getPostulaciones(){
+                this.cargando=true;
                 try {
                     const response = await axios.get(`${this.url213}?all=true`);
                     
@@ -134,7 +126,6 @@
                     this.cargando = false;
                 }
             },
-
             updateFilteredData() {
                  // Aplicar paginación local
                 const startIndex = (this.currentPage - 1) * 10;
@@ -150,12 +141,12 @@
                 if (query) {
                     this.buscando = true;
                     this.filteredpostulaciones = this.postulacionespr.filter(inves =>
-                        inves.CIInfPer.includes(query)
+                        inves.ruc.includes(query)
                     );
                 } else {
                     this.buscando = false;
                     this.actualizar();
-                }
+                } 
             },
             onlyNumbers(event) {
                 const charCode = event.which ? event.which : event.keyCode;
@@ -175,8 +166,9 @@
                     this.updateFilteredData();
                 }
             },
-            eliminar(id,nombre){
-                confimar('http://backendbolsaempleo.test/api/b_e/vin/postulacions/',id,'Eliminar registro','¿Realmente desea eliminar a '+nombre+'?');
+             eliminar(id,nombre){
+                confimar('http://backendbolsaempleo.test/api/b_e/vin/consultapostuser/',id,'Eliminar registro','¿Realmente desea eliminar la postulación de la oferta '+nombre+'?');
+                this.getPostulaciones();
                 this.cargando = false;
                 this.$router.push('/principal/'+this.idus);
 

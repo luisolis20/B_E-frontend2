@@ -78,7 +78,7 @@
                                 
                                 <div class="col-lg-12  wow fadeIn" data-wow-delay="0.1s">
                                     <div class="form-group">
-                                        <label for="exampletextarea" class="form-label text-dark">Descripcion</label>
+                                        <label for="exampletextarea" class="form-label text-dark">Descripción</label>
                                         <textarea name="text" v-model="descripcion" class="form-control border-1 text-dark" id="exampletextarea" disabled></textarea>
                                     </div>
                                 </div>
@@ -151,7 +151,7 @@ export default {
             categoria:'',
             Fechafinofer:'',
             jefe:'',
-            urk32:'http://vinculacionconlasociedad.utelvt.edu.ec/backendbolsaempleo/api/b_e/vin/consultaofert',
+            urk32:'http://backendbolsaempleo.test/api/b_e/vin/consultaofert',
             apiBaseUrl: "http://vinculacionconlasociedad.utelvt.edu.ec/cvubackendv2/api/cvn/v1",
             urls: {
                
@@ -335,7 +335,7 @@ export default {
             };
 
             if (this.si_cvn) {
-                enviarsolig('POST', parametros, 'http://vinculacionconlasociedad.utelvt.edu.ec/backendbolsaempleo/api/b_e/vin/postulacions', 'Postulado con Exito');
+                enviarsolig('POST', parametros, 'http://backendbolsaempleo.test/api/b_e/vin/postulacions', 'Postulado con Exito');
                 this.$router.push('/principal/' + this.ide);
             } else {
                 mostraralertas2("Por requisitos del sistema no puedes postularte hasta que tengas tu CVN. Ve a tu perfil y crea tu CVN", "warning");

@@ -3,7 +3,7 @@
         <div class="container-fluid py-5">
             <h1 class="display-5 mb-4" style="text-align: center;"> Todas las Empresas</h1>
             <small class="d-inline-block fw-bold text-dark text-uppercase bg-light border border-primary rounded-pill px-4 py-1 mb-3">
-                    Estas son todas las Empresas</small>
+                    Estas son todas las Empresas registradas</small>
 
             &nbsp;&nbsp;&nbsp;&nbsp;
             <div class="row gx-4 gy-3 d-flex justify-content-center">
@@ -88,7 +88,7 @@
         data(){
             return{
                 idus:0,
-                url255:'http://vinculacionconlasociedad.utelvt.edu.ec/backendbolsaempleo/api/b_e/vin/empresas',
+                url255:'http://backendbolsaempleo.test/api/b_e/vin/empresas',
                 empresasprac: [],
                 filteredempresas: [],
                 searchQuery: '',
@@ -162,7 +162,7 @@
                 }
             },
             eliminar(id,nombre){
-                confimar('http://vinculacionconlasociedad.utelvt.edu.ec/backendbolsaempleo/api/b_e/vin/empresas/',id,'Eliminar registro','¿Realmente desea eliminar a '+nombre+'?');
+                confimar('http://backendbolsaempleo.test/api/b_e/vin/empresas/',id,'Eliminar registro','¿Realmente desea eliminar a '+nombre+'?');
                 this.cargando = false;
                 this.$router.push('/principal/'+this.idus);
 

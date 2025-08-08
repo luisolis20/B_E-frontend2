@@ -2,7 +2,7 @@
     <div class="container-fluid RSVP-form py-3" id="weddingRsvp">
         <div class="container py-3">
             <div class="mb-5 text-center mx-auto wow fadeIn" data-wow-delay="0.1s" style="max-width: 800px;">
-                <h1 class="display-2 text-primary">Felicidades la Empresa a Aceptado tu postulación!!</h1>
+                <h1 class="display-2 text-primary">Felicidades la Empresa ha aceptado tu postulación!!</h1>
             </div>
             <div class="row justify-content-center">
                 <div class="col-md-10">
@@ -10,7 +10,7 @@
                         <div class="fw-bold text-primary bg-white d-flex align-items-center justify-content-center position-absolute border-secondary p-2 wow fadeIn"
                             data-wow-delay="0.1s"
                             style="width: 75%; border-style: double; top: 0; left: 50%; transform: translate(-50%, -50%);">
-                            Estos son los datos de la Oferta para que te comuniques con la empresa
+                            Estos son los datos de la oferta para que te comuniques con la empresa
                         </div>
                         <form>
                             <div class="row gx-4 gy-3">
@@ -81,7 +81,7 @@
                                     <div class="text-center border border-secondary p-4 my-4 position-relative">
                                         <div class="fw-bold text-primary bg-white d-flex align-items-center justify-content-center position-absolute border-secondary p-2"
                                             style="width: 50%; border-style: double; top: 0; left: 50%; transform: translate(-50%, -50%);">
-                                            ¡La UTLVTE y la Empresa se comunicarán contigo o puedes comunicarte directamente¡ 
+                                            ¡La UTLVTE y la Empresa se comunicarán contigo o puedes hacerlo directamente¡ 
                                         </div>
                                        
                                     </div>
@@ -123,7 +123,7 @@ export default {
             modalidad:'',
             categoria:'',
             jefe:'',
-            urk32:'http://vinculacionconlasociedad.utelvt.edu.ec/backendbolsaempleo/api/b_e/vin/consultaofert',
+            urk32:'http://backendbolsaempleo.test/api/b_e/vin/consultaofert',
             
             cargando: false,
         }

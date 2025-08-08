@@ -34,11 +34,11 @@
                                 <input type="text" class="form-control" v-model="rol" id="rol" >
                             </div>
                             <div class="form-item">
-                                <label class="form-label my-3">Direccion<sup>*</sup></label>
+                                <label class="form-label my-3">Dirección<sup>*</sup></label>
                                 <input type="text" class="form-control" v-model="direccion" id="direccion" required>
                             </div>
                             <div class="form-item">
-                                <label class="form-label my-3">Telefono<sup>*</sup></label>
+                                <label class="form-label my-3">Teléfono<sup>*</sup></label>
                                 <input type="tel" class="form-control" v-model="telf" id="telf" required>
                             </div>
                             

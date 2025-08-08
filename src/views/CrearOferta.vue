@@ -51,7 +51,7 @@
                                
                                 <div class="col-lg-6 wow fadeIn" data-wow-delay="0.1s">
                                     <div class="form-group">
-                                        <label for="Examplename" class="form-label text-dark">Telefono</label>
+                                        <label for="Examplename" class="form-label text-dark">Teléfono</label>
                                         <input type="text" v-model="telefonoe" class="form-control py-3 border-0 text-dark" id="Examplename"
                                         disabled>
                                     </div>
@@ -72,7 +72,7 @@
                                 </div>
                                 <div class="col-lg-6 wow fadeIn" data-wow-delay="0.1s">
                                     <div class="form-group">
-                                        <label for="Examplename" class="form-label text-dark">Titulo del Representante de la Empresa</label>
+                                        <label for="Examplename" class="form-label text-dark">Título del Representante de la Empresa</label>
                                         <input type="text" v-model="titulorepree" class="form-control py-3 border-0 text-dark" id="Examplename"
                                         disabled>
                                     </div>
@@ -94,7 +94,7 @@
                                 
                                 <div class="col-12 wow fadeIn" data-wow-delay="0.1s">
                                     <div class="form-group">
-                                        <label for="exampletextarea" class="form-label text-dark">Direccion</label>
+                                        <label for="exampletextarea" class="form-label text-dark">Dirección</label>
                                         <textarea name="text" v-model="direccione" class="form-control border-0 text-dark" id="exampletextarea" cols="30"
                                             rows="5" disabled></textarea>
                                     </div>
@@ -118,11 +118,11 @@
                                     <div class="text-center border border-secondary p-4 my-4 position-relative">
                                         <div class="fw-bold text-primary bg-white d-flex align-items-center justify-content-center position-absolute border-secondary p-2"
                                             style="width: 50%; border-style: double; top: 0; left: 50%; transform: translate(-50%, -50%);">
-                                            Si deseas crear oferta de Empleo 
+                                            ¿Deseas Crear Oferta de Empleo?
                                         </div>
                                         <div class="mt-4">
                                             <div class="col-12 text-center wow fadeIn" data-wow-delay="0.1s">
-                                                <router-link :to="{path:'/ofertanew/'+ide}" class="btn btn-primary btn-primary-outline-0 py-3 px-5 text-white">Click Aquí</router-link>
+                                                <router-link :to="{path:'/ofertanew/'+ide}" class="btn btn-primary btn-primary-outline-0 py-3 px-5 text-white">Clic Aquí</router-link>
                                             </div>
                                         </div>
                                     </div>
@@ -168,7 +168,7 @@ export default {
             nombrerepree:'',
             cargorepree:'',
             usuario_id:'',
-            urk3:'http://vinculacionconlasociedad.utelvt.edu.ec/backendbolsaempleo/api/b_e/vin/consultaredir',
+            urk3:'http://backendbolsaempleo.test/api/b_e/vin/consultaredir',
             cargando: false,
         }
     },

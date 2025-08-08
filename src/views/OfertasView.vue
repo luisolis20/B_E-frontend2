@@ -47,7 +47,7 @@
                     <thead>
                         <tr>
                             <th scope="col">Id</th>
-                            <th scope="col">Titulo</th>
+                            <th scope="col">Título</th>
                             <th scope="col">Jornada</th>
                             <th scope="col">Tipo de contrato</th>
                             <th scope="col">Modalidad</th>
@@ -112,7 +112,7 @@
             
         </div>
         <div v-if="filteredofertas.length === 0" class="text-center">
-                <h3>No hay ofertas disponibles</h3>
+                <h3>No hay ofertas creadas</h3>
         </div>
         <div class="alert alert-info d-flex justify-content-around fw-bold text-dark">
             <div>Total de Ofertas: {{ totalOfertas }}</div>
@@ -135,7 +135,7 @@
             return{
                 ide:0,
                 idus:0,
-                url21:'http://vinculacionconlasociedad.utelvt.edu.ec/backendbolsaempleo/api/b_e/vin/oferta__empleos',
+                url21:'http://backendbolsaempleo.test/api/b_e/vin/oferta__empleos',
                 ofertas:[],
                 filteredofertas: [],
                 searchQuery: '',
@@ -228,7 +228,7 @@
                 }
             },
             eliminar(id,nombre){
-                confimar('http://vinculacionconlasociedad.utelvt.edu.ec/backendbolsaempleo/api/b_e/vin/oferta__empleos/',id,'Eliminar registro','¿Realmente desea eliminar a '+nombre+'?');
+                confimar('http://backendbolsaempleo.test/api/b_e/vin/oferta__empleos/',id,'Eliminar registro','¿Realmente desea eliminar a '+nombre+'?');
                 this.cargando = false;
                 this.$router.push('/principal/'+this.idus);
 

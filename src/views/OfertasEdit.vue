@@ -16,7 +16,7 @@
                             <div class="row gx-4 gy-3">
                                 <div class="col-lg-6 wow fadeIn" data-wow-delay="0.1s">
                                     <div class="form-group">
-                                        <label for="Examplename" class="form-label text-dark">Titulo de la oferta</label>
+                                        <label for="Examplename" class="form-label text-dark">Título de la oferta</label>
                                         <input type="text" v-model="titulo" class="form-control py-3 border-1 text-dark" id="Examplename" >
                                     </div>
                                 </div>
@@ -133,7 +133,7 @@ export default {
             modalidad:'',
             categoriaSeleccionada:'',
             Fechafinofer:'',
-            ur3:'http://vinculacionconlasociedad.utelvt.edu.ec/backendbolsaempleo/api/b_e/vin/oferta__empleos2',
+            ur3:'http://backendbolsaempleo.test/api/b_e/vin/oferta__empleos2',
             empresa_id:'',
             cargando: false,
         }
