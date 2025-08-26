@@ -118,6 +118,11 @@
                         class="btn border-secondary rounded-pill px-4 py-3 text-primary" type="button">Haz Click Aquí
                         Para Añadirlos</router-link>
                 </div>
+                <br><br>
+                 <div class="d-flex justify-content-center">
+                  <router-link :to="{ path: '/emprendimientosofertview/' + idus }" class="btn btn-primary text-white"><i
+                      class="fa-solid fa-eye me-2 text-white"></i> Ver Mis ofertas</router-link>
+                </div>
             </div>
 
 

@@ -1,7 +1,7 @@
 <template>
     <div class="container-fluid py-3">
         <div class="container-fluid py-3">
-            <h1 class="display-5 mb-4" style="text-align: center;"> Ofertas creadas </h1>
+            <h1 class="display-5 mb-4" style="text-align: center;"> Ofertas de emprendimientos creadas </h1>
             <small class="d-inline-block fw-bold text-dark text-uppercase bg-light border border-primary rounded-pill px-4 py-1 mb-3">
                     Estas son tus Ofertas Creadas</small>
                     
@@ -77,11 +77,11 @@
                                 <button v-else class="btn btn-success fw-bold">Oferta Vigente</button>
                             </td>
                             <td>
-                                <router-link :to="{path:'/postulados/'+ofe.id}" class="btn btn-info">
+                                <router-link :to="{path:'/postuladosempr/'+ofe.id}" class="btn btn-info">
                                    Ver postulados
                                 </router-link>
                                 &nbsp;
-                                <router-link :to="{path:'/ofertasedit/'+ ofe.empresa_id + '/' + ofe.id}" class="btn btn-warning">
+                                <router-link :to="{path:'/ofertaseditemp/'+ ofe.emprendimiento_id + '/' + ofe.id}" class="btn btn-warning">
                                     <i class="fa-solid fa-edit"></i>
                                 </router-link>
                                 &nbsp;
@@ -94,6 +94,9 @@
                         
                     </tbody>
                 </table>
+                <div v-if="filteredofertas.length === 0" class="text-center">
+                        <h3>No hay ofertas creadas</h3>
+                </div><br>
             </div>
              <div class="d-flex justify-content-center mb-4">
                 <button @click="previousPage" :disabled="currentPage === 1 || buscando" class="btn btn-primary text-white">
@@ -111,9 +114,7 @@
            
             
         </div>
-        <div v-if="filteredofertas.length === 0" class="text-center">
-                <h3>No hay ofertas creadas</h3>
-        </div>
+        
         <div class="alert alert-info d-flex justify-content-around fw-bold text-dark">
             <div>Total de Ofertas: {{ totalOfertas }}</div>
             <div>Ofertas Vigentes: <span class="text-success">{{ ofertasVigentes }}</span></div>
@@ -135,7 +136,7 @@
             return{
                 ide:0,
                 idus:0,
-                url21:'http://backendbolsaempleo.test/api/b_e/vin/oferta__empleos',
+                url21:'http://backendbolsaempleo.test/api/b_e/vin/oferta_empleos_emprendimiento',
                 ofertas:[],
                 filteredofertas: [],
                 searchQuery: '',
@@ -228,9 +229,14 @@
                 }
             },
             eliminar(id,nombre){
-                confimar('http://backendbolsaempleo.test/api/b_e/vin/oferta__empleos/',id,'Eliminar registro','¿Realmente desea eliminar la oferta'+nombre+'?', this.actualizar);
-                this.cargando = false;
-                this.$router.push('/principal/'+this.idus);
+                try {
+                    confimar('http://backendbolsaempleo.test/api/b_e/vin/oferta_empleos_emprendimiento/',id,'Eliminar registro','¿Realmente desea eliminar la oferta'+nombre+'?', this.actualizar);
+                    
+                } catch (error) {
+                    console.error("Error al eliminar:", error);
+                    this.cargando = false;
+                }
+               
 
             }
         }

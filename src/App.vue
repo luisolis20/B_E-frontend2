@@ -129,7 +129,7 @@
                   </a>
                   <div class="dropdown-menu animate slide dropdown-menu-start dropdown-menu-lg-end p-3" style="min-width: 400px;">
                     <h4 class="d-flex justify-content-between align-items-center mb-3">
-                      <span class="text-primary">Postulaciones Aceptadas</span>
+                      <span class="text-primary">Notificaciones</span>
                       <span class="badge bg-primary rounded-pill">{{ vistos2 }}</span>
                     </h4>
                     <ul class="list-group mb-3">

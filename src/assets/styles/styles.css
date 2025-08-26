@@ -512,6 +512,14 @@
   top: auto;
   transform: translateY(-10px);
 }
+.tooltip-box-down {
+  left: 0;
+  top: 100%; /* Colocamos abajo */
+  bottom: auto;
+  transform: translateY(10px);
+}
+
+
 
 /* Flecha hacia abajo cuando aparece arriba */
 .tooltip-box-top .tooltip-arrow-down {
@@ -520,4 +528,18 @@
   transform: none;
   border-width: 6px 6px 0 6px;
   border-color: #ddd transparent transparent transparent;
+}
+/* Flecha hacia arriba cuando aparece abajo */
+.tooltip-box-down .tooltip-arrow-up {
+  left: 20px;
+  bottom: 100%;
+  top: auto;
+  transform: none;
+  border-width: 0 6px 6px 6px;
+  border-color: transparent transparent #ddd transparent;
+}
+
+option:checked {
+  background-color: #126E1B !important;
+  color: white;
 }

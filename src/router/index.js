@@ -10,11 +10,15 @@ import EmprendimientoNew from '../views/EmprendimientoNew.vue'
 import EmpresaEdit from '../views/EmpresaEdit.vue'
 import EmprendimientoEdit from '../views/EmprendimientoEdit.vue'
 import OfertasEdit from '../views/OfertasEdit.vue'
+import OfertasEmprendimientoEdit from '../views/OfertasEmprendimientoEdit.vue'
 import CrearOferta from '../views/CrearOferta.vue'
 import CrearOfertaEmprendimiento from '../views/CrearOfertaEmprendimiento.vue'
 import OfertasNew from '../views/OfertasNew.vue'
 import OfertasView from '../views/OfertasView.vue'
+import OfertasEmprendimientosView from '../views/OfertasEmprendimientosView.vue'
+import OfertasEmprendimientoNew from '../views/OfertasEmprendimientoNew.vue'
 import Postulados from '../views/Postulados.vue'
+import PostuladosEmpren from '../views/PostuladosEmpren.vue'
 import Postuladosall from '../views/Postuladosall.vue'
 import Estadopostulacionall from '../views/Estadopostulacionall.vue'
 import Perfilpostulado from '../views/Perfilpostulado.vue'
@@ -75,6 +79,11 @@ const routes = [
     component: OfertasEdit
   },
   {
+    path: '/ofertaseditemp/:id/:secondId',
+    name: 'ofertaseditemp',
+    component: OfertasEmprendimientoEdit
+  },
+  {
     path: '/viewE/:id',
     name: 'viewE',
     component: CrearOferta
@@ -90,14 +99,29 @@ const routes = [
     component: OfertasNew
   },
   {
+    path: '/ofertaempnew/:id',
+    name: 'ofertaempnew',
+    component: OfertasEmprendimientoNew
+  },
+  {
     path: '/ofertas/:id',
     name: 'ofertas',
     component: OfertasView
   },
   {
+    path: '/emprendimientosofertview/:id',
+    name: 'emprendimientosofertview',
+    component: OfertasEmprendimientosView
+  },
+  {
     path: '/postulados/:id',
     name: 'postulados',
     component: Postulados
+  },
+  {
+    path: '/postuladosempr/:id',
+    name: 'postuladosempr',
+    component: PostuladosEmpren
   },
   {
     path: '/postuladosall/:id',

@@ -340,12 +340,12 @@
                 <b class="text-dark">Noticias de Vinculación con la Sociedad</b>
                 <div class="rounded overflow-hidden">
                   <img :src="publicacionPrincipal.full_picture" class="img-fluid rounded img-zoomin w-100" alt="">
-                </div>
-                <div class="d-flex justify-content-center px-4 position-absolute flex-wrap" style="bottom: 10px; left: 0;">
-                  <a href="#" class="text-white me-3 link-hover"><i class="fa fa-thumbs-up"></i> {{ estadisticas?.reacciones }} Reacciones</a>
-                  <a href="#" class="text-white me-3 link-hover"><i class="fa fa-eye"></i>{{ estadisticas?.vistas }} Vistas </a>
-                  <a href="#" class="text-white me-3 link-hover"><i class="fa fa-comment-dots"></i> {{ estadisticas?.comentarios }} Comentarios</a>
-                  <a href="#" class="text-white link-hover"><i class="fa fa-arrow-up"></i> {{ estadisticas?.compartidas }} Compartidas</a>
+                  <div class="d-flex justify-content-center px-4 position-absolute flex-wrap" style="bottom: 10px; left: 0;">
+                    <a href="#" class="text-white me-3 link-hover"><i class="fa fa-thumbs-up"></i> {{ estadisticas?.reacciones }} Reacciones</a>
+                    <a href="#" class="text-white me-3 link-hover"><i class="fa fa-eye"></i>{{ estadisticas?.vistas }} Vistas </a>
+                    <a href="#" class="text-white me-3 link-hover"><i class="fa fa-comment-dots"></i> {{ estadisticas?.comentarios }} Comentarios</a>
+                    <a href="#" class="text-white link-hover"><i class="fa fa-arrow-up"></i> {{ estadisticas?.compartidas }} Compartidas</a>
+                  </div>
                 </div>
 
                 &nbsp;&nbsp;&nbsp;&nbsp;

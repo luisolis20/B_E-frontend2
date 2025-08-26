@@ -13,8 +13,8 @@ export default {
             ruc: '',
             nombre_emprendimiento: '',
             descripcion: '',
-            fotografia: '',   // Aquí guardamos SOLO el base64 limpio (para BLOB en backend)
-            previewFoto: '',  // Aquí guardamos la versión con prefijo para mostrar en <img>
+            fotografia: '',   
+            previewFoto: '',  
             tiempo_emprendimiento: '',
             horarios_atencion: '',
             direccion: '',
@@ -118,7 +118,7 @@ export default {
                         CIInfPer: this.idus
                     };
                     enviarsolig('POST', parametros, 'http://backendbolsaempleo.test/api/b_e/vin/emprendimientos_E', 'Emprendimiento Creado');
-                    this.$router.push('/principal/' + this.idus);
+                    this.$router.push('/misemprendimientos/' + this.idus);
                 }
             } catch (error) {
                 console.error('Error al guardar el emprendimiento:', error);
@@ -172,7 +172,7 @@ export default {
                         CIInfPer: this.idususuario
                     };
                     await enviarsoliedit('PUT',parametros,this.ur3,'Emprendimiento Actualizado');
-                    this.$router.push('/principal/'+store.state.idusu);
+                    this.$router.push('/misemprendimientos/'+store.state.idusu);
                 }
             } catch (error) {
                 console.error('Error al actualizar el emprendimiento:', error);

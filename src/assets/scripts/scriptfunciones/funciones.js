@@ -103,6 +103,7 @@ export function enviarsolig(metodo,parametros,url,mensaje){
         var estado = res.status;
         if(estado==200){
             mostraralertas(mensaje,'success');
+            window.location.reload();
                
         }else{
             mostraralertas('No se pudo recuperar la respuesta','error');
@@ -121,6 +122,7 @@ export async function enviarsoliedit(metodo, parametros, url, mensaje) {
         if (response.data) {
             //console.log(mensaje + ': ' + response.data.mensaje);
             mostraralertas(mensaje, 'success');
+            window.location.reload();
 
         } else {
             mostraralertas('No se pudo recuperar la respuesta', 'error');
