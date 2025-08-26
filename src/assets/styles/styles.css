@@ -194,6 +194,41 @@
   font-weight: 600;
   margin-bottom: 15px;
 }
+/* 🔹 Estilos para select (cuando está cerrado o con una opción seleccionada) */
+#contact-form select {
+  width: 100%;
+  height: 46px;
+  border-radius: 23px;
+  background-color: #ce16163b; /* mismo color que input */
+  border: none;
+  outline: none;
+  padding: 0px 15px;
+  font-size: 14px;
+  color: #2a2a2a;
+  font-weight: 600;
+  margin-bottom: 15px;
+  cursor: pointer;
+  appearance: auto; /* mantiene la flechita nativa */
+}
+
+/* 🔹 Estilos de las opciones dentro del select */
+#contact-form select option {
+  background-color: white; /* fondo blanco por defecto */
+  color: #2a2a2a;          /* texto negro por defecto */
+  font-weight: 600;
+  cursor: pointer;
+  
+}
+
+/* 🔹 Cuando paso el mouse por encima de una opción */
+#contact-form select option:hover {
+  background-color: #126E1B !important;
+  color: white;
+}
+#contact-form select option:checked {
+  background-color: #126E1B !important;
+  color: white;
+}
 
 #contact-form input::placeholder {
   color: #2a2a2a;
@@ -417,4 +452,72 @@
   .wishlist-dropdown .dropdown-menu{
     min-width: fit-content;
   }
+}
+.input-with-icon {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-with-icon input {
+  flex: 1;
+  padding-right: 40px; /* deja espacio para el ícono */
+}
+
+.help-icon {
+  cursor: pointer;
+  font-size: 14px;       /* tamaño del ícono ❓ */
+  color: #555;    /* lo mete dentro del input */
+  background: #f0f0f0;
+  border-radius: 50%;
+  padding: 4px 8px;
+  transition: 0.2s;
+}
+
+.help-icon:hover {
+  background: #ddd;
+}
+
+/* Tooltip estilo globito */
+.tooltip-box {
+  position: absolute;
+  top: -10px;
+  left: 105%;
+  width: 220px;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 8px 10px;
+  font-size: 13px;
+  color: #333;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  z-index: 100;
+}
+
+.tooltip-arrow {
+  position: absolute;
+  top: 12px;
+  left: -6px;
+  width: 12px;
+  height: 12px;
+  background: white;
+  border-left: 1px solid #ccc;
+  border-top: 1px solid #ccc;
+  transform: rotate(45deg);
+}
+/* SOLO PARA NOMBRE → Mostrar arriba */
+.tooltip-box-top {
+  left: 0;
+  bottom: 100%; /* Colocamos arriba */
+  top: auto;
+  transform: translateY(-10px);
+}
+
+/* Flecha hacia abajo cuando aparece arriba */
+.tooltip-box-top .tooltip-arrow-down {
+  left: 20px;
+  top: 100%;
+  transform: none;
+  border-width: 6px 6px 0 6px;
+  border-color: #ddd transparent transparent transparent;
 }

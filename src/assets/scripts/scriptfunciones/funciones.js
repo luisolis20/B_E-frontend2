@@ -21,26 +21,40 @@ export function mostraralertas2(titulo,icono){
         buttonsStyling:false
     });
 }
-export function confimar(urlconslash,id,titulo,mensaje){
-    var url = urlconslash+id;
+export function confimar(urlconslash, id, titulo, mensaje, actualizarTabla) {
+    var url = urlconslash + id;
     const swalwithboostrapbutton = Swal.mixin({
-        customClass:{confirmButton:'btn btn-success me-3',cancelButton:'btn btn-danger'},
+        customClass: {
+            confirmButton: 'btn btn-success me-3',
+            cancelButton: 'btn btn-danger'
+        },
     });
+
     swalwithboostrapbutton.fire({
-        title:titulo,
-        text:mensaje,
-        icon:'question',
-        showCancelButton:true,
-        confirmButtonText:'<i class="fa-solid fa-check"></i> Si, Eliminar',
-        cancelButtonText:'<i class="fa-solid fa-ban"></i> Cancelar'}).then((res)=>{
-        if(res.isConfirmed){
-            enviarsolig('DELETE',{id:id},url,'Eliminado con exito');
-        }else{
-            mostraralertas('Operacion cancelada','info');
+        title: titulo,
+        text: mensaje,
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: '<i class="fa-solid fa-check"></i> Si, Eliminar',
+        cancelButtonText: '<i class="fa-solid fa-ban"></i> Cancelar'
+    }).then((res) => {
+        if (res.isConfirmed) {
+            axios.delete(url, { data: { id: id } })
+                .then(() => {
+                    mostraralertas('Eliminado con éxito', 'success');
+                    if (typeof actualizarTabla === "function") {
+                        actualizarTabla(); // 🔄 refrescar tabla
+                    }
+                })
+                .catch(() => {
+                    mostraralertas('Error al eliminar', 'error');
+                });
+        } else {
+            mostraralertas('Operación cancelada', 'info');
         }
     });
-   
 }
+
 export function guardarcambios(metodo,parametros,urlid,titulo){
     
     Swal.fire({

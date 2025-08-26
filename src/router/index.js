@@ -6,9 +6,12 @@ import Mispostulaciones from '../views/Mispostulaciones.vue'
 import MispostulacionesEstado from '../views/MispostulacionesEstado.vue'
 import EmpresasView from '../views/EmpresasView.vue'
 import EmpresaNew from '../views/EmpresaNew.vue'
+import EmprendimientoNew from '../views/EmprendimientoNew.vue'
 import EmpresaEdit from '../views/EmpresaEdit.vue'
+import EmprendimientoEdit from '../views/EmprendimientoEdit.vue'
 import OfertasEdit from '../views/OfertasEdit.vue'
 import CrearOferta from '../views/CrearOferta.vue'
+import CrearOfertaEmprendimiento from '../views/CrearOfertaEmprendimiento.vue'
 import OfertasNew from '../views/OfertasNew.vue'
 import OfertasView from '../views/OfertasView.vue'
 import Postulados from '../views/Postulados.vue'
@@ -52,9 +55,19 @@ const routes = [
     component: EmpresaNew
   },
   {
+    path: '/emprendimientocreate/:id',
+    name: 'emprendimientocreate',
+    component: EmprendimientoNew
+  },
+  {
     path: '/editE/:id',
     name: 'editE',
     component: EmpresaEdit
+  },
+  {
+    path: '/editEmp/:id',
+    name: 'editEmp',
+    component: EmprendimientoEdit
   },
   {
     path: '/ofertasedit/:id/:secondId',
@@ -65,6 +78,11 @@ const routes = [
     path: '/viewE/:id',
     name: 'viewE',
     component: CrearOferta
+  },
+  {
+    path: '/viewEmp/:id',
+    name: 'viewEmp',
+    component: CrearOfertaEmprendimiento
   },
   {
     path: '/ofertanew/:id',
