@@ -53,6 +53,7 @@ export default {
                     this.descripcion = response.data.data.descripcion;
                     this.fotografia = response.data.data.fotografia;
                     this.previewFoto = 'data:image/jpeg;base64,' + response.data.data.fotografia;
+                    console.log(this.previewFoto);
                     this.tiempo_emprendimiento = response.data.data.tiempo_emprendimiento;
                     this.horarios_atencion = response.data.data.horarios_atencion;
                     this.direccion = response.data.data.direccion;

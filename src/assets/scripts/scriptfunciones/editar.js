@@ -21,7 +21,8 @@ export default {
             link: '',
             telf: '',
             direccion: '',
-            imagen: '',
+            fotografia: '',
+            previewFoto: '',
             url: 'http://backendbolsaempleo.test/api/b_e/vin/users',
 
             si_cvn: false,
@@ -345,7 +346,8 @@ export default {
                     this.DirecDomicilioPer = data.DirecDomicilioPer;
                     this.Telf1InfPer = data.Telf1InfPer;
                     this.mailPer = data.mailPer;
-                    this.imagen = data.fotografia;
+                    this.fotografia = data.fotografia;
+                    this.previewFoto = 'data:image/jpeg;base64,' + data.fotografia;
                     const añoActual = new Date().getFullYear();
                     const añoNacimiento = new Date(data.FechNacimPer).getFullYear();
                     this.edad = añoActual - añoNacimiento;
@@ -368,16 +370,44 @@ export default {
 
             }
         },
+        handleFotoUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const img = new Image();
+                img.onload = () => {
+                    // Validamos tamaño original
+                    if (img.width !== 320 || img.height !== 240) {
+                        // Redimensionamos al tamaño exacto
+                        const canvas = document.createElement("canvas");
+                        canvas.width = 320;
+                        canvas.height = 240;
+                        const ctx = canvas.getContext("2d");
+                        ctx.drawImage(img, 0, 0, 320, 240);
+
+                        this.previewFoto = canvas.toDataURL("image/jpeg", 0.9); // Imagen ajustada
+                    } else {
+                        // Ya tiene 320x240, la usamos directamente
+                        this.previewFoto = e.target.result;
+                    }
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        },
+
         //Formacion Academica
         async getFormacionAcademica() {
             try {
                 const response = await axios.get(this.urlformacion_academica);
                 console.log(this.estudioactualmentefacultadcarreras);
-                
+
 
                 if (response.data.data && response.data.data.length > 0) {
                     const data = response.data.data;
-                    this.formacion_academicas2= data;
+                    this.formacion_academicas2 = data;
 
                     // Limpiamos los arreglos existentes
                     this.titulosBachiller = [];
@@ -461,7 +491,7 @@ export default {
                 const response = await axios.get(this.urlexperiencia_profesionale);
                 if (response.data.data && response.data.data.length > 0) {
                     const data = response.data.data;
-                    this.experiencia_profesionales2= data;
+                    this.experiencia_profesionales2 = data;
                     this.cargosEmpresas = [];
                     this.cargosPasantias = [];
 
@@ -510,7 +540,7 @@ export default {
                 return response;
 
             } catch (error) {
-                 if (error.response?.status === 404) {
+                if (error.response?.status === 404) {
                     // ✅ Se controla el error y NO se imprime en consola como un error
                     // ⚠️ Importante: No lanzamos el error ni usamos console.error
                     console.warn("El estudiante no ha llenado la experiencia profesional y es su primera vez (404).");
@@ -528,7 +558,7 @@ export default {
                 const response = await axios.get(this.urlinvestigacion_publicacione);
                 if (response.data.data && response.data.data.length > 0) {
                     const data = response.data.data;
-                    this.filteredpublicacion2=data;
+                    this.filteredpublicacion2 = data;
                     this.publicacionesarray = [];
 
                     data.forEach(item => {
@@ -598,7 +628,7 @@ export default {
                 return response;
 
             } catch (error) {
-                 if (error.response?.status === 404) {
+                if (error.response?.status === 404) {
                     // ✅ Se controla el error y NO se imprime en consola como un error
                     // ⚠️ Importante: No lanzamos el error ni usamos console.error
                     console.warn("El estudiante no ha llenado Idiomas y es su primera vez (404).");
@@ -616,7 +646,7 @@ export default {
                 const response = await axios.get(this.urlhabilidades_informatica);
                 if (response.data.data && response.data.data.length > 0) {
                     const data = response.data.data;
-                    this.habilidades_informaticas2=data;
+                    this.habilidades_informaticas2 = data;
                     this.habilidades_comunicativas_array = [];
                     this.habilidades_creativas_array = [];
                     this.habilidades_informaticas_array = [];
@@ -682,7 +712,7 @@ export default {
                 return response;
 
             } catch (error) {
-                 if (error.response?.status === 404) {
+                if (error.response?.status === 404) {
                     // ✅ Se controla el error y NO se imprime en consola como un error
                     // ⚠️ Importante: No lanzamos el error ni usamos console.error
                     console.warn("El estudiante no ha llenado Habilidades y es su primera vez (404).");
@@ -701,7 +731,7 @@ export default {
                 const response = await axios.get(this.urlcursoscapacitacion);
                 if (response.data.data && response.data.data.length > 0) {
                     const data = response.data.data;
-                    this.filteredcursos2=data;
+                    this.filteredcursos2 = data;
                     this.curso_capacitacionarray = [];
 
                     data.forEach(item => {
@@ -733,7 +763,7 @@ export default {
                 return response;
 
             } catch (error) {
-                 if (error.response?.status === 404) {
+                if (error.response?.status === 404) {
                     // ✅ Se controla el error y NO se imprime en consola como un error
                     // ⚠️ Importante: No lanzamos el error ni usamos console.error
                     console.warn("El estudiante no ha llenado Cursos y es su primera vez (404).");
@@ -752,7 +782,7 @@ export default {
                 const response = await axios.get(this.urlotros_datos_relevante);
                 if (response.data.data && response.data.data.length > 0) {
                     const data = response.data.data;
-                    this.otros_datos_relevantes2=data;
+                    this.otros_datos_relevantes2 = data;
                     this.otros_datos_personalesarray = [];
 
                     data.forEach(item => {
@@ -777,7 +807,7 @@ export default {
                 return response;
 
             } catch (error) {
-                 if (error.response?.status === 404) {
+                if (error.response?.status === 404) {
                     // ✅ Se controla el error y NO se imprime en consola como un error
                     // ⚠️ Importante: No lanzamos el error ni usamos console.error
                     console.warn("El estudiante no ha llenado Datos Relevantes y es su primera vez (404).");
@@ -796,7 +826,7 @@ export default {
                 const response = await axios.get(this.urlinformacion_contacto);
                 if (response.data.data && response.data.data.length > 0) {
                     const data = response.data.data;
-                    this.filteredreferencias2=data;
+                    this.filteredreferencias2 = data;
                     this.informacion_contactoarray = [];
 
                     data.forEach(item => {
@@ -842,7 +872,7 @@ export default {
                 const response = await axios.get(this.urldeclaracion_personal);
                 if (response.data.data && response.data.data.length > 0) {
                     const data = response.data.data[0];
-                    this.filtereddeclaracion_personals2=data;
+                    this.filtereddeclaracion_personals2 = data;
                     this.iddeclaracion_personal = data.id;
                     this.texto = data.texto;
 
@@ -853,7 +883,7 @@ export default {
                 return response;
 
             } catch (error) {
-               if (error.response?.status === 404) {
+                if (error.response?.status === 404) {
                     // ✅ Se controla el error y NO se imprime en consola como un error
                     // ⚠️ Importante: No lanzamos el error ni usamos console.error
                     console.warn("El estudiante no ha llenado la declaración personal y es su primera vez (404).");

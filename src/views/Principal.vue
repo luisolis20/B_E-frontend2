@@ -123,7 +123,8 @@
 
               <div class="container-fluid py-5" v-if="mostrarOpciones2">
                 <h4 class="mb-0 display-4">Ofertas en sitios webs</h4>
-                <p class="text-dark">Aquí encontrarás ofertas en sitios webs, si deseas verlos puedes dar clic y te lllevará al sitio donde se encuentra publicado</p><br>
+                <p class="text-dark">Aquí encontrarás ofertas en sitios webs, si deseas verlos puedes dar clic y te
+                  lllevará al sitio donde se encuentra publicado</p><br>
                 <form class="container-fluid row g-1 mt-1">
                   <div class="row">
                     <div class="col-lg-12">
@@ -215,7 +216,7 @@
                 <div v-if="ofertas.length === 0" class="text-center">
                   <h3>No hay Ofertas publicadas</h3>
                 </div>
-                
+
                 <br><br>
 
               </div>
@@ -230,7 +231,8 @@
 
               <div class="container-fluid py-5" v-if="mostrarOpciones2">
                 <h4 class="mb-0 display-4">Ofertas de emprendimientos</h4>
-                <p class="text-dark">Aquí encontrarás ofertas de estudiantes que tienen emprendimientos y desean que postules a ellas.</p><br>
+                <p class="text-dark">Aquí encontrarás ofertas de estudiantes que tienen emprendimientos y desean que
+                  postules a ellas.</p><br>
                 <form class="container-fluid row g-1 mt-1">
                   <div class="row">
                     <div class="col-lg-12">
@@ -240,7 +242,7 @@
                       </div>
                       <div class="col-sm-6 col-md-6 col-xl-5">
                         <div class="input-group-icon">
-                          <select v-model="categoriaSeleccionada"
+                          <select v-model="categoriaSeleccionada2"
                             class="form-select form-voyage-select input-box text-dark" id="inputPersonOne">
                             <option value="" selected>
                               Categorías / Área
@@ -277,11 +279,11 @@
                   &nbsp;&nbsp;&nbsp;&nbsp;
                   <div class="owl-carousel vegetable-carousel justify-content-center">
                     &nbsp;&nbsp;&nbsp;&nbsp;
-                    <div v-for="ofe in ofertasFiltradas.slice(0, 10)" :key="ofe.id"
+                    <div v-for="ofe2 in ofertasemprendFiltradas.slice(0, 10)" :key="ofe2.id"
                       class="border border-primary rounded position-relative vesitable-item mx-2 my-3">
 
                       <div>
-                        <div v-if="new Date(ofe.fechaFinOferta) <= new Date()"
+                        <div v-if="new Date(ofe2.fechaFinOferta) <= new Date()"
                           class="text-white bg-danger px-3 py-1 rounded position-absolute"
                           style="top: 10px; right: 10px;">Ofertas Caducada</div>
                         <div v-else class="text-white bg-primary px-3 py-1 rounded position-absolute"
@@ -289,29 +291,47 @@
 
                       </div>
                       <div class="p-4 rounded-bottom">
-                        <h4>{{ ofe.titulo }}</h4>
-                        <h6>Fecha de publicación: {{ new Date(ofe.created_at).toLocaleDateString('es-ES') }}</h6>
-                        <div v-if="new Date(ofe.fechaFinOferta) > new Date() && tiemposRestantes[ofe.id]">
-                          <h6 class="text-success">
-                            {{ calcularDiasRestantes(ofe.fechaFinOferta) }} - Tiempo restante:
-                            <span :class="{
-                              'text-success': !tiemposRestantes[ofe.id].includes('Caducada'),
-                              'text-danger': tiemposRestantes[ofe.id].includes('Caducada')
-                            }">
-                              {{ tiemposRestantes[ofe.id] }}
-                            </span>
-                          </h6>
-                        </div>
-                        <div v-else>
-                          <h6 class="text-danger">La oferta ya caducó</h6>
-                        </div>
-                        <h6>Categoría / Área: {{ ofe.categoria }}</h6>
-                        <p class="text-dark">Descripcion: {{ ofe.descripcion }}</p>
-                        <div class="d-flex justify-content-between flex-lg-wrap">
-                          <p class="text-dark fs-5 fw-bold mb-0">Nombre de la Empresa: {{ ofe.Empresa }}</p>
-                          <router-link :to="{ path: '/postularse/' + idus + '/' + ofe.id }"
-                            class="btn border border-secondary rounded-pill px-3 text-primary"><i
-                              class="fa-solid fa-eye me-2 text-primary"></i> Ver Detalle</router-link>
+                        <div class="row">
+                          <div class="col-md-12 col-lg-3">
+                            <div class="text-center">
+                              
+                              <img v-if="ofe2.fotografia" :src="'data:image/jpeg;base64,' + ofe2.fotografia" width="100%"
+                                height="300" style="border-radius: 10px; object-fit: cover;" />
+                              <img v-else src="https://emprendedores.biz/wp-content/uploads/2023/08/QEE-2.png"
+                                width="100%" height="300" style="border-radius: 10px; object-fit: cover;" />
+                            </div>
+
+
+                          </div>
+                          <div class="col-md-12 col-lg-8">
+                            <h4>{{ ofe2.titulo }}</h4>
+                            <h6>Fecha de publicación: {{ new Date(ofe2.created_at).toLocaleDateString('es-ES') }}</h6>
+                            <div v-if="new Date(ofe2.fechaFinOferta) > new Date() && tiemposRestantes2[ofe2.id]">
+                              <h6 class="text-success">
+                                {{ calcularDiasRestantes(ofe2.fechaFinOferta) }} - Tiempo restante:
+                                <span :class="{
+                                  'text-success': !tiemposRestantes2[ofe2.id].includes('Caducada'),
+                                  'text-danger': tiemposRestantes2[ofe2.id].includes('Caducada')
+                                }">
+                                  {{ tiemposRestantes2[ofe2.id] }}
+                                </span>
+                              </h6>
+                            </div>
+                            <div v-else>
+                              <h6 class="text-danger">La oferta ya caducó</h6>
+                            </div>
+                            <h6>Categoría / Área: {{ ofe2.categoria }}</h6>
+                            <p class="text-dark">Descripcion: {{ ofe2.descripcion }}</p>
+                            <div class="d-flex justify-content-between flex-lg-wrap">
+                              <p class="text-dark fs-5 fw-bold mb-0">Nombre del Emprendimiento: {{ ofe2.Empresa }}</p>
+                            </div>
+                            <div class="text-center">
+                            <br><br><br>
+                              <router-link :to="{ path: '/postularse/' + idus + '/' + ofe2.id }"
+                                class="btn border border-secondary rounded-pill px-3 text-primary"><i
+                                  class="fa-solid fa-eye me-2 text-primary"></i> Ver Detalle Completo</router-link>
+                            </div>
+                          </div>
                         </div>
                       </div>
 
@@ -319,7 +339,7 @@
                     &nbsp;&nbsp;&nbsp;&nbsp;
                   </div>
                 </form>
-                <div v-if="ofertas.length === 0" class="text-center">
+                <div v-if="ofertas_emprendi.length === 0" class="text-center">
                   <h3>No hay Ofertas publicadas</h3>
                 </div>
                 <div v-else class="d-flex justify-content-center">
@@ -340,11 +360,16 @@
                 <b class="text-dark">Noticias de Vinculación con la Sociedad</b>
                 <div class="rounded overflow-hidden">
                   <img :src="publicacionPrincipal.full_picture" class="img-fluid rounded img-zoomin w-100" alt="">
-                  <div class="d-flex justify-content-center px-4 position-absolute flex-wrap" style="bottom: 10px; left: 0;">
-                    <a href="#" class="text-white me-3 link-hover"><i class="fa fa-thumbs-up"></i> {{ estadisticas?.reacciones }} Reacciones</a>
-                    <a href="#" class="text-white me-3 link-hover"><i class="fa fa-eye"></i>{{ estadisticas?.vistas }} Vistas </a>
-                    <a href="#" class="text-white me-3 link-hover"><i class="fa fa-comment-dots"></i> {{ estadisticas?.comentarios }} Comentarios</a>
-                    <a href="#" class="text-white link-hover"><i class="fa fa-arrow-up"></i> {{ estadisticas?.compartidas }} Compartidas</a>
+                  <div class="d-flex justify-content-center px-4 position-absolute flex-wrap"
+                    style="bottom: 10px; left: 0;">
+                    <a href="#" class="text-white me-3 link-hover"><i class="fa fa-thumbs-up"></i> {{
+                      estadisticas?.reacciones }} Reacciones</a>
+                    <a href="#" class="text-white me-3 link-hover"><i class="fa fa-eye"></i>{{ estadisticas?.vistas }}
+                      Vistas </a>
+                    <a href="#" class="text-white me-3 link-hover"><i class="fa fa-comment-dots"></i> {{
+                      estadisticas?.comentarios }} Comentarios</a>
+                    <a href="#" class="text-white link-hover"><i class="fa fa-arrow-up"></i> {{
+                      estadisticas?.compartidas }} Compartidas</a>
                   </div>
                 </div>
 
@@ -372,7 +397,7 @@
                   <div class="col-7">
                     <div class="features-content d-flex flex-column">
                       <a :href="post.permalink_url" target="_blank" class="h6 link-hover">{{ post.message.slice(0, 80)
-                        }}...</a>
+                      }}...</a>
 
                     </div>
                     <p class="text-muted small">
@@ -414,12 +439,16 @@ export default {
     return {
       idus: 0,
       url255: 'http://backendbolsaempleo.test/api/b_e/vin/consultanopostofert',
+      url2552: 'http://backendbolsaempleo.test/api/b_e/vin/consultanopostempre',
       ofertas: [],
+      ofertas_emprendi: [],
       categoriaSeleccionada: '',
+      categoriaSeleccionada2: '',
       cargando: false,
       currentPage: 1,
       lastPage: 1,
       tiemposRestantes: {},
+      tiemposRestantes2: {},
       publicaciones: [],
       publicacionPrincipal: null,
       publicacionsecundaria: null,
@@ -436,6 +465,10 @@ export default {
     this.getOFertas().then(() => {
       this.actualizarTiemposRestantes();
       setInterval(this.actualizarTiemposRestantes, 1000); // Actualiza cada segundo
+    });
+    this.getOFertasEmpr().then(() => {
+      this.actualizarTiemposRestantes2();
+      setInterval(this.actualizarTiemposRestantes2, 1000); // Actualiza cada segundo
     });
   },
   computed: {
@@ -463,7 +496,32 @@ export default {
 
       // Unirlas: primero vigentes, luego caducadas
       return [...vigentes, ...caducadas];
-    }
+    },
+    //
+    ofertasemprendFiltradas() {
+      let ofertasempFiltradas = this.ofertas_emprendi;
+
+      // Filtro por categoría si se ha seleccionado alguna
+      if (this.categoriaSeleccionada2 !== '') {
+        ofertasempFiltradas = ofertasempFiltradas.filter(
+          oferta => oferta.categoria === this.categoriaSeleccionada2
+        );
+      }
+
+      // Separar vigentes y caducadas
+      const ahora = new Date();
+
+      const vigentes = ofertasempFiltradas
+        .filter(oferta => new Date(oferta.fechaFinOferta) > ahora)
+        .sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+
+      const caducadas = ofertasempFiltradas
+        .filter(oferta => new Date(oferta.fechaFinOferta) <= ahora)
+        .sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+
+      // Unirlas: primero vigentes, luego caducadas
+      return [...vigentes, ...caducadas];
+    },
   },
   methods: {
     async getOFertas() {
@@ -472,6 +530,16 @@ export default {
         params: { user_id: this.idus }
       }).then(res => {
         this.ofertas = res.data.data.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+      }).finally(() => {
+        this.cargando = false;
+      });
+    },
+    async getOFertasEmpr() {
+      this.cargando = true;
+      return axios.get(`${this.url2552}?all=true`, {
+        params: { CIInfPer: this.idus }
+      }).then(res => {
+        this.ofertas_emprendi = res.data.data.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
       }).finally(() => {
         this.cargando = false;
       });
@@ -560,6 +628,27 @@ export default {
           const segundos = Math.floor((diferenciaMs % (1000 * 60)) / 1000);
 
           this.tiemposRestantes[ofe.id] =
+            `${dias}d ${horas}h ${minutos}m ${segundos}s`;
+        }
+      });
+    },
+    actualizarTiemposRestantes2() {
+      const ahora = new Date();
+
+      this.ofertas_emprendi.forEach(ofe2 => {
+        const fin = new Date(ofe2.fechaFinOferta);
+        const diferenciaMs = fin - ahora;
+
+        if (diferenciaMs <= 0) {
+          // Oferta caducada
+          this.tiemposRestantes2[ofe2.id] = 'Caducada';
+        } else {
+          const dias = Math.floor(diferenciaMs / (1000 * 60 * 60 * 24));
+          const horas = Math.floor((diferenciaMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+          const minutos = Math.floor((diferenciaMs % (1000 * 60 * 60)) / (1000 * 60));
+          const segundos = Math.floor((diferenciaMs % (1000 * 60)) / 1000);
+
+          this.tiemposRestantes2[ofe2.id] =
             `${dias}d ${horas}h ${minutos}m ${segundos}s`;
         }
       });
