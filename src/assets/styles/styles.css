@@ -25,10 +25,13 @@
 }
 
 .navbar .navbar-nav .nav-link:hover,
+.sticky-top.bg-white .navbar .navbar-nav .nav-link:hover {
+  color: #CE1616 !important;
+
+}
 .navbar .navbar-nav .nav-link.active,
-.sticky-top.bg-white .navbar .navbar-nav .nav-link:hover,
 .sticky-top.bg-white .navbar .navbar-nav .nav-link.active {
-  color: #126E1B;
+  color: #126E1B !important;
 }
 .topbar{
   background-color: #126E1B;
@@ -542,4 +545,27 @@
 option:checked {
   background-color: #126E1B !important;
   color: white;
+}
+
+
+
+/* Mostrar dropdown con hover */
+.nav-item.dropdown:hover .dropdown-menu {
+  display: block;
+  margin-top: 0;
+   /* evita salto */
+}
+
+/* Para que la flecha de Bootstrap no se quede activa al salir */
+.nav-item.dropdown .dropdown-toggle::after {
+  transition: transform 0.2s;
+  
+}
+
+.nav-item.dropdown:hover .dropdown-toggle::after {
+  transform: rotate(180deg);
+}
+/* Evitar que el dropdown desaparezca al hacer hover sobre él */
+.nav-item.dropdown .dropdown-menu:hover {
+  display: block;
 }
