@@ -1,7 +1,7 @@
 <template>
     <div class="container-fluid py-5">
         <div class="container-fluid py-5">
-            <h1 class="display-5 mb-4" style="text-align: center;"> Ofertas de empleo de Empresas</h1>
+            <h1 class="display-5 mb-4" style="text-align: center;">Ofertas de emprendimientos</h1>
             <small
                 class="d-inline-block fw-bold text-dark text-uppercase bg-light border border-primary rounded-pill px-4 py-1 mb-3">
                 Estas son todas las ofertas de Empleo</small>
@@ -50,15 +50,15 @@
                     <div>
                         <label for="filtroEstado" class="form-label fw-bold text-dark">Modo de visualización:</label>
                     </div>
-                    
+
                     <div class="form-check form-check-inline py-2">
-                        <input class="form-check-input text-dark" type="radio" name="inlineRadioOptions" id="inlineRadio1"
-                            value="option2" checked @click="tabla = false; carrousel = true;">
+                        <input class="form-check-input text-dark" type="radio" name="inlineRadioOptions"
+                            id="inlineRadio1" value="option2" checked @click="tabla = false; carrousel = true;">
                         <label class="form-check-label text-dark" for="inlineRadio1">Carrousel</label>
                     </div>
                     <div class="form-check form-check-inline py-2">
-                        <input class="form-check-input text-dark" type="radio" name="inlineRadioOptions" id="inlineRadio1"
-                            value="option1"  @click="tabla = true; carrousel = false;">
+                        <input class="form-check-input text-dark" type="radio" name="inlineRadioOptions"
+                            id="inlineRadio1" value="option1" @click="tabla = true; carrousel = false;">
                         <label class="form-check-label text-dark" for="inlineRadio1">Tabla</label>
                     </div>
 
@@ -139,29 +139,50 @@
 
                     </div>
                     <div class="p-4 rounded-bottom">
-                        <h4>{{ ofe.titulo }}</h4>
-                        <h6>Fecha de publicación: {{ new Date(ofe.created_at).toLocaleDateString('es-ES') }}</h6>
-                        <div v-if="new Date(ofe.fechaFinOferta) > new Date() && tiemposRestantes[ofe.id]">
-                            <h6 class="text-success">
-                                {{ calcularDiasRestantes(ofe.fechaFinOferta) }} - Tiempo restante:
-                                <span :class="{
-                                    'text-success': !tiemposRestantes[ofe.id].includes('Caducada'),
-                                    'text-danger': tiemposRestantes[ofe.id].includes('Caducada')
-                                }">
-                                    {{ tiemposRestantes[ofe.id] }}
-                                </span>
-                            </h6>
-                        </div>
-                        <div v-else>
-                            <h6 class="text-danger">La oferta ya caducó</h6>
-                        </div>
-                        <h6>Categoría / Área: {{ ofe.categoria }}</h6>
-                        <p class="text-dark">Descripcion: {{ ofe.descripcion }}</p>
-                        <div class="d-flex justify-content-between flex-lg-wrap">
-                            <p class="text-dark fs-5 fw-bold mb-0">Nombre de la Empresa: {{ ofe.Empresa }}</p>
-                            <router-link :to="{ path: '/postularse/' + idus + '/' + ofe.id }"
-                                class="btn border border-secondary rounded-pill px-3 text-primary"><i
-                                    class="fa-solid fa-eye me-2 text-primary"></i> Ver Detalle</router-link>
+                        <div class="row">
+                            <div class="col-md-12 col-lg-3">
+                                <div class="text-center">
+
+                                    <img v-if="ofe.fotografia" :src="'data:image/jpeg;base64,' + ofe.fotografia"
+                                        width="100%" height="300" style="border-radius: 10px; object-fit: cover;" />
+                                    <img v-else src="https://emprendedores.biz/wp-content/uploads/2023/08/QEE-2.png"
+                                        width="100%" height="300" style="border-radius: 10px; object-fit: cover;" />
+                                </div>
+
+
+                            </div>
+                            <div class="col-md-12 col-lg-8">
+                                <h4>{{ ofe.titulo }}</h4>
+                                <h6>Fecha de publicación: {{ new Date(ofe.created_at).toLocaleDateString('es-ES') }}
+                                </h6>
+                                <div v-if="new Date(ofe.fechaFinOferta) > new Date() && tiemposRestantes[ofe.id]">
+                                    <h6 class="text-success">
+                                        {{ calcularDiasRestantes(ofe.fechaFinOferta) }} - Tiempo restante:
+                                        <span :class="{
+                                            'text-success': !tiemposRestantes[ofe.id].includes('Caducada'),
+                                            'text-danger': tiemposRestantes[ofe.id].includes('Caducada')
+                                        }">
+                                            {{ tiemposRestantes[ofe.id] }}
+                                        </span>
+                                    </h6>
+                                </div>
+                                <div v-else>
+                                    <h6 class="text-danger">La oferta ya caducó</h6>
+                                </div>
+                                <h6>Categoría / Área: {{ ofe.categoria }}</h6>
+                                <p class="text-dark">Descripcion: {{ ofe.descripcion }}</p>
+                                <div class="d-flex justify-content-between flex-lg-wrap">
+                                    <p class="text-dark fs-5 fw-bold mb-0">Nombre del Emprendimiento: {{ ofe.Empresa }}
+                                    </p>
+                                </div>
+                                <div class="text-center">
+                                    <br><br><br>
+                                    <router-link :to="{ path: '/postularse/' + idus + '/' + ofe.id }"
+                                        class="btn border border-secondary rounded-pill px-3 text-primary"><i
+                                            class="fa-solid fa-eye me-2 icom"></i> Ver Detalle
+                                        Completo</router-link>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -203,7 +224,7 @@ export default {
     data() {
         return {
             idus: 0,
-            url255: 'http://backendbolsaempleo.test/api/b_e/vin/consultanopostofert',
+            url255: 'http://backendbolsaempleo.test/api/b_e/vin/consultanopostempre',
             ofertas: [],
             filteredofertas: [],
             searchQuery: '',
@@ -222,9 +243,9 @@ export default {
         const ruta = useRoute();
         this.idus = ruta.params.id;
         this.getOFertas().then(() => {
-        this.actualizarTiemposRestantes();
-        setInterval(this.actualizarTiemposRestantes, 1000); // Actualiza cada segundo
-        });
+            this.actualizarTiemposRestantes();
+            setInterval(this.actualizarTiemposRestantes, 1000); // Actualiza cada segundo
+        })
     },
 
 
@@ -233,7 +254,7 @@ export default {
             this.cargando = true;
             try {
                 const response = await axios.get(`${this.url255}?all=true`, {
-                    params: { user_id: this.idus }
+                    params: { CIInfPer: this.idus }
                 });
                 const allData = response.data.data;
 

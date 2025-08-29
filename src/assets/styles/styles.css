@@ -85,6 +85,10 @@
   background: #126E1B !important;
   color: var(--bs-white) !important;
 }
+.btn.border-secondary .icom:hover{
+  color: #ffffff !important;
+}
+
 
 .table-container {
   max-height: 400px;

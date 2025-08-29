@@ -343,8 +343,8 @@
                   <h3>No hay Ofertas publicadas</h3>
                 </div>
                 <div v-else class="d-flex justify-content-center">
-                  <router-link :to="{ path: '/ofertasall/' + idus }" class="btn btn-primary text-white"><i
-                      class="fa-solid fa-eye me-2 text-white"></i> Ver Todas los emprendimientos</router-link>
+                  <router-link :to="{ path: '/ofertasallemp/' + idus }" class="btn btn-primary text-white"><i
+                      class="fa-solid fa-eye me-2 text-white"></i> Ver Todas las ofertas de emprendimientos</router-link>
                 </div>
                 <br><br>
 

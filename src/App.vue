@@ -88,7 +88,7 @@
                     </router-link>
                   </li>
                   <li>
-                    <router-link class="dropdown-item" :to="{ path: '//' + idus }" :class="{ 'active': $route.path === '//' + idus }">
+                    <router-link class="dropdown-item" :to="{ path: '/ofertasallemp/' + idus }" :class="{ 'active': $route.path === '/ofertasallemp/' + idus }">
                     Ofertas de Emprendimientos
                     </router-link>
                   </li>
