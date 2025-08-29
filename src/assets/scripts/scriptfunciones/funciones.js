@@ -112,6 +112,25 @@ export function enviarsolig(metodo,parametros,url,mensaje){
         mostraralertas('Servidor no Disponible','error');
     });
 }
+export function enviarsolig23(metodo, parametros, url, mensaje) {
+    return axios({
+        method: metodo,
+        url: url,
+        data: parametros
+    }).then(function (res) {
+        var estado = res.status;
+        if (estado == 200) {
+            mostraralertas(mensaje, 'success');
+            
+            return res.data; // 👈 aquí ya solo retornas los datos
+        } else {
+            mostraralertas('No se pudo recuperar la respuesta', 'error');
+        }
+    }).catch(function (error) {
+        mostraralertas('Servidor no Disponible', 'error');
+        throw error; // 👈 importante para poder manejar en catch
+    });
+}
 export async function enviarsoliedit(metodo, parametros, url, mensaje) {
     try {
         var response = await axios({

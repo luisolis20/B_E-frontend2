@@ -25,6 +25,7 @@ import Perfilpostulado from '../views/Perfilpostulado.vue'
 import Ofertasall from '../views/Ofertasall.vue'
 import OfertasEmprendimientoall from '../views/OfertasEmprendimientoall.vue'
 import Postularse from '../views/Postularse.vue'
+import PostularseEmprendimiento from '../views/PostularseEmprendimiento.vue'
 import AceptacionView from '../views/AceptacionView.vue'
 import RechazoView from '../views/RechazoView.vue'
 import Userall from '../views/Userall.vue'
@@ -153,6 +154,11 @@ const routes = [
     path: '/postularse/:id/:secondId',
     name: 'postularse',
     component: Postularse
+  },
+  {
+    path: '/postularseempr/:id/:secondId',
+    name: 'postularseempr',
+    component: PostularseEmprendimiento
   },
   {
     path: '/aceptacionview/:id/:secondId',

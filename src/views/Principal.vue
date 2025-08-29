@@ -327,7 +327,7 @@
                             </div>
                             <div class="text-center">
                             <br><br><br>
-                              <router-link :to="{ path: '/postularse/' + idus + '/' + ofe2.id }"
+                              <router-link :to="{ path: '/postularseempr/' + idus + '/' + ofe2.id }"
                                 class="btn border border-secondary rounded-pill px-3 text-primary"><i
                                   class="fa-solid fa-eye me-2 text-primary"></i> Ver Detalle Completo</router-link>
                             </div>

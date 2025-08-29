@@ -161,7 +161,7 @@
                             <p class="text-dark fs-5 fw-bold mb-0">Nombre de la Empresa: {{ ofe.Empresa }}</p>
                             <router-link :to="{ path: '/postularse/' + idus + '/' + ofe.id }"
                                 class="btn border border-secondary rounded-pill px-3 text-primary"><i
-                                    class="fa-solid fa-eye me-2 text-primary"></i> Ver Detalle</router-link>
+                                    class="fa-solid fa-eye me-2 icom"></i> Ver Detalle</router-link>
                         </div>
                     </div>
 
