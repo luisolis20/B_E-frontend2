@@ -1,10 +1,10 @@
 <template>
     <div class="container-fluid py-5">
         <div class="container-fluid py-5">
-            <h1 class="display-5 mb-4" style="text-align: center;"> Personas Postuladas a tu Emprendimiento</h1>
+            <h1 class="display-5 mb-4" style="text-align: center;"> Tus Postulaciones a ofertas de emprendimientos</h1>
             <small
                 class="d-inline-block fw-bold text-dark text-uppercase bg-light border border-primary rounded-pill px-4 py-1 mb-3">
-                Estos son tus Postulados a tu oferta</small>
+                Estos son tus Postulaciones</small>
             &nbsp;&nbsp;&nbsp;&nbsp;
             <div class="row gx-4 gy-3 d-flex justify-content-center">
                 <div class="col-lg-12">
@@ -15,37 +15,32 @@
                 </div>
             </div>
             &nbsp;&nbsp;&nbsp;&nbsp;
-
             <div class="table-container">
                 <table class="table table-hover">
                     <thead>
                         <tr>
                             <th scope="col">Id</th>
+                            <th scope="col">Ruc Empresa</th>
                             <th scope="col">Empresa</th>
                             <th scope="col">Oferta</th>
-                            <th scope="col">Descripcion</th>
-                            <th scope="col">Céd del Postulante</th>
-                            <th scope="col">Apellidos del Postulante</th>
-                            <th scope="col">Email</th>
-                            <th scope="col">Estado</th>
-                            <th scope="col">Registrado</th>
+                            <th scope="col">Categoría</th>
+                            <th scope="col">Estado de la Postulación</th>
+                            <th scope="col">Fecha y hora de postulación</th>
                         </tr>
                     </thead>
                     <tbody id="contenido">
                         <tr v-if="this.cargando">
-                            <td colspan="9">
+                            <td colspan="5">
                                 <h3>Cargando....</h3>
                             </td>
                         </tr>
                         <tr v-else v-for="post,  in this.filteredpostulaciones" :key="post.id">
 
                             <td v-text="post.id"></td>
+                            <td v-text="post.ruc"></td>
                             <td v-text="post.Empresa"></td>
                             <td v-text="post.Oferta"></td>
-                            <td v-text="post.descripcion"></td>
-                            <td v-text="post.CIInfPer"></td>
-                            <td v-text="post.NombInfPer + ' ' + post.ApellInfPer + ' ' + post.ApellMatInfPer"></td>
-                            <td v-text="post.mailPer"></td>
+                            <td v-text="post.categoria"></td>
                             <td>
                                 <label v-if="post.estado === 'En proceso'" class="text-warning fw-bold">En
                                     Proceso</label>
@@ -55,19 +50,20 @@
                                     class="btn btn-success fw-bold">Aceptada</button>
 
                             </td>
-                            <!-- Cédula
-                            <td>
-                                <img v-if="post.imagen" style="width: 100px !important;" :src="post.fotografia" class="img-thumbnail" >
-                                <img v-else style="width: 100px !important;" src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/User_icon_2.svg/480px-User_icon_2.svg.png" class="img-thumbnail" >
-                            </td>-->
-                            <td> {{ formatFecha(post.created_at) }}</td>
+                            <td>{{ formatFecha(post.created_at) }}</td>
                             <td>
 
-                                <router-link
-                                    :to="{ path: '/perfilpostuladosemp/' + post.id + '/' + post.CIInfPer + '/' + post.estado_id }"
-                                    class="btn btn-info">
+
+                                <button class="btn btn-danger" v-on:click="eliminar(post.id, post.Oferta)">
+                                    <i class="fa-solid fa-trash"></i>
+                                </button>
+                                &nbsp;
+                                <button class="btn btn-primary" v-on:click="$router.push('/aceptacionviewemp/' + post.emprendimiento_id + '/' + post.oferta_id)">
                                     <i class="fa-solid fa-eye"></i>
-                                </router-link>
+                                </button>
+
+                            </td>
+                            <td>
 
                             </td>
                         </tr>
@@ -75,6 +71,7 @@
                     </tbody>
                 </table>
             </div>
+            <br><br>
             <div v-if="filteredpostulaciones.length === 0" class="text-center">
                 <h3>No hay Postulaciones</h3>
             </div>
@@ -95,7 +92,6 @@
                 <button class="btn btn-primary text-white" @click="actualizar">Actualizar Datos</button>
             </div>
 
-
         </div>
 
     </div>
@@ -108,11 +104,12 @@
 import axios from 'axios';
 import { useRoute } from 'vue-router';
 import { confimar } from '@/assets/scripts/scriptfunciones/funciones';
+
 export default {
     data() {
         return {
             idus: 0,
-            url213: 'http://backendbolsaempleo.test/api/b_e/vin/postulacionemprendi',
+            url213: 'http://backendbolsaempleo.test/api/b_e/vin/consultapostuserempr',
             postulacionespr: [],
             filteredpostulaciones: [],
             searchQuery: '',
@@ -141,16 +138,10 @@ export default {
                 if (allData.length === 0) {
                     console.warn("No se encontraron postulaciones.");
                 }
-                else if(allData[0].estado !="Aceptada" && allData[0].estado !="Rechazada"){
-                    this.postulacionespr = allData;
-                    this.lastPage = Math.ceil(this.postulacionespr.length / 10);
-                    this.updateFilteredData();
 
-                }else{
-                    this.postulacionespr = [];
-                    
-                }
-
+                this.postulacionespr = allData;
+                this.lastPage = Math.ceil(this.postulacionespr.length / 10);
+                this.updateFilteredData();
             } catch (error) {
                 console.error("Error al obtener postulaciones:", error);
                 this.postulacionespr = []; // Asegura que no queden datos anteriores
@@ -160,7 +151,6 @@ export default {
                 this.cargando = false;
             }
         },
-
         updateFilteredData() {
             // Aplicar paginación local
             const startIndex = (this.currentPage - 1) * 10;
@@ -176,12 +166,24 @@ export default {
             if (query) {
                 this.buscando = true;
                 this.filteredpostulaciones = this.postulacionespr.filter(inves =>
-                    inves.CIInfPer.includes(query)
+                    inves.ruc.includes(query)
                 );
             } else {
                 this.buscando = false;
                 this.actualizar();
             }
+        },
+        formatFecha(fecha) {
+            if (!fecha) return '';
+            // Convierte a objeto Date (JS entiende bien "YYYY-MM-DD HH:mm:ss" si es ISO)
+            const normalizada = fecha.replace(' ', 'T');
+            return new Date(normalizada + '-05:00').toLocaleString('es-EC', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
         },
         onlyNumbers(event) {
             const charCode = event.which ? event.which : event.keyCode;
@@ -201,19 +203,18 @@ export default {
                 this.updateFilteredData();
             }
         },
-        formatFecha(fecha) {
-            if (!fecha) return '';
-            // Convierte a objeto Date (JS entiende bien "YYYY-MM-DD HH:mm:ss" si es ISO)
-            const normalizada = fecha.replace(' ', 'T');
-            return new Date(normalizada + '-05:00').toLocaleString('es-EC', {
-                day: '2-digit',
-                month: '2-digit',
-                year: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit'
-            });
-        },
+        eliminar(id, nombre) {
+            try {
+                confimar('http://backendbolsaempleo.test/api/b_e/vin/consultapostuserempr/', id, 'Eliminar registro', '¿Realmente desea eliminar la postulación de la oferta ' + nombre + '?', this.actualizar);
 
+            } catch (error) {
+                console.error("Error al eliminar la postulación:", error);
+                this.cargando = false;
+
+            }
+
+
+        }
     }
 }
 </script>

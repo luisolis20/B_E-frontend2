@@ -83,7 +83,7 @@
                                             style="width: 50%; border-style: double; top: 0; left: 50%; transform: translate(-50%, -50%);">
                                             Explicación del Rechazo
                                         </div>
-                                       <label for="" class="text-dark">Estimado: {{ ApellInfPer }} {{ ApellMatInfPer }} {{ NombInfPer }}. Le informamos que la empresa 
+                                       <label for="" class="text-dark">Estimado/a: {{ ApellInfPer }} {{ ApellMatInfPer }} {{ NombInfPer }}. Le informamos que la empresa 
                                        rechazó su postulación por lo siguiente:</label>
                                        <label for="" class="text-dark">{{ rechazo_detalle }}</label>
                                     </div>

@@ -323,7 +323,6 @@ export default {
                 const res = await axios.get(this.urk32);
                 if(res.data.data){
                     this.empresa=res.data.data[0].Empresa;
-                    this.empresa=res.data.data[0].Empresa;
                     this.titulo=res.data.data[0].titulo;
                     this.descripcion=res.data.data[0].descripcion;
                     this.requisitos=res.data.data[0].Requisitos;

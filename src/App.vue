@@ -44,8 +44,27 @@
                 :class="{ 'active': $route.path === '/postuladosall/' + idus }">Todos los Postulados</router-link>
               <router-link :to="{ path: '/estadopostulacionall/' + idus }" class="nav-item nav-link" v-if="mostrarOpciones"
                 :class="{ 'active': $route.path === '/estadopostulacionall/' + idus }">Estado de Postulaciones</router-link>
-              <router-link :to="{ path: '/mispostulaciones/' + idus }" class="nav-item nav-link" v-if="mostrarOpciones2"
-                :class="{ 'active': $route.path === '/mispostulaciones/' + idus }">Mis Postulaciones</router-link>
+              
+                <!-- 🔽 DROPDOWN para Mis Postulaciones -->
+              <div class="nav-item dropdown" v-if="mostrarOpciones2">
+                <a class="nav-link dropdown-toggle" href="#" id="dropdownPostulaciones" role="button"
+                  data-bs-toggle="dropdown" aria-expanded="false" :class="{ 'active': $route.path.startsWith('/mispostulaciones/') || $route.path.startsWith('/mispostulacionesemp/') || $route.path.startsWith('/aceptacionview/') || $route.path.startsWith('/rechazoview/') }"
+                  >
+                  Postulaciones
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end border-0 rounded-0 rounded-bottom m-0" aria-labelledby="dropdownPostulaciones">
+                  <li>
+                    <router-link class="dropdown-item" :to="{ path: '/mispostulaciones/' + idus }" :class="{ 'active': $route.path === '/mispostulaciones/' + idus }">
+                       Mis Postulaciones a Ofertas de Empresas
+                    </router-link>
+                  </li>
+                  <li>
+                    <router-link class="dropdown-item" :to="{ path: '/mispostulacionesemp/' + idus }" :class="{ 'active': $route.path === '/mispostulacionesemp/' + idus }">
+                      Mis Postulaciones a OFertas de Emprendimientos
+                    </router-link>
+                  </li>
+                </ul>
+              </div>
                <!-- 🔽 DROPDOWN para Mis Emprendimientos -->
               <div class="nav-item dropdown" v-if="mostrarOpciones2">
                 <a class="nav-link dropdown-toggle" href="#" id="dropdownEmprendimientos" role="button"
@@ -65,7 +84,7 @@
                     </router-link>
                   </li>
                   <li>
-                    <router-link class="dropdown-item" :to="{ path: '/estadisticas-emprendimiento/' + idus }">
+                    <router-link class="dropdown-item" :to="{ path: '/postuladosallemp/' + idus }">
                       Postulados a mis Emprendimientos
                     </router-link>
                   </li>

@@ -1,7 +1,7 @@
 <template>
     <div class="container-fluid py-5">
         <div class="container-fluid py-5">
-            <h1 class="display-5 mb-4" style="text-align: center;"> Tus Postulaciones </h1>
+            <h1 class="display-5 mb-4" style="text-align: center;"> Tus Postulaciones a ofertas de empresas</h1>
             <small class="d-inline-block fw-bold text-dark text-uppercase bg-light border border-primary rounded-pill px-4 py-1 mb-3">
                     Estos son tus Postulaciones</small>
              &nbsp;&nbsp;&nbsp;&nbsp;

@@ -3,6 +3,7 @@ import HomeView from '../views/HomeView.vue'
 import Principal from '../views/Principal.vue'
 import Perfil from '../views/Perfil.vue'
 import Mispostulaciones from '../views/Mispostulaciones.vue'
+import MispostulacionesEmprendimient from '../views/MispostulacionesEmprendimient.vue'
 import MispostulacionesEstado from '../views/MispostulacionesEstado.vue'
 import EmpresasView from '../views/EmpresasView.vue'
 import EmpresaNew from '../views/EmpresaNew.vue'
@@ -20,13 +21,16 @@ import OfertasEmprendimientoNew from '../views/OfertasEmprendimientoNew.vue'
 import Postulados from '../views/Postulados.vue'
 import PostuladosEmpren from '../views/PostuladosEmpren.vue'
 import Postuladosall from '../views/Postuladosall.vue'
+import PostuladosallEmprend from '../views/PostuladosallEmprend.vue'
 import Estadopostulacionall from '../views/Estadopostulacionall.vue'
 import Perfilpostulado from '../views/Perfilpostulado.vue'
+import Perfilpostuladoempr from '../views/Perfilpostuladoempr.vue'
 import Ofertasall from '../views/Ofertasall.vue'
 import OfertasEmprendimientoall from '../views/OfertasEmprendimientoall.vue'
 import Postularse from '../views/Postularse.vue'
 import PostularseEmprendimiento from '../views/PostularseEmprendimiento.vue'
 import AceptacionView from '../views/AceptacionView.vue'
+import AceptacionViewEmp from '../views/AceptacionViewEmp.vue'
 import RechazoView from '../views/RechazoView.vue'
 import Userall from '../views/Userall.vue'
 import AdminEdit from '../views/AdminEdit.vue'
@@ -131,6 +135,11 @@ const routes = [
     component: Postuladosall
   },
   {
+    path: '/postuladosallemp/:id',
+    name: 'postuladosallemp',
+    component: PostuladosallEmprend
+  },
+  {
     path: '/estadopostulacionall/:id',
     name: 'estadopostulacionall',
     component: Estadopostulacionall
@@ -139,6 +148,11 @@ const routes = [
     path: '/perfilpostulados/:id/:secondId',
     name: 'perfilpostulados',
     component: Perfilpostulado
+  },
+  {
+    path: '/perfilpostuladosemp/:id/:secondId/:thirdId',
+    name: 'perfilpostuladosemp',
+    component: Perfilpostuladoempr
   },
   {
     path: '/ofertasall/:id',
@@ -166,6 +180,11 @@ const routes = [
     component: AceptacionView
   },
   {
+    path: '/aceptacionviewemp/:id/:secondId',
+    name: 'aceptacionviewemp',
+    component: AceptacionViewEmp
+  },
+  {
     path: '/rechazoview/:id/:secondId',
     name: 'rechazoview',
     component: RechazoView
@@ -174,6 +193,11 @@ const routes = [
     path: '/mispostulaciones/:id',
     name: 'mispostulaciones',
     component: Mispostulaciones
+  },
+  {
+    path: '/mispostulacionesemp/:id',
+    name: 'mispostulacionesemp',
+    component: MispostulacionesEmprendimient
   },
   {
     path: '/misemprendimientos/:id',
