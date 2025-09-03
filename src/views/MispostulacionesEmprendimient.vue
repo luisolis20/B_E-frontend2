@@ -2,16 +2,63 @@
     <div class="container-fluid py-5">
         <div class="container-fluid py-5">
             <h1 class="display-5 mb-4" style="text-align: center;"> Tus Postulaciones a ofertas de emprendimientos</h1>
+            <br>
+            <p class="text-dark">Aquí encontrarás todas tus postulaciones realizadas a emprendimientos, si el dueño del
+                emprendimiento no ha revisado tu postulación
+                te aparecerá en el <b>Estado de la postulación</b> en proceso, si te aceptaron o rechazaron te aparecerá
+                en el estado y podrás ver el detalle dando clic en el ícono del ojo.</p>
+            <p class="text-danger">Nota: Si el dueño del emprendimiento no ha revisado tu postulación y el estado está
+                <b>en proceso</b>, te aparecerá un botón para eliminar tu postulación.
+                Ya queda a tu disposición si deseas eliminarla, si la eliminas la empresa ya no verá tu postulación
+            </p>
+            <br>
             <small
                 class="d-inline-block fw-bold text-dark text-uppercase bg-light border border-primary rounded-pill px-4 py-1 mb-3">
-                Estos son tus Postulaciones</small>
+                Estos son tus Postulaciones a Emprendimientos</small>
             &nbsp;&nbsp;&nbsp;&nbsp;
             <div class="row gx-4 gy-3 d-flex justify-content-center">
                 <div class="col-lg-12">
                     <form class="d-none d-md-flex ms-4">
-                        <input class="form-control py-3 border-1 text-dark" type="search" placeholder="Buscar"
-                            v-model="searchQuery" @input="filterResults" @keypress="onlyNumbers">
+                        <div class="input-with-icon col-sm-6">
+                            <input class="form-control py-3 border-1 text-dark" type="search"
+                                placeholder="Buscar por ruc del emprendimiento" v-model="searchQuery"
+                                @input="filterResults" @keypress="onlyNumbers">
+                            <!-- Botón de ayuda -->
+                            <span class="help-icon" @mouseenter="showTooltipbuscar = true"
+                                @mouseleave="hideOnLeave('buscar')" @click.stop="toggleTooltip('buscar')"
+                                ref="tooltipIconbuscar">❓</span>
+
+                            <!-- Tooltip -->
+                            <div v-if="showTooltipbuscar" class="tooltip-box" ref="tooltipBoxbuscar"
+                                @mouseenter="hoveringTooltipbuscar = true" @mouseleave="hideOnLeave('buscar')">
+                                Escriba el ruc del emprendimiento que desea buscar.
+                                <div class="tooltip-arrow"></div>
+                            </div>
+                        </div>
                     </form>
+                </div>
+            </div>
+            <div class="mb-3 col-sm-2 col-md-2 col-xl-2">
+                <label for="filtroEstado" class="form-label fw-bold text-dark">Filtrar por estado de la
+                    postulación:</label>
+                <div class="input-with-icon col-sm-6">
+                    <select v-model="filtroEstado" @change="filtrarOfertas" class="form-select text-dark"
+                        id="filtroEstado">
+                        <option value="todas">Todas</option>
+                        <option value="Aceptada">Aceptada</option>
+                        <option value="Rechazada">Rehcazada</option>
+                        <option value="En proceso">En proceso</option>
+                    </select>
+                    <!-- Botón de ayuda -->
+                    <span class="help-icon" @mouseenter="showTooltipfiltro = true"
+                        @mouseleave="hideOnLeave('filtroEstado')" @click.stop="toggleTooltip('filtroEstado')"
+                        ref="tooltipIconfiltrar">❓</span>
+                    <!-- Tooltip -->
+                    <div v-if="showTooltipfiltro" class="tooltip-box" ref="tooltipBoxfiltro"
+                        @mouseenter="hoveringTooltipfiltro = true" @mouseleave="hideOnLeave('filtroEstado')">
+                        Seleccione el estado de la postulación que desea filtrar.
+                        <div class="tooltip-arrow"></div>
+                    </div>
                 </div>
             </div>
             &nbsp;&nbsp;&nbsp;&nbsp;
@@ -54,11 +101,14 @@
                             <td>
 
 
-                                <button class="btn btn-danger" v-on:click="eliminar(post.id, post.Oferta)">
+                                <button class="btn btn-danger" v-on:click="eliminar(post.id, post.Oferta)"
+                                    v-if="post.estado === 'En proceso'">
                                     <i class="fa-solid fa-trash"></i>
                                 </button>
                                 &nbsp;
-                                <button class="btn btn-primary" v-on:click="$router.push('/aceptacionviewemp/' + post.emprendimiento_id + '/' + post.oferta_id)">
+                                <button class="btn btn-info"
+                                    v-on:click="$router.push('/aceptacionviewemp/' + post.emprendimiento_id + '/' + post.oferta_id)"
+                                    v-if="post.estado === 'Aceptada' || post.estado === 'Rechazada'">
                                     <i class="fa-solid fa-eye"></i>
                                 </button>
 
@@ -117,6 +167,11 @@ export default {
             currentPage: 1,
             lastPage: 1,
             buscando: false,
+            showTooltipbuscar: false,
+            hoveringTooltipbuscar: false,
+            filtroEstado: 'todas',
+            showTooltipfiltro: false,
+            hoveringTooltipfiltro: false,
         }
     },
     mounted() {
@@ -151,14 +206,33 @@ export default {
                 this.cargando = false;
             }
         },
+        filtrarOfertas() {
+            this.currentPage = 1; // Reinicia a la primera página
+            this.updateFilteredData();
+        },
         updateFilteredData() {
+            // Aplicar paginación local
+            let filtradas = this.postulacionespr;
+
+            if (this.filtroEstado === 'Aceptada') {
+                filtradas = filtradas.filter(ofe => ofe.estado == "Aceptada");
+            } else if (this.filtroEstado === 'Rechazada') {
+                filtradas = filtradas.filter(ofe => ofe.estado == "Rechazada");
+            } else if (this.filtroEstado === 'En proceso') {
+                filtradas = filtradas.filter(ofe => ofe.estado == "En proceso");
+            }
+
             // Aplicar paginación local
             const startIndex = (this.currentPage - 1) * 10;
             const endIndex = startIndex + 10;
-            this.filteredpostulaciones = this.postulacionespr.slice(startIndex, endIndex);
+            this.filteredpostulaciones = filtradas.slice(startIndex, endIndex);
+
+            // Actualizar total de páginas (si quieres que se actualice también el número de páginas)
+            this.lastPage = Math.ceil(filtradas.length / 10);
         },
         actualizar() {
             this.cargando = true;
+            this.filtroEstado = 'todas';
             this.getPostulaciones()
         },
         filterResults() {
@@ -214,6 +288,29 @@ export default {
             }
 
 
+        },
+        toggleTooltip(field) {
+            if (field === "buscar") this.showTooltipbuscar = !this.showTooltipbuscar;
+            if (field === "filtroEstado") this.showTooltipfiltro = !this.showTooltipfiltro;
+        },
+        hideOnLeave(field) {
+            setTimeout(() => {
+                if (field === "buscar" && !this.hoveringTooltipbuscar) this.showTooltipbuscar = false;
+                if (field === "filtroEstado" && !this.hoveringTooltipfiltro) this.showTooltipfiltro = false;
+            }, 200);
+        },
+        handleClickOutside(event) {
+            const refs = [
+                ["tooltipIconbuscar", "tooltipBoxbuscar", "showTooltipbuscar"],
+                ["tooltipIconfiltrar", "tooltipBoxfiltro", "showTooltipfiltro"]
+            ];
+            refs.forEach(([iconRef, boxRef, state]) => {
+                const icon = this.$refs[iconRef];
+                const box = this.$refs[boxRef];
+                if (icon && box && !icon.contains(event.target) && !box.contains(event.target)) {
+                    this[state] = false;
+                }
+            });
         }
     }
 }

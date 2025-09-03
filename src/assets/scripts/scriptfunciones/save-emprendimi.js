@@ -35,6 +35,7 @@ export default {
         const ruta = useRoute();
         this.idus = ruta.params.id;
         this.idus2 = ruta.params.id;
+        console.log(this.idus);
         this.url += '/' + this.idus;
         this.ur3 += '/' + this.idus2;
         this.getEmprendiemi();
@@ -43,25 +44,25 @@ export default {
         async getEmprendiemi() {
             try {
                 const response = await axios.get(this.ur3);
-                //console.log(response.data.data);
+                console.log(response.data.data);
 
 
                 if (response.data.data) {
-                    this.ruc = response.data.data.ruc;
-                    this.nombre_emprendimiento = response.data.data.nombre_emprendimiento;
-                    this.idususuario = response.data.data.CIInfPer;
-                    this.descripcion = response.data.data.descripcion;
-                    this.fotografia = response.data.data.fotografia;
-                    this.previewFoto = 'data:image/jpeg;base64,' + response.data.data.fotografia;
-                    console.log(this.previewFoto);
-                    this.tiempo_emprendimiento = response.data.data.tiempo_emprendimiento;
-                    this.horarios_atencion = response.data.data.horarios_atencion;
-                    this.direccion = response.data.data.direccion;
-                    this.telefono_contacto = response.data.data.telefono_contacto;
-                    this.email_contacto = response.data.data.email_contacto;
-                    this.sitio_web = response.data.data.sitio_web;
-                    this.redes_sociales = response.data.data.redes_sociales;
-                    this.est = response.data.data.estado_empren;
+                    this.ruc = response.data.data[0].ruc;
+                    this.nombre_emprendimiento = response.data.data[0].nombre_emprendimiento;
+                    this.idususuario = response.data.data[0].CIInfPer;
+                    this.descripcion = response.data.data[0].descripcion;
+                    this.fotografia = response.data.data[0].fotografia;
+                    this.previewFoto = 'data:image/jpeg;base64,' + response.data.data[0].fotografia;
+                    console.log(this.fotografia);
+                    this.tiempo_emprendimiento = response.data.data[0].tiempo_emprendimiento;
+                    this.horarios_atencion = response.data.data[0].horarios_atencion;
+                    this.direccion = response.data.data[0].direccion;
+                    this.telefono_contacto = response.data.data[0].telefono_contacto;
+                    this.email_contacto = response.data.data[0].email_contacto;
+                    this.sitio_web = response.data.data[0].sitio_web;
+                    this.redes_sociales = response.data.data[0].redes_sociales;
+                    this.est = response.data.data[0].estado_empren;
                     if(this.est==1){
                         this.estado_empren="Disponible"
                     }else{
@@ -172,8 +173,9 @@ export default {
                         estado_empren: this.est,
                         CIInfPer: this.idususuario
                     };
-                    await enviarsoliedit('PUT',parametros,this.ur3,'Emprendimiento Actualizado');
+                    await enviarsoliedit('PUT',parametros,this.url,'Emprendimiento Actualizado');
                     this.$router.push('/misemprendimientos/'+store.state.idusu);
+                    //window.location.reload();
                 }
             } catch (error) {
                 console.error('Error al actualizar el emprendimiento:', error);
