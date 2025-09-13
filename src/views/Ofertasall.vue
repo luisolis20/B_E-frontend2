@@ -46,26 +46,26 @@
                         <option value="Otros">Otros</option>
                     </select>
                 </div>
-                <div class="mb-3 col-sm-2 col-md-2 col-xl-2">
+                <div class="mb-3 col-sm-2 col-md-2 col-xl-2" v-if="mostrarOpciones2">
                     <div>
                         <label for="filtroEstado" class="form-label fw-bold text-dark">Modo de visualización:</label>
                     </div>
-                    
+
                     <div class="form-check form-check-inline py-2">
-                        <input class="form-check-input text-dark" type="radio" name="inlineRadioOptions" id="inlineRadio1"
-                            value="option2" checked @click="tabla = false; carrousel = true;">
+                        <input class="form-check-input text-dark" type="radio" name="inlineRadioOptions"
+                            id="inlineRadio1" value="option2" checked @click="tabla = false; carrousel = true;">
                         <label class="form-check-label text-dark" for="inlineRadio1">Carrousel</label>
                     </div>
                     <div class="form-check form-check-inline py-2">
-                        <input class="form-check-input text-dark" type="radio" name="inlineRadioOptions" id="inlineRadio1"
-                            value="option1"  @click="tabla = true; carrousel = false;">
+                        <input class="form-check-input text-dark" type="radio" name="inlineRadioOptions"
+                            id="inlineRadio1" value="option1" @click="tabla = true; carrousel = false;">
                         <label class="form-check-label text-dark" for="inlineRadio1">Tabla</label>
                     </div>
 
                 </div>
 
             </div>
-            <div class="table-container" v-if="tabla">
+            <div class="table-container" v-if="tabla || mostrarOpciones3">
                 <table class="table table-hover">
                     <thead>
                         <tr>
@@ -73,18 +73,20 @@
                             <th scope="col">Empresa</th>
                             <th scope="col">Título</th>
                             <th scope="col">Categorías</th>
-                            <th scope="col">Modalidad</th>
+                            <th scope="col" v-if="mostrarOpciones2">Modalidad</th>
                             <th scope="col">Tipo de Contrato</th>
                             <th scope="col">Jefe</th>
-                            <th scope="col">Registrado</th>
                             <th scope="col">Finalización de la Oferta</th>
-                            <th scope="col">Estado de la Oferta</th>
+                            <th scope="col">Publicado</th>
+                            <th scope="col" v-if="mostrarOpciones3">Actualizado</th>
+                            <th scope="col" v-if="mostrarOpciones3">Estado</th>
+                            <th scope="col" v-if="mostrarOpciones3">Cant. Post</th>
                             <th scope="col"></th>
                         </tr>
                     </thead>
                     <tbody id="contenido">
                         <tr v-if="this.cargando">
-                            <td colspan="8">
+                            <td colspan="12">
                                 <h3>Cargando....</h3>
                             </td>
                         </tr>
@@ -94,28 +96,41 @@
                             <td v-text="ofe.Empresa"></td>
                             <td v-text="ofe.titulo"></td>
                             <td v-text="ofe.categoria"></td>
-                            <td v-text="ofe.modalidad"></td>
+                            <td v-text="ofe.modalidad" v-if="mostrarOpciones2"></td>
                             <td v-text="ofe.tipo_contrato"></td>
                             <td v-text="ofe.Jefe"></td>
-                            <td v-text="new Date(ofe.created_at).toLocaleDateString('en-US')"></td>
-                            <td
-                                v-text="new Date(ofe.fechaFinOferta).toLocaleDateString('es-EC', { timeZone: 'America/Guayaquil' })">
+                            <td>{{ new Date(ofe.fechaFinOferta).toLocaleDateString('es-EC', {
+                                timeZone:
+                                    'America/Guayaquil'
+                            }) }}
+                                <label v-if="new Date(ofe.fechaFinOferta) <= new Date()"
+                                    class="text-danger fw-bold">(Oferta Caducada)</label>
+                                <label v-else class="text-success fw-bold">(Oferta Vigente)</label>
                             </td>
-                            <td>
-                                <button v-if="new Date(ofe.fechaFinOferta) <= new Date()"
-                                    class="btn btn-danger fw-bold">Oferta Caducada</button>
-                                <button v-else class="btn btn-success fw-bold">Oferta Vigente</button>
+                            <td v-text="formatFecha(ofe.created_at)"></td>
+                            <td v-if="mostrarOpciones3" v-text="formatFecha(ofe.updated_at)"></td>
+                            <td v-if="mostrarOpciones3">
+                                <button v-if="ofe.estado_ofert == 1" class="btn btn-success fw-bold">
+                                    Habilitado</button>
+                                <button v-if="ofe.estado_ofert == 0" class="btn btn-danger fw-bold">
+                                    Deshabilitado</button>
                             </td>
+                            <td class="text-center" v-if="mostrarOpciones3">({{ ofe.total_postulados }})</td>
                             <td>
                                 <router-link :to="{ path: '/postularse/' + this.idus + '/' + ofe.id }"
                                     v-if="mostrarOpciones2" class="btn btn-info">
                                     <i class="fa-solid fa-eye"></i>
                                 </router-link>
                                 &nbsp;
-                                <button v-if="mostrarOpciones3" class="btn btn-danger"
-                                    v-on:click="eliminar(ofe.id, ofe.Empresa)">
+                                <button v-if="mostrarOpciones3 && ofe.estado_ofert == 1" class="btn btn-danger"
+                                    v-on:click="eliminar(ofe.id, ofe.titulo)">
                                     <i class="fa-solid fa-trash"></i>
                                 </button>
+                                <button v-if="mostrarOpciones3 && ofe.estado_ofert == 0" class="btn btn-success"
+                                    v-on:click="habilitar(ofe.id, ofe.titulo)">
+                                    <i class="fas fa-redo"></i>
+                                </button>
+
 
 
                             </td>
@@ -125,7 +140,7 @@
                 </table>
             </div>
             <br><br>
-            <div class="owl-carousel vegetable-carousel justify-content-center" v-if="carrousel">
+            <div class="owl-carousel vegetable-carousel justify-content-center" v-if="carrousel && mostrarOpciones2">
                 &nbsp;&nbsp;&nbsp;&nbsp;
                 <div v-for="ofe in filteredofertas" :key="ofe.id"
                     class="border border-primary rounded position-relative vesitable-item mx-2 my-3">
@@ -172,13 +187,11 @@
                 <h3>No hay ofertas disponibles</h3>
             </div>
             <div class="d-flex justify-content-center mb-4">
-                <button @click="previousPage" :disabled="currentPage === 1 || buscando"
-                    class="btn btn-primary text-white">
+                <button @click="previousPage" :disabled="currentPage === 1" class="btn btn-primary text-white">
                     Anterior
                 </button>&nbsp;
                 <span class="text-dark">Página {{ currentPage }} de {{ lastPage }}</span>&nbsp;
-                <button @click="nextPage" :disabled="currentPage === lastPage || buscando"
-                    class="btn btn-primary text-white">
+                <button @click="nextPage" :disabled="currentPage === lastPage" class="btn btn-primary text-white">
                     Siguiente
                 </button>
             </div>
@@ -189,6 +202,10 @@
 
         </div>
     </div>
+    <div class="container mt-5">
+        <h4 class="text-center mb-3">Estadísticas de ofertas por empresas</h4>
+        <canvas id="graficoOfertas" height="100"></canvas>
+    </div>
     <!-- Cart Page End -->
 </template>
 <style>
@@ -198,12 +215,16 @@
 import script2 from '@/assets/scripts/custom.js';
 import axios from 'axios';
 import { useRoute } from 'vue-router';
-import { confimar } from '@/assets/scripts/scriptfunciones/funciones';
+import { confimar, confimarhabi } from '@/assets/scripts/scriptfunciones/funciones';
+import { Chart, registerables } from 'chart.js';
+Chart.register(...registerables);
 export default {
     data() {
         return {
             idus: 0,
             url255: 'http://backendbolsaempleo.test/api/b_e/vin/consultanopostofert',
+            url2552: 'http://backendbolsaempleo.test/api/b_e/vin/oferta__empleos',
+
             ofertas: [],
             filteredofertas: [],
             searchQuery: '',
@@ -215,16 +236,24 @@ export default {
             tiemposRestantes: {},
             tabla: false,
             carrousel: true,
+            grafico: null,
+
 
         }
     },
     mounted() {
         const ruta = useRoute();
         this.idus = ruta.params.id;
-        this.getOFertas().then(() => {
-        this.actualizarTiemposRestantes();
-        setInterval(this.actualizarTiemposRestantes, 1000); // Actualiza cada segundo
-        });
+
+        if (this.mostrarOpciones2 || this.mostrarOpciones) {
+
+            this.getOFertas().then(() => {
+                this.actualizarTiemposRestantes();
+                setInterval(this.actualizarTiemposRestantes, 1000); // Actualiza cada segundo
+            });
+        } else {
+            this.getOFertas2();
+        }
     },
 
 
@@ -240,12 +269,87 @@ export default {
                 this.ofertas = allData;
                 this.lastPage = Math.ceil(this.ofertas.length / 10);
                 this.updateFilteredData();
+                this.generarGrafico();
             } catch (error) {
                 console.error("Error al obtener datos:", error);
             } finally {
                 this.cargando = false;
             }
         },
+        async getOFertas2() {
+            this.cargando = true;
+            try {
+                const response = await axios.get(`${this.url2552}?all=true`);
+                const allData = response.data.data;
+
+                this.ofertas = allData;
+                this.lastPage = Math.ceil(this.ofertas.length / 10);
+                this.updateFilteredData();
+                this.generarGrafico();
+            } catch (error) {
+                console.error("Error al obtener datos:", error);
+            } finally {
+                this.cargando = false;
+            }
+        },
+        generarGrafico() {
+            const conteoOfertas = {};
+            const conteoPostulados = {};
+
+            this.ofertas.forEach(post => {
+                if (!conteoOfertas[post.Empresa]) {
+                    conteoOfertas[post.Empresa] = 0;
+                    conteoPostulados[post.Empresa] = 0;
+                }
+                conteoOfertas[post.Empresa]++; // cuenta de ofertas
+                conteoPostulados[post.Empresa] += post.total_postulados || 0; // suma de postulados
+            });
+
+            const etiquetas = Object.keys(conteoOfertas);
+            const datosOfertas = Object.values(conteoOfertas);
+            const datosPostulados = Object.values(conteoPostulados);
+
+            if (this.grafico) {
+                this.grafico.destroy();
+            }
+
+            const ctx = document.getElementById('graficoOfertas');
+            const colores1 = etiquetas.map(() => `hsl(${Math.floor(Math.random() * 360)}, 70%, 60%)`);
+            const colores2 = etiquetas.map(() => `hsl(${Math.floor(Math.random() * 360)}, 70%, 40%)`);
+
+            this.grafico = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: etiquetas,
+                    datasets: [
+                        {
+                            label: 'Cantidad de Ofertas',
+                            data: datosOfertas,
+                            backgroundColor: colores1,
+                            borderColor: colores1,
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'Cantidad de Postulados',
+                            data: datosPostulados,
+                            backgroundColor: colores2,
+                            borderColor: colores2,
+                            borderWidth: 1
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            stepSize: 1
+                        }
+                    }
+                }
+            });
+        },
+
         calcularDiasRestantes(fechaFin) {
             const hoy = new Date();
             const fin = new Date(fechaFin);
@@ -312,10 +416,20 @@ export default {
         },
 
         actualizar() {
-            this.cargando = true;
-            this.filtroEstado = 'todas';
-            this.categoriaSeleccionada = 'Categorías / Área';
-            this.getOFertas()
+            if (this.mostrarOpciones2 || this.mostrarOpciones) {
+
+                this.cargando = true;
+                this.filtroEstado = 'todas';
+                this.categoriaSeleccionada = 'Categorías / Área';
+                this.getOFertas()
+                window.location.reload()
+            } else {
+                this.cargando = true;
+                this.filtroEstado = 'todas';
+                this.categoriaSeleccionada = 'Categorías / Área';
+                this.getOFertas2()
+                window.location.reload()
+            }
         },
         nextPage() {
             if (this.currentPage < this.lastPage) {
@@ -330,11 +444,45 @@ export default {
             }
         },
         eliminar(id, nombre) {
-            confimar('http://backendbolsaempleo.test/api/b_e/vin/oferta__empleos/', id, 'Eliminar registro', '¿Realmente desea eliminar a ' + nombre + '?');
-            this.cargando = false;
-            this.$router.push('/principal/' + this.idus);
+            try {
+                confimar('http://backendbolsaempleo.test/api/b_e/vin/oferta__empleos/',
+                    id,
+                    'Inhabilitar registro',
+                    '¿Realmente desea inhabilitar la oferta ' + nombre + '?',
+                    this.actualizar   // 👈 callback para refrescar la tabla al confirmar
+                );
+            } catch (error) {
+                console.error("Error al eliminar el emprendimiento:", error);
+                this.cargando = false;
+            }
 
-        }
+        },
+        habilitar(id, nombre) {
+            try {
+                confimarhabi(
+                    'http://backendbolsaempleo.test/api/b_e/vin/oferta__empleoshabi/',
+                    id,
+                    'Hbailitar registro',
+                    '¿Desea habilitar el emprendimiento ' + nombre + '?',
+                    this.actualizar   // 👈 callback para refrescar la tabla al confirmar
+                );
+            } catch (error) {
+                console.error("Error al eliminar el emprendimiento:", error);
+                this.cargando = false;
+            }
+        },
+        formatFecha(fecha) {
+            if (!fecha) return '';
+            // Convierte a objeto Date (JS entiende bien "YYYY-MM-DD HH:mm:ss" si es ISO)
+            const normalizada = fecha.replace(' ', 'T');
+            return new Date(normalizada + '-05:00').toLocaleString('es-EC', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        },
 
     },
     mixins: [script2],

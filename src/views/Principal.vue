@@ -2,7 +2,7 @@
   <!-- Main Post Section Start-->
   <div class="container-fluid py-3">
     <div class="container-fluid py-3">
-      <div class="row g-4">
+      <div class="row g-4" v-if="mostrarOpciones2">
         <div class="col-lg-7 col-xl-8 mt-0">
           <div class="bg-white p-4 rounded">
             <div class="news-2">
@@ -10,7 +10,7 @@
             </div>
             <div class="container-fluid vesitable py-5" id="ofertasrecientes">
 
-              <div class="container-fluid py-5" v-if="mostrarOpciones2">
+              <div class="container-fluid py-5">
                 <h4 class="mb-0 display-4">Ofertas Más Recientes</h4>
                 <p class="text-dark">Aquí encontrarás las ofertas más recientes con las empresas que la UTLVTE tiene
                   convenios</p><br>
@@ -121,7 +121,7 @@
             </div>
             <div class="container-fluid vesitable py-5" id="ofertasrecientes">
 
-              <div class="container-fluid py-5" v-if="mostrarOpciones2">
+              <div class="container-fluid py-5">
                 <h4 class="mb-0 display-4">Ofertas en sitios webs</h4>
                 <p class="text-dark">Aquí encontrarás ofertas en sitios webs, si deseas verlos puedes dar clic y te
                   lllevará al sitio donde se encuentra publicado</p><br>
@@ -229,7 +229,7 @@
             </div>
             <div class="container-fluid vesitable py-5" id="ofertasrecientes">
 
-              <div class="container-fluid py-5" v-if="mostrarOpciones2">
+              <div class="container-fluid py-5">
                 <h4 class="mb-0 display-4">Ofertas de emprendimientos</h4>
                 <p class="text-dark">Aquí encontrarás ofertas de estudiantes que tienen emprendimientos y desean que
                   postules a ellas.</p><br>
@@ -294,9 +294,9 @@
                         <div class="row">
                           <div class="col-md-12 col-lg-3">
                             <div class="text-center">
-                              
-                              <img v-if="ofe2.fotografia" :src="'data:image/jpeg;base64,' + ofe2.fotografia" width="100%"
-                                height="300" style="border-radius: 10px; object-fit: cover;" />
+
+                              <img v-if="ofe2.fotografia" :src="'data:image/jpeg;base64,' + ofe2.fotografia"
+                                width="100%" height="300" style="border-radius: 10px; object-fit: cover;" />
                               <img v-else src="https://emprendedores.biz/wp-content/uploads/2023/08/QEE-2.png"
                                 width="100%" height="300" style="border-radius: 10px; object-fit: cover;" />
                             </div>
@@ -326,7 +326,7 @@
                               <p class="text-dark fs-5 fw-bold mb-0">Nombre del Emprendimiento: {{ ofe2.Empresa }}</p>
                             </div>
                             <div class="text-center">
-                            <br><br><br>
+                              <br><br><br>
                               <router-link :to="{ path: '/postularseempr/' + idus + '/' + ofe2.id }"
                                 class="btn border border-secondary rounded-pill px-3 text-primary"><i
                                   class="fa-solid fa-eye me-2 icom"></i> Ver Detalle Completo</router-link>
@@ -344,7 +344,8 @@
                 </div>
                 <div v-else class="d-flex justify-content-center">
                   <router-link :to="{ path: '/ofertasallemp/' + idus }" class="btn btn-primary text-white"><i
-                      class="fa-solid fa-eye me-2 text-white"></i> Ver Todas las ofertas de emprendimientos</router-link>
+                      class="fa-solid fa-eye me-2 text-white"></i> Ver Todas las ofertas de
+                    emprendimientos</router-link>
                 </div>
                 <br><br>
 
@@ -412,6 +413,99 @@
           </div>
         </div>
       </div>
+      <div class="row g-4" v-if="mostrarOpciones3||mostrarOpciones">
+        <div class="col-lg-7 col-xl-8 mt-0" v-if="publicacionPrincipal">
+          <div class="position-relative overflow-hidden rounded">
+
+            <img :src="publicacionPrincipal.full_picture" class="img-fluid rounded img-zoomin w-100" alt="">
+            <div class="d-flex justify-content-center px-4 position-absolute flex-wrap" style="bottom: 10px; left: 0;">
+              <a href="#" class="text-white me-3 link-hover"><i class="fa fa-thumbs-up"></i> {{ estadisticas?.reacciones
+                }} Reacciones</a>
+              <a href="#" class="text-white me-3 link-hover"><i class="fa fa-eye"></i>{{ estadisticas?.vistas }} Vistas
+              </a>
+              <a href="#" class="text-white me-3 link-hover"><i class="fa fa-comment-dots"></i> {{
+                estadisticas?.comentarios }} Comentarios</a>
+              <a href="#" class="text-white link-hover"><i class="fa fa-arrow-up"></i> {{ estadisticas?.compartidas }}
+                Compartidas</a>
+            </div>
+          </div>
+          <p class="text-muted mb-0">
+            <i class="fa fa-calendar"></i> {{ formatearFechaInteligente(publicacionPrincipal.created_time) }}
+          </p>
+
+          <div class="border-bottom py-3">
+            <a :href="publicacionPrincipal.permalink_url" target="_blank" class="display-4 text-dark mb-0 link-hover">
+              {{ estadisticas?.titulo || truncateText(publicacionPrincipal.message, 100) }}</a>
+          </div>
+          <p class="mt-3 mb-4 text-dark">{{ truncateText(publicacionPrincipal.message, 450) }}</p>
+          <div class="bg-white p-4 rounded">
+            <div class="news-2">
+              <h3 class="mb-4">----</h3>
+            </div>
+            <div class="row g-4 align-items-center" v-if="publicacionsecundaria">
+              <div class="col-md-6">
+                <div class="rounded overflow-hidden">
+                  <img :src="publicacionsecundaria.full_picture" class="img-fluid rounded img-zoomin w-100" alt="">
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="d-flex flex-column">
+                  <a :href="publicacionsecundaria.permalink_url" target="_blank" class="h3 link-hover">{{
+                    truncateText(publicacionsecundaria.message, 150) }}</a>
+                  <p class="text-muted mb-0">
+                    <i class="fa fa-calendar"></i> {{ formatearFechaInteligente(publicacionsecundaria.created_time) }}
+                  </p>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-5 col-xl-4">
+          <div class="bg-white rounded p-4 pt-0">
+            <div class="row g-4">
+              <div class="col-12" v-if="publicaciontercera">
+                <div class="rounded overflow-hidden">
+                  <img :src="publicaciontercera.full_picture" class="img-fluid rounded img-zoomin w-100" alt="">
+                </div>
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                <div class="col-12">
+                  <div class="d-flex flex-column">
+                    <p class="text-muted mb-0">
+                      <i class="fa fa-calendar"></i> {{ formatearFechaInteligente(publicaciontercera.created_time) }}
+                    </p>
+                    <a :href="publicaciontercera.permalink_url" target="_blank" class="h4 mb-2 link-hover">{{
+                      truncateText(publicaciontercera.message, 150) }}</a>
+                  </div>
+                </div>
+
+              </div>
+
+              <div class="col-12" v-for="post in publicaciones2" :key="post.id">
+                <div class="row g-4 align-items-center">
+                  <div class="col-5">
+                    <div class="overflow-hidden rounded">
+                      <img :src="post.full_picture" class="img-zoomin img-fluid rounded w-100" alt="">
+                    </div>
+                  </div>
+                  <div class="col-7">
+                    <div class="features-content d-flex flex-column">
+                      <a :href="post.permalink_url" target="_blank" class="h6 link-hover">{{ post.message.slice(0, 80)
+                        }}...</a>
+
+                    </div>
+                    <p class="text-muted small">
+                      <i class="fa fa-calendar"></i> {{ formatearFechaInteligente(post.created_time) }}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -450,6 +544,7 @@ export default {
       tiemposRestantes: {},
       tiemposRestantes2: {},
       publicaciones: [],
+      publicaciones2: [],
       publicacionPrincipal: null,
       publicacionsecundaria: null,
       publicaciontercera: null,
@@ -574,6 +669,7 @@ export default {
           this.publicacionsecundaria = posts[1];
           this.publicaciontercera = posts[2];
           this.publicaciones = posts.slice(1, 30); // las siguientes pequeñas
+           this.publicaciones2 = posts.slice(3, 30); // las siguientes pequeñas
           await this.cargarEstadisticas(posts[0].id);
         }
       } catch (error) {

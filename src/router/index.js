@@ -34,6 +34,7 @@ import AceptacionViewEmp from '../views/AceptacionViewEmp.vue'
 import RechazoView from '../views/RechazoView.vue'
 import Userall from '../views/Userall.vue'
 import AdminEdit from '../views/AdminEdit.vue'
+import AdminCreatedUsers from '../views/AdminCreatedUsers.vue'
 import Empresall from '../views/Empresall.vue'
 import MisEmprendimientos from '../views/MisEmprendimientos.vue'
 
@@ -218,6 +219,11 @@ const routes = [
     path: '/useredit/:id',
     name: 'useredit',
     component: AdminEdit
+  },
+  {
+    path: '/usercreated/:id',
+    name: 'usercreated',
+    component: AdminCreatedUsers
   },
   {
     path: '/empresall/:id',

@@ -2,6 +2,8 @@
     <div class="container-fluid py-3">
         <div class="container-fluid py-3">
             <h1 class="display-5 mb-4" style="text-align: center;"> Mis Emprendimientos </h1>
+            <p class="text-dark text-center">En este apartado tendrás todos tus emprendimiento creados. Para que tus emprendimientos están vigentes deben ser aprobados por
+            la Dirección de Vincualción con la Sociedad de la UTLVTE</p>
             <small
                 class="d-inline-block fw-bold text-dark text-uppercase bg-light border border-primary rounded-pill px-4 py-1 mb-3">
                 Estos son tus Emprendimientos Creados</small>
@@ -36,17 +38,16 @@
                             <th scope="col">Id</th>
                             <th scope="col">Ruc</th>
                             <th scope="col">Emprendimiento</th>
-                            <th scope="col">Horarios de Atención</th>
                             <th scope="col">Dueño</th>
                             <th scope="col">Telefono</th>
-                            <th scope="col">Registrado</th>
+                            <th scope="col">Registrado/Actualizado</th>
                             <th scope="col">Estado</th>
                             <th scope="col">Acciones</th>
                         </tr>
                     </thead>
                     <tbody id="contenido">
                         <tr v-if="this.cargando">
-                            <td colspan="8">
+                            <td colspan="9">
                                 <h3>Cargando....</h3>
                             </td>
                         </tr>
@@ -55,27 +56,33 @@
                             <td v-text="emp.id"></td>
                             <td v-text="emp.ruc"></td>
                             <td v-text="emp.nombre_emprendimiento"></td>
-                            <td v-text="emp.horarios_atencion"></td>
-                            <td v-text="emp.ApellInfPer + ' ' + emp.ApellMatInfPer + ' ' + emp.NombInfPer"></td>
+                            <td v-if="emp.CIInfPer===this.idus">Yo</td>
+
+                            <td v-else v-text="emp.ApellInfPer + ' ' + emp.ApellMatInfPer + ' ' + emp.NombInfPer"></td>
                             <td v-text="emp.telefono_contacto"></td>
-                            <td>{{ formatFecha(emp.created_at) }}</td>
+                            <td>{{ formatFecha(emp.updated_at) }}</td>
                             <td>
-                                <button v-if="emp.estado_empren == 1" class="btn btn-success fw-bold">Emprendimiento
+                                <button v-if="emp.estado_empren == 1" class="btn btn-success fw-bold">
                                     Vigente</button>
-                                <button v-else class="btn btn-danger fw-bold">Emprendimiento No Vigente</button>
+                                <button v-if="emp.estado_empren == 0" class="btn btn-danger fw-bold"> No Vigente</button>
+                                <label v-if="emp.estado_empren == 2"class=" text-info fw-bold"> En revisión </label>
                             </td>
                             <td>
-                                <router-link :to="{ path: '/viewEmp/' + emp.id }" class="btn btn-info">
+                                <router-link :to="{ path: '/viewEmp/' + emp.id }" class="btn btn-info" title="Ver emprendimiento">
                                     <i class="fa-solid fa-eye"></i>
                                 </router-link>
                                 &nbsp;
-                                <router-link :to="{ path: '/editEmp/' + emp.id }" class="btn btn-warning">
+                                <router-link :to="{ path: '/editEmp/' + emp.id }" class="btn btn-warning" title="Editar emprendimiento">
                                     <i class="fa-solid fa-edit"></i>
                                 </router-link>
                                 &nbsp;
-                                <button class="btn btn-danger" v-on:click="eliminar(emp.id, emp.nombre_emprendimiento)">
+                                <button class="btn btn-danger" v-on:click="eliminar(emp.id, emp.nombre_emprendimiento)" v-if="emp.estado_empren == 1">
                                     <i class="fa-solid fa-trash"></i>
                                 </button>
+                                <button class="btn btn-success" v-on:click="habilitar(emp.id, emp.nombre_emprendimiento)" v-if="emp.estado_empren == 0">
+                                    <i class="fas fa-redo"></i>
+                                </button>
+
 
                             </td>
                         </tr>
@@ -139,7 +146,7 @@
 <script>
 import axios from 'axios';
 import { useRoute } from 'vue-router';
-import { confimar } from '@/assets/scripts/scriptfunciones/funciones';
+import { confimar,confimarhabi } from '@/assets/scripts/scriptfunciones/funciones';
 export default {
     data() {
         return {
@@ -168,7 +175,8 @@ export default {
             try {
                 const response = await axios.get(`${this.url2}?all=true`);
                 const allData = response.data.data;
-
+                //console.log(allData);
+                
                 this.emprendimientoemp = allData;
                 this.lastPage = Math.ceil(this.emprendimientoemp.length / 10);
                 this.updateFilteredData();
@@ -228,10 +236,24 @@ export default {
         eliminar(id, nombre) {
             try {
                 confimar(
-                    'http://backendbolsaempleo.test/api/b_e/vin/consultarediremp/',
+                    'http://backendbolsaempleo.test/api/b_e/vin/consultaredirempelim/',
                     id,
-                    'Eliminar registro',
-                    '¿Realmente desea eliminar de manera permanente el emprendimiento ' + nombre + '?',
+                    'Inhabilitar registro',
+                    '¿Realmente desea inhabilitar el emprenidmiento  ' + nombre + '?',
+                    this.actualizar   // 👈 callback para refrescar la tabla al confirmar
+                );
+            } catch (error) {
+                console.error("Error al eliminar el emprendimiento:", error);
+                this.cargando = false;
+            }
+        },
+        habilitar(id, nombre) {
+            try {
+                confimarhabi(
+                    'http://backendbolsaempleo.test/api/b_e/vin/consultaredirempelim2/',
+                    id,
+                    'Hbailitar registro',
+                    '¿Desea habilitar el emprendimiento ' + nombre + '?',
                     this.actualizar   // 👈 callback para refrescar la tabla al confirmar
                 );
             } catch (error) {

@@ -551,6 +551,15 @@ option:checked {
   color: white;
 }
 
+.toggle-password {
+  position: absolute;
+  right: 10px; /* ajusta según tu padding */
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  font-size: 18px;
+  color: #6c757d;
+}
 
 
 /* Mostrar dropdown con hover */

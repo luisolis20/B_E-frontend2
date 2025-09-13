@@ -22,7 +22,8 @@ export function mostraralertas2(titulo,icono){
     });
 }
 export function confimar(urlconslash, id, titulo, mensaje, actualizarTabla) {
-    var url = urlconslash + id;
+    var url = urlconslash + id;   // 👈 Se construye la URL con el ID
+
     const swalwithboostrapbutton = Swal.mixin({
         customClass: {
             confirmButton: 'btn btn-success me-3',
@@ -35,13 +36,13 @@ export function confimar(urlconslash, id, titulo, mensaje, actualizarTabla) {
         text: mensaje,
         icon: 'question',
         showCancelButton: true,
-        confirmButtonText: '<i class="fa-solid fa-check"></i> Si, Eliminar',
+        confirmButtonText: '<i class="fa-solid fa-check"></i> Si, Inhabilitar',
         cancelButtonText: '<i class="fa-solid fa-ban"></i> Cancelar'
     }).then((res) => {
         if (res.isConfirmed) {
-            axios.delete(url, { data: { id: id } })
-                .then(() => {
-                    mostraralertas('Eliminado con éxito', 'success');
+            axios.delete(url)   // 👈 Ya NO mandamos { data: { id } }
+                .then((response) => {
+                    mostraralertas(response.data.mensaje ?? 'Eliminado con éxito', 'success');
                     if (typeof actualizarTabla === "function") {
                         actualizarTabla(); // 🔄 refrescar tabla
                     }
@@ -54,6 +55,41 @@ export function confimar(urlconslash, id, titulo, mensaje, actualizarTabla) {
         }
     });
 }
+export function confimarhabi(urlconslash, id, titulo, mensaje, actualizarTabla) {
+    var url = urlconslash + id;   // 👈 Se construye la URL con el ID
+
+    const swalwithboostrapbutton = Swal.mixin({
+        customClass: {
+            confirmButton: 'btn btn-success me-3',
+            cancelButton: 'btn btn-danger'
+        },
+    });
+
+    swalwithboostrapbutton.fire({
+        title: titulo,
+        text: mensaje,
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: '<i class="fa-solid fa-check"></i> Si, Habilitar',
+        cancelButtonText: '<i class="fa-solid fa-ban"></i> Cancelar'
+    }).then((res) => {
+        if (res.isConfirmed) {
+            axios.delete(url)   // 👈 Ya NO mandamos { data: { id } }
+                .then((response) => {
+                    mostraralertas(response.data.mensaje ?? 'Habilitado con éxito', 'success');
+                    if (typeof actualizarTabla === "function") {
+                        actualizarTabla(); // 🔄 refrescar tabla
+                    }
+                })
+                .catch(() => {
+                    mostraralertas('Error al eliminar', 'error');
+                });
+        } else {
+            mostraralertas('Operación cancelada', 'info');
+        }
+    });
+}
+
 
 export function guardarcambios(metodo,parametros,urlid,titulo){
     
@@ -84,9 +120,7 @@ export function enviarsoli(metodo,parametros,url,mensaje){
         var estado = res.status;
         if(estado==200){
             mostraralertas(mensaje,'success');
-            window.setTimeout(function(){
-                window.location.href='/'
-            },2000);
+            
         }else{
             mostraralertas('No se pudo recuperar la respuesta','error');
         }

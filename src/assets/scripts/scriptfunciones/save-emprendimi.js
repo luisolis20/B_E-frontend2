@@ -35,7 +35,7 @@ export default {
         const ruta = useRoute();
         this.idus = ruta.params.id;
         this.idus2 = ruta.params.id;
-        console.log(this.idus);
+        //console.log(this.idus);
         this.url += '/' + this.idus;
         this.ur3 += '/' + this.idus2;
         this.getEmprendiemi();
@@ -44,7 +44,7 @@ export default {
         async getEmprendiemi() {
             try {
                 const response = await axios.get(this.ur3);
-                console.log(response.data.data);
+                //console.log(response.data.data);
 
 
                 if (response.data.data) {
@@ -63,9 +63,13 @@ export default {
                     this.sitio_web = response.data.data[0].sitio_web;
                     this.redes_sociales = response.data.data[0].redes_sociales;
                     this.est = response.data.data[0].estado_empren;
+                    console.log(this.est);
                     if(this.est==1){
                         this.estado_empren="Disponible"
-                    }else{
+                    }else if(this.est==2){
+                        this.estado_empren="En Revisión"
+                    }
+                    else{
                         this.estado_empren="No Disponible"
                     }
 
@@ -116,7 +120,7 @@ export default {
                         email_contacto: this.email_contacto,
                         sitio_web: this.sitio_web,
                         redes_sociales: this.redes_sociales,
-                        estado_empren: 1,
+                        estado_empren: 2,
                         CIInfPer: this.idus
                     };
                     enviarsolig('POST', parametros, 'http://backendbolsaempleo.test/api/b_e/vin/emprendimientos_E', 'Emprendimiento Creado');
@@ -170,7 +174,7 @@ export default {
                         email_contacto: this.email_contacto,
                         sitio_web: this.sitio_web,
                         redes_sociales: this.redes_sociales,
-                        estado_empren: this.est,
+                        estado_empren: 2,
                         CIInfPer: this.idususuario
                     };
                     await enviarsoliedit('PUT',parametros,this.url,'Emprendimiento Actualizado');

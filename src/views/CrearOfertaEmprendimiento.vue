@@ -97,7 +97,7 @@
                                     </div>
                                 </div>
 
-                                <div class="col-12 wow fadeIn" data-wow-delay="0.1s">
+                                <div class="col-12 wow fadeIn" data-wow-delay="0.1s"  v-if="est==1">
                                     <div class="text-center border border-secondary p-4 my-4 position-relative">
                                         <div class="fw-bold text-primary bg-white d-flex align-items-center justify-content-center position-absolute border-secondary p-2"
                                             style="width: 50%; border-style: double; top: 0; left: 50%; transform: translate(-50%, -50%);">
@@ -112,6 +112,25 @@
                                         </div>
                                     </div>
                                 </div>
+                                 <div class="col-12 wow fadeIn" data-wow-delay="0.1s"  v-if="est==0">
+                                    <div class="text-center border border-secondary p-4 my-4 position-relative">
+                                        <div class="fw-bold text-primary bg-white d-flex align-items-center justify-content-center position-absolute border-secondary p-2"
+                                            style="width: 50%; border-style: double; top: 0; left: 50%; transform: translate(-50%, -50%);">
+                                            El emprendimiento no está disponible para crear ofertas de empleo
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+                                 <div class="col-12 wow fadeIn" data-wow-delay="0.1s"  v-if="est==2">
+                                    <div class="text-center border border-secondary p-4 my-4 position-relative">
+                                        <div class="fw-bold text-primary bg-white d-flex align-items-center justify-content-center position-absolute border-secondary p-2"
+                                            style="width: 50%; border-style: double; top: 0; left: 50%; transform: translate(-50%, -50%);">
+                                            El emprendimiento está en proceso de revisión, no está disponible para crear ofertas de empleo
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+
 
                             </div>
                         </form>
@@ -168,22 +187,25 @@ export default {
                 //console.log(response.data.data);
 
 
-                if (response.data.data) {
-                    this.ruc = response.data.data.ruc;
-                    this.nombre_emprendimiento = response.data.data.nombre_emprendimiento;
-                    this.idususuario = response.data.data.CIInfPer;
-                    this.descripcion = response.data.data.descripcion;
-                    this.tiempo_emprendimiento = response.data.data.tiempo_emprendimiento;
-                    this.horarios_atencion = response.data.data.horarios_atencion;
-                    this.direccion = response.data.data.direccion;
-                    this.telefono_contacto = response.data.data.telefono_contacto;
-                    this.email_contacto = response.data.data.email_contacto;
-                    this.sitio_web = response.data.data.sitio_web;
-                    this.redes_sociales = response.data.data.redes_sociales;
-                    this.est = response.data.data.estado_empren;
+                if (response.data.data) { 
+                    this.ruc = response.data.data[0].ruc;
+                    this.nombre_emprendimiento = response.data.data[0].nombre_emprendimiento;
+                    this.idususuario = response.data.data[0].CIInfPer;
+                    this.descripcion = response.data.data[0].descripcion;
+                    this.tiempo_emprendimiento = response.data.data[0].tiempo_emprendimiento;
+                    this.horarios_atencion = response.data.data[0].horarios_atencion;
+                    this.direccion = response.data.data[0].direccion;
+                    this.telefono_contacto = response.data.data[0].telefono_contacto;
+                    this.email_contacto = response.data.data[0].email_contacto;
+                    this.sitio_web = response.data.data[0].sitio_web;
+                    this.redes_sociales = response.data.data[0].redes_sociales;
+                    this.est = response.data.data[0].estado_empren;
                     if(this.est==1){
                         this.estado_empren="Disponible"
-                    }else{
+                    }else if(this.est==2){
+                        this.estado_empren="En Revisión"
+                    }
+                    else{
                         this.estado_empren="No Disponible"
                     }
 

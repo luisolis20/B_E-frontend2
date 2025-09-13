@@ -238,27 +238,7 @@
                         </div>
                       </div>
                     </div>
-                    <!-- Campo Estado con tooltip -->
-                    <div class="col-lg-8 relative">
-                      <div class="input-with-icon">
-                       <select v-model="estado_empren" id="estado">
-                          <option value="" disabled selected>Seleccione el estado actual de su emprendimiento</option>
-                          <option value="Disponible">Disponible</option>
-                          <option value="No Disponible">No Disponible</option>
-                        </select>
-                        <!-- Icono Estado -->
-                        <span class="help-icon" @mouseenter="showTooltipestado_empren = true"
-                          @mouseleave="hideOnLeave('estado')" @click.stop="toggleTooltip('estado')"
-                          ref="tooltipIconestado_empren">❓</span>
-
-                        <!-- Tooltip Estado -->
-                        <div v-if="showTooltipestado_empren" class="tooltip-box" ref="tooltipBoxestado_empren"
-                          @mouseenter="hoveringTooltipestado_empren = true" @mouseleave="hideOnLeave('estado')">
-                          Debe seleccionar el estado actual de su emprendimiento, si está disponible o no.
-                          <div class="tooltip-arrow"></div>
-                        </div>
-                      </div>
-                    </div>
+                   
 
                     <div class="col-lg-12" v-if="!correoErrornue && !correoErrornuetelf && !correoErrornueRucf">
                       <fieldset>
