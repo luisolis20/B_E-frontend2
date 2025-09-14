@@ -14,7 +14,7 @@
                                 <label class="form-label my-3 text-dark">Nombre de Usuario<sup>*</sup></label>
                                 <div class="input-with-icon">
                                     <input type="text" class="form-control text-dark" v-model="nombre" id="nombre"
-                                        required />
+                                       autocomplete="off" required />
                                     <!-- Icono Nombre -->
                                     <span class="help-icon" @mouseenter="showTooltipNombre = true"
                                         @mouseleave="hideOnLeave('nombre')" @click.stop="toggleTooltip('nombre')"
@@ -36,7 +36,7 @@
                             <label class="form-label my-3">Email<sup>*</sup></label>
                             <div class="input-with-icon">
                                 <input type="email" class="form-control text-dark" v-model="email" id="email"
-                                    required />
+                                   autocomplete="off" required />
                                 <!-- Icono email -->
                                 <span class="help-icon" @mouseenter="showTooltipemail = true"
                                     @mouseleave="hideOnLeave('email')" @click.stop="toggleTooltip('email')"
@@ -56,7 +56,7 @@
                             <div class="input-with-icon">
 
                                 <input :type="showPassword ? 'text' : 'password'" class="form-control text-dark"
-                                    v-model="password" id="password" required />
+                                    v-model="password" autocomplete="off" id="password" required />
 
 
                                 <!-- Icono password -->

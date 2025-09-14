@@ -26,6 +26,7 @@
                             <th scope="col">Rol</th>
                             <th scope="col">Registrado</th>
                             <th scope="col">Actualizado</th>
+                            <th scope="col">Estado</th>
                             <th scope="col"></th>
                         </tr>
                     </thead>
@@ -38,7 +39,7 @@
                         <tr v-else v-for="user,  in this.filteredusuarios" :key="user.id">
 
                             <td v-text="user.id"></td>
-                            <td v-if="user.id==this.idus">Yo</td>
+                            <td v-if="user.id == this.idus">Yo</td>
                             <td v-else v-text="user.name"></td>
                             <td v-text="user.email"></td>
                             <td v-text="user.role"></td>
@@ -46,16 +47,27 @@
                             <td v-text="formatFecha(user.created_at)"></td>
                             <td v-text="formatFecha(user.updated_at)"></td>
                             <td>
-                                <router-link :to="{ path: '/perfil/' + this.idus }" class="btn btn-warning" v-if="user.id==this.idus">
+                                <button v-if="user.estado == 1" class="btn btn-success fw-bold">
+                                    Habilitado</button>
+                                <button v-if="user.estado == 0" class="btn btn-danger fw-bold">Deshabilitado</button>
+                            </td>
+                            <td>
+                                <router-link :to="{ path: '/perfil/' + this.idus }" class="btn btn-warning"
+                                    v-if="user.id == this.idus">
                                     <i class="fa-solid fa-edit"></i>
                                 </router-link>
-                                <router-link :to="{ path: '/useredit/' + user.id }" class="btn btn-warning" v-else>
+                                <router-link :to="{ path: '/useredit/' + user.id }" class="btn btn-warning"
+                                    v-if="user.role != 'Estudiante' && user.id != this.idus">
                                     <i class="fa-solid fa-edit"></i>
                                 </router-link>
                                 &nbsp;
-                                <button v-if="mostrarOpciones3" class="btn btn-danger"
-                                    v-on:click="eliminar(user.id, user.Empresa)">
+                                <button v-if="user.role != 'Estudiante' && user.estado == 1 && user.id != this.idus"
+                                    class="btn btn-danger" v-on:click="eliminar(user.id, user.name)">
                                     <i class="fa-solid fa-trash"></i>
+                                </button>
+                                <button v-if="user.role != 'Estudiante' && user.estado == 0 && user.id != this.idus"
+                                    class="btn btn-success" v-on:click="habilitar(user.id, user.name)">
+                                    <i class="fas fa-redo"></i>
                                 </button>
 
 
@@ -102,7 +114,7 @@
 import script2 from '@/assets/scripts/custom.js';
 import axios from 'axios';
 import { useRoute } from 'vue-router';
-import { confimar } from '@/assets/scripts/scriptfunciones/funciones';
+import { confimar, confimarhabi } from '@/assets/scripts/scriptfunciones/funciones';
 export default {
     data() {
         return {
@@ -175,10 +187,32 @@ export default {
             }
         },
         eliminar(id, nombre) {
-            confimar('http://192.168.1.110/b_e/api/b_e/vin/users/', id, 'Eliminar registro', '¿Realmente desea eliminar a ' + nombre + '?');
-            this.cargando = false;
-            this.$router.push('/principal/' + this.idus);
+            try {
+                confimar('http://backendbolsaempleo.test/api/b_e/vin/users/',
+                    id, 'Inhabilitar registro',
+                    '¿Realmente desea inhabilitar el usuario  ' + nombre + '?',
+                    this.actualizar
+                );
 
+            } catch (error) {
+                console.error("Error al eliminar el usuario:", error);
+                this.cargando = false;
+            }
+
+        },
+        habilitar(id, nombre) {
+            try {
+                confimarhabi(
+                    'http://backendbolsaempleo.test/api/b_e/vin/usershabi/',
+                    id,
+                    'Hbailitar registro',
+                    '¿Desea habilitar el usuario ' + nombre + '?',
+                    this.actualizar   // 👈 callback para refrescar la tabla al confirmar
+                );
+            } catch (error) {
+                console.error("Error al eliminar el usuario:", error);
+                this.cargando = false;
+            }
         },
         formatFecha(fecha) {
             if (!fecha) return '';

@@ -1579,7 +1579,7 @@ export default {
                     role: this.rol.trim(),
                     estado: 1,
                 }
-                var response = await enviarsoliedit('PUT', parametros, this.url, 'Actualizado');
+                enviarsoliedit('PUT', parametros, this.url, 'Actualizado');
                 store.commit('setemail', this.email);
 
                 this.$router.push('/principal/' + store.state.idusu);

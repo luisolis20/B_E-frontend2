@@ -175,7 +175,7 @@ export async function enviarsoliedit(metodo, parametros, url, mensaje) {
         if (response.data) {
             //console.log(mensaje + ': ' + response.data.mensaje);
             mostraralertas(mensaje, 'success');
-            
+             window.location.reload();
 
         } else {
             mostraralertas('No se pudo recuperar la respuesta', 'error');
