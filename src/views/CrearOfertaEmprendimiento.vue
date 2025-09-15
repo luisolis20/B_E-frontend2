@@ -169,7 +169,7 @@ export default {
             sitio_web: '',
             redes_sociales: '',
             estado_empren: '',
-            urk3: 'http://backendbolsaempleo.test/api/b_e/vin/consultarediremp',
+            urk3: 'http://vinculacionconlasociedad.utelvt.edu.ec/backendbolsaempleo/api/b_e/vin/consultarediremp',
             cargando: false,
         }
     },

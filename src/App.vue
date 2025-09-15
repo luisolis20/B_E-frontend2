@@ -297,9 +297,9 @@ export default {
   data() {
     return {
       idus2: 0,
-      url213: 'http://backendbolsaempleo.test/api/b_e/vin/postulacions2',
-      url214: 'http://backendbolsaempleo.test/api/b_e/vin/estadopostuser',
-      url215: 'http://backendbolsaempleo.test/api/b_e/vin/estadopostuser2',
+      url213: 'http://vinculacionconlasociedad.utelvt.edu.ec/backendbolsaempleo/api/b_e/vin/postulacions2',
+      url214: 'http://vinculacionconlasociedad.utelvt.edu.ec/backendbolsaempleo/api/b_e/vin/estadopostuser',
+      url215: 'http://vinculacionconlasociedad.utelvt.edu.ec/backendbolsaempleo/api/b_e/vin/estadopostuser2',
       postulaciones: [], // Lista de postulaciones
       postulacionesacepta: [], // Lista de postulaciones
       vistos: 0,
@@ -317,7 +317,7 @@ export default {
         this.idus2 = this.$route.params.id;
 
         if (this.idus2) {
-          this.url214 = 'http://backendbolsaempleo.test/api/b_e/vin/estadopostuser/' + customscript.computed.idUsuario();
+          this.url214 = 'http://vinculacionconlasociedad.utelvt.edu.ec/backendbolsaempleo/api/b_e/vin/estadopostuser/' + customscript.computed.idUsuario();
 
           this.getPostulacionesAcept();
         }
@@ -334,7 +334,7 @@ export default {
       this.idus2 = this.$route.params.id;
 
       if (this.idus2) {
-        this.url214 = 'http://backendbolsaempleo.test/api/b_e/vin/estadopostuser/' + customscript.computed.idUsuario();
+        this.url214 = 'http://vinculacionconlasociedad.utelvt.edu.ec/backendbolsaempleo/api/b_e/vin/estadopostuser/' + customscript.computed.idUsuario();
 
 
         this.getPostulacionesAcept();

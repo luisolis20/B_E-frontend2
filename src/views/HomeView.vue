@@ -158,7 +158,7 @@ export default {
         mensaje: this.mensaje
       };
 
-      await axios.post('http://backendbolsaempleo.test/api/b_e/vin/enviar-comentario', comentarioData)
+      await axios.post('http://vinculacionconlasociedad.utelvt.edu.ec/backendbolsaempleo/api/b_e/vin/enviar-comentario', comentarioData)
         .then(response => {
           mostraralertas2('Comentario enviado con éxito','success');
           this.apellidonombre = '';

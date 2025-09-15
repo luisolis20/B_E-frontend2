@@ -27,8 +27,8 @@ export default {
             mision: '',
             vision: '',
             lugar: '',
-            url: 'http://backendbolsaempleo.test/api/b_e/vin/empresasEM',
-            ur3: 'http://backendbolsaempleo.test/api/b_e/vin/empresas',
+            url: 'http://vinculacionconlasociedad.utelvt.edu.ec/backendbolsaempleo/api/b_e/vin/empresasEM',
+            ur3: 'http://vinculacionconlasociedad.utelvt.edu.ec/backendbolsaempleo/api/b_e/vin/empresas',
 
             cargando: false,
             Errorfoto: false,
@@ -172,7 +172,7 @@ export default {
 
 
                     }
-                    enviarsolig('POST', parametros, 'http://backendbolsaempleo.test/api/b_e/vin/empresas', 'Empresa Creada');
+                    enviarsolig('POST', parametros, 'http://vinculacionconlasociedad.utelvt.edu.ec/backendbolsaempleo/api/b_e/vin/empresas', 'Empresa Creada');
                     this.$router.push('/empresas/' + this.idus);
                 }
 

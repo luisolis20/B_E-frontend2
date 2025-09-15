@@ -84,7 +84,7 @@
         data(){
             return{
                 idus:0,
-                url213:'http://backendbolsaempleo.test/api/b_e/vin/consultapostuser',
+                url213:'http://vinculacionconlasociedad.utelvt.edu.ec/backendbolsaempleo/api/b_e/vin/consultapostuser',
                 postulacionespr: [],
                 filteredpostulaciones: [],
                 searchQuery: '',
@@ -167,7 +167,7 @@
                 }
             },
              eliminar(id,nombre){
-                confimar('http://backendbolsaempleo.test/api/b_e/vin/consultapostuser/',id,'Eliminar registro','¿Realmente desea eliminar la postulación de la oferta '+nombre+'?');
+                confimar('http://vinculacionconlasociedad.utelvt.edu.ec/backendbolsaempleo/api/b_e/vin/consultapostuser/',id,'Eliminar registro','¿Realmente desea eliminar la postulación de la oferta '+nombre+'?');
                 this.getPostulaciones();
                 this.cargando = false;
                 this.$router.push('/principal/'+this.idus);

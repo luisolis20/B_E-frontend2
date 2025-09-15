@@ -23,7 +23,7 @@ export default {
             direccion: '',
             fotografia: '',
             previewFoto: '',
-            url: 'http://backendbolsaempleo.test/api/b_e/vin/users',
+            url: 'http://vinculacionconlasociedad.utelvt.edu.ec/backendbolsaempleo/api/b_e/vin/users',
 
             si_cvn: false,
             no_cvn: true,

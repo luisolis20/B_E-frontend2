@@ -236,7 +236,7 @@ export default {
             modalidad: '',
             categoria: '',
             jefe: '',
-            urk32: 'http://backendbolsaempleo.test/api/b_e/vin/consultaofertempr2',
+            urk32: 'http://vinculacionconlasociedad.utelvt.edu.ec/backendbolsaempleo/api/b_e/vin/consultaofertempr2',
             estado: '',
             ApellInfPer: '',
             ApellMatInfPer: '',

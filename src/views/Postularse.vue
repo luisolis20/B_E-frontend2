@@ -164,7 +164,7 @@ export default {
             categoria:'',
             Fechafinofer:'',
             jefe:'',
-            urk32:'http://backendbolsaempleo.test/api/b_e/vin/consultaofert',
+            urk32:'http://vinculacionconlasociedad.utelvt.edu.ec/backendbolsaempleo/api/b_e/vin/consultaofert',
             apiBaseUrl: "http://vinculacionconlasociedad.utelvt.edu.ec/cvubackendv2/api/cvn/v1",
             urls: {
                
@@ -348,7 +348,7 @@ export default {
             };
 
             if (this.si_cvn) {
-                const response = await enviarsolig23('POST', parametros, 'http://backendbolsaempleo.test/api/b_e/vin/postulacions', 'Postulado con éxito');
+                const response = await enviarsolig23('POST', parametros, 'http://vinculacionconlasociedad.utelvt.edu.ec/backendbolsaempleo/api/b_e/vin/postulacions', 'Postulado con éxito');
                 const fechaEcuador = dayjs().tz('America/Guayaquil').format('YYYY-MM-DDTHH:mm:ss');
                 const thisidpostu = response.data.id;
                 //console.log(thisidpostu);
@@ -358,7 +358,7 @@ export default {
                     fecha: fechaEcuador,
                     detalle_estado: "Verificando Datos de postulación",
                 };
-                axios.post('http://backendbolsaempleo.test/api/b_e/vin/estadopostuser', parametros2)
+                axios.post('http://vinculacionconlasociedad.utelvt.edu.ec/backendbolsaempleo/api/b_e/vin/estadopostuser', parametros2)
                 this.$router.push('/principal/' + this.ide);
             } else {
                 mostraralertas2("Por requisitos del sistema no puedes postularte hasta que tengas tu CVN. Ve a tu perfil y crea tu CVN", "warning");

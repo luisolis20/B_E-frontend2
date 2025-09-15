@@ -166,8 +166,8 @@ export default {
             Apellidos:'',
             ApellidosM:'',
             Nombres:'',
-            urk32:'http://backendbolsaempleo.test/api/b_e/vin/consultaofertempr',
-            url255:'http://backendbolsaempleo.test/api/b_e/vin/postulacionemprendi',
+            urk32:'http://vinculacionconlasociedad.utelvt.edu.ec/backendbolsaempleo/api/b_e/vin/consultaofertempr',
+            url255:'http://vinculacionconlasociedad.utelvt.edu.ec/backendbolsaempleo/api/b_e/vin/postulacionemprendi',
             apiBaseUrl: "http://vinculacionconlasociedad.utelvt.edu.ec/cvubackendv2/api/cvn/v1",
             urls: {
                
@@ -359,7 +359,7 @@ export default {
             };
 
             if (this.si_cvn) {
-                const response = await enviarsolig23('POST', parametros, 'http://backendbolsaempleo.test/api/b_e/vin/postulacionemprendi', 'Postulado con éxito');
+                const response = await enviarsolig23('POST', parametros, 'http://vinculacionconlasociedad.utelvt.edu.ec/backendbolsaempleo/api/b_e/vin/postulacionemprendi', 'Postulado con éxito');
                 
                 const fechaEcuador = dayjs().tz('America/Guayaquil').format('YYYY-MM-DDTHH:mm:ss');
                 const thisidpostu = response.data.id;
@@ -370,8 +370,8 @@ export default {
                     fecha: fechaEcuador,
                     detalle_estado: "Verificando Datos de postulación",
                 };
-                axios.post('http://backendbolsaempleo.test/api/b_e/vin/estadopostuserempr', parametros2)
-                //enviarsolig('POST', parametros2, 'http://backendbolsaempleo.test/api/b_e/vin/estadopostuserempr', 'Postulación Aceptada');
+                axios.post('http://vinculacionconlasociedad.utelvt.edu.ec/backendbolsaempleo/api/b_e/vin/estadopostuserempr', parametros2)
+                //enviarsolig('POST', parametros2, 'http://vinculacionconlasociedad.utelvt.edu.ec/backendbolsaempleo/api/b_e/vin/estadopostuserempr', 'Postulación Aceptada');
                 
                 this.$router.push('/principal/' + this.ide);
             } else {

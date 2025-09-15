@@ -308,7 +308,7 @@ export default {
             modalidad:'',
             categoriaSeleccionada:'',
             Fechafinofer:'',
-            ur3:'http://backendbolsaempleo.test/api/b_e/vin/oferta__empleos2',
+            ur3:'http://vinculacionconlasociedad.utelvt.edu.ec/backendbolsaempleo/api/b_e/vin/oferta__empleos2',
             empresa_id:'',
             cargando: false,
             showTooltiptitulo: false,

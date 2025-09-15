@@ -423,7 +423,7 @@ export default {
 
                 }
 
-                enviarsolig('POST', parametros, 'http://backendbolsaempleo.test/api/b_e/vin/oferta_empleos_emprendimiento', 'Oferta Creada');
+                enviarsolig('POST', parametros, 'http://vinculacionconlasociedad.utelvt.edu.ec/backendbolsaempleo/api/b_e/vin/oferta_empleos_emprendimiento', 'Oferta Creada');
                 this.$router.push('/emprendimientosofertview/' + store.state.idusu);
             }
         },

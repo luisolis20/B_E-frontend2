@@ -152,7 +152,7 @@ export default {
     data() {
         return {
             idus: 0,
-            url2: 'http://backendbolsaempleo.test/api/b_e/vin/emprendimientos_E',
+            url2: 'http://vinculacionconlasociedad.utelvt.edu.ec/backendbolsaempleo/api/b_e/vin/emprendimientos_E',
             emprendimientoemp: [],
             filteredemprend: [],
             searchQuery: '',
@@ -236,7 +236,7 @@ export default {
         eliminar(id, nombre) {
             try {
                 confimar(
-                    'http://backendbolsaempleo.test/api/b_e/vin/consultaredirempelim/',
+                    'http://vinculacionconlasociedad.utelvt.edu.ec/backendbolsaempleo/api/b_e/vin/consultaredirempelim/',
                     id,
                     'Inhabilitar registro',
                     '¿Realmente desea inhabilitar el emprenidmiento  ' + nombre + '?',
@@ -250,7 +250,7 @@ export default {
         habilitar(id, nombre) {
             try {
                 confimarhabi(
-                    'http://backendbolsaempleo.test/api/b_e/vin/consultaredirempelim2/',
+                    'http://vinculacionconlasociedad.utelvt.edu.ec/backendbolsaempleo/api/b_e/vin/consultaredirempelim2/',
                     id,
                     'Hbailitar registro',
                     '¿Desea habilitar el emprendimiento ' + nombre + '?',

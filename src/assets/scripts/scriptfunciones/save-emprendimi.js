@@ -23,11 +23,11 @@ export default {
             sitio_web: '',
             redes_sociales: '',
             estado_empren: '',
-            url: 'http://backendbolsaempleo.test/api/b_e/vin/emprendimientos_E',
+            url: 'http://vinculacionconlasociedad.utelvt.edu.ec/backendbolsaempleo/api/b_e/vin/emprendimientos_E',
             cargando: false,
             Errorfoto: false,
             guardaremprendimiento: true,
-            ur3: 'http://backendbolsaempleo.test/api/b_e/vin/consultarediremp',
+            ur3: 'http://vinculacionconlasociedad.utelvt.edu.ec/backendbolsaempleo/api/b_e/vin/consultarediremp',
 
         }
     },
@@ -36,9 +36,12 @@ export default {
         this.idus = ruta.params.id;
         this.idus2 = ruta.params.id;
         //console.log(this.idus);
-        this.url += '/' + this.idus;
-        this.ur3 += '/' + this.idus2;
-        this.getEmprendiemi();
+        if (store.state.idusu != this.idus) {
+                    this.ur3 += '/' + this.idus2;
+        
+                    this.url += '/' + this.idus;
+                    this.getEmprendiemi();
+                }
     },
     methods: {
         async getEmprendiemi() {
@@ -125,7 +128,7 @@ export default {
                         estado_empren: 2,
                         CIInfPer: this.idus
                     };
-                    enviarsolig('POST', parametros, 'http://backendbolsaempleo.test/api/b_e/vin/emprendimientos_E', 'Emprendimiento Creado');
+                    enviarsolig('POST', parametros, 'http://vinculacionconlasociedad.utelvt.edu.ec/backendbolsaempleo/api/b_e/vin/emprendimientos_E', 'Emprendimiento Creado');
                     this.$router.push('/misemprendimientos/' + this.idus);
                 }
             } catch (error) {

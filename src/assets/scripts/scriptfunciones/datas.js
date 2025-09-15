@@ -10,7 +10,7 @@ export default {
       email: '',
       password: '',
       rol: '',
-      url: 'http://backendbolsaempleo.test/api/b_e/vin/users',
+      url: 'http://vinculacionconlasociedad.utelvt.edu.ec/backendbolsaempleo/api/b_e/vin/users',
 
       // Verificación de correo
       mostrarModal: false,
@@ -116,7 +116,7 @@ export default {
     async enviarCodigo() {
       try {
 
-        const response = await axios.post("http://backendbolsaempleo.test/api/b_e/vin/enviar-correo",
+        const response = await axios.post("http://vinculacionconlasociedad.utelvt.edu.ec/backendbolsaempleo/api/b_e/vin/enviar-correo",
           {
             email: this.email.trim(),
           }
@@ -151,7 +151,7 @@ export default {
 
     // ✅ Guardar usuario en backend
     procesarGuardar() {
-      const urlg = "http://backendbolsaempleo.test/api/b_e/vin/users"
+      const urlg = "http://vinculacionconlasociedad.utelvt.edu.ec/backendbolsaempleo/api/b_e/vin/users"
       const parametros = {
         name: this.nombre.trim(),
         email: this.email.trim(),
