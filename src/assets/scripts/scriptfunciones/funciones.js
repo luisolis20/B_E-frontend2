@@ -1,24 +1,25 @@
 import Swal from 'sweetalert2';
 import axios from 'axios';
+import store from '@/store';
 
-export function mostraralertas(titulo,icono,foco=''){
-    if(foco!=''){
+export function mostraralertas(titulo, icono, foco = '') {
+    if (foco != '') {
         document.getElementById(foco).focus();
     }
     Swal.fire({
-        title:titulo,
-        icon:icono,
-        customClass:{confirmButton:'btn btn-secondary', popup:'animated zoonIn'},
-        buttonsStyling:false
+        title: titulo,
+        icon: icono,
+        customClass: { confirmButton: 'btn btn-secondary', popup: 'animated zoonIn' },
+        buttonsStyling: false
     });
 }
-export function mostraralertas2(titulo,icono){
-    
+export function mostraralertas2(titulo, icono) {
+
     Swal.fire({
-        title:titulo,
-        icon:icono,
-        customClass:{confirmButton:'btn btn-secondary', popup:'animated zoonIn'},
-        buttonsStyling:false
+        title: titulo,
+        icon: icono,
+        customClass: { confirmButton: 'btn btn-secondary', popup: 'animated zoonIn' },
+        buttonsStyling: false
     });
 }
 export function confimar(urlconslash, id, titulo, mensaje, actualizarTabla) {
@@ -91,8 +92,8 @@ export function confimarhabi(urlconslash, id, titulo, mensaje, actualizarTabla) 
 }
 
 
-export function guardarcambios(metodo,parametros,urlid,titulo){
-    
+export function guardarcambios(metodo, parametros, urlid, titulo) {
+
     Swal.fire({
         title: titulo,
         showDenyButton: true,
@@ -102,48 +103,48 @@ export function guardarcambios(metodo,parametros,urlid,titulo){
     }).then((result) => {
         /* Read more about isConfirmed, isDenied below */
         if (result.isConfirmed) {
-            enviarsoliedit(metodo,parametros,urlid,'!Cambios reaizados!');
+            enviarsoliedit(metodo, parametros, urlid, '!Cambios reaizados!');
             //Swal.fire("!Cambios reaizados!", "", "success");
 
         } else if (result.isDenied) {
             Swal.fire("Los cambios no se guardaron", "", "info");
         }
     });
-   
+
 }
-export function enviarsoli(metodo,parametros,url,mensaje){
+export function enviarsoli(metodo, parametros, url, mensaje) {
     axios({
-        method:metodo,
-        url:url,
-        data:parametros
-    }).then(function(res){
+        method: metodo,
+        url: url,
+        data: parametros
+    }).then(function (res) {
         var estado = res.status;
-        if(estado==200){
-            mostraralertas(mensaje,'success');
-            
-        }else{
-            mostraralertas('No se pudo recuperar la respuesta','error');
+        if (estado == 200) {
+            mostraralertas(mensaje, 'success');
+
+        } else {
+            mostraralertas('No se pudo recuperar la respuesta', 'error');
         }
-    }).catch(function(error){
-        mostraralertas('Servidor no Disponible','error');
+    }).catch(function (error) {
+        mostraralertas('Servidor no Disponible', 'error');
     });
 }
-export function enviarsolig(metodo,parametros,url,mensaje){
+export function enviarsolig(metodo, parametros, url, mensaje) {
     axios({
-        method:metodo,
-        url:url,
-        data:parametros
-    }).then(function(res){
+        method: metodo,
+        url: url,
+        data: parametros
+    }).then(function (res) {
         var estado = res.status;
-        if(estado==200){
-            mostraralertas(mensaje,'success');
+        if (estado == 200) {
+            mostraralertas(mensaje, 'success');
             window.location.reload();
-               
-        }else{
-            mostraralertas('No se pudo recuperar la respuesta','error');
+
+        } else {
+            mostraralertas('No se pudo recuperar la respuesta', 'error');
         }
-    }).catch(function(error){
-        mostraralertas('Servidor no Disponible','error');
+    }).catch(function (error) {
+        mostraralertas('Servidor no Disponible', 'error');
     });
 }
 export function enviarsolig23(metodo, parametros, url, mensaje) {
@@ -155,7 +156,7 @@ export function enviarsolig23(metodo, parametros, url, mensaje) {
         var estado = res.status;
         if (estado == 200) {
             mostraralertas(mensaje, 'success');
-            
+
             return res.data; // 👈 aquí ya solo retornas los datos
         } else {
             mostraralertas('No se pudo recuperar la respuesta', 'error');
@@ -173,9 +174,14 @@ export async function enviarsoliedit(metodo, parametros, url, mensaje) {
             data: parametros
         });
         if (response.data) {
-            //console.log(mensaje + ': ' + response.data.mensaje);
+
             mostraralertas(mensaje, 'success');
-             window.location.reload();
+            //window.location.reload();
+
+            //console.log(mensaje + ': ' + response.data.mensaje);
+            //mostraralertas(mensaje, 'success');
+            // window.location.href = '/empresas/' + store.state.idusu;
+
 
         } else {
             mostraralertas('No se pudo recuperar la respuesta', 'error');

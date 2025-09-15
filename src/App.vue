@@ -36,10 +36,25 @@
                 v-if="mostrarOp">Home</router-link>
               <router-link :to="{ path: '/principal/' + idus }" class="nav-item nav-link"
                 :class="{ 'active': $route.path === '/principal/' + idus }">Inicio</router-link>
-              <router-link :to="{ path: '/empresas/' + idus }" class="nav-item nav-link" v-if="mostrarOpciones"
-                :class="{ 'active': $route.path === '/empresas/' + idus }">Mis Empresas</router-link>
-              <router-link :to="{ path: '/ofertas/' + idus }" class="nav-item nav-link" v-if="mostrarOpciones"
-                :class="{ 'active': $route.path === '/ofertas/' + idus }">Mis Oferas</router-link>
+               <div class="nav-item dropdown" v-if="mostrarOpciones">
+                <a class="nav-link dropdown-toggle" href="#" id="dropdownPostulaciones" role="button"
+                  data-bs-toggle="dropdown" aria-expanded="false" :class="{ 'active': $route.path.startsWith('/empresas/') || $route.path.startsWith('/ofertas/') || $route.path.startsWith('/aceptacionview/') || $route.path.startsWith('/rechazoview/') }"
+                  >
+                  Ver
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end border-0 rounded-0 rounded-bottom m-0" aria-labelledby="dropdownPostulaciones">
+                  <li>
+                    <router-link class="dropdown-item" :to="{ path: '/empresas/' + idus }" :class="{ 'active': $route.path === '/empresas/' + idus }">
+                       Mis Empresas
+                    </router-link>
+                  </li>
+                  <li>
+                    <router-link class="dropdown-item" :to="{ path: '/ofertas/' + idus }" :class="{ 'active': $route.path === '/ofertas/' + idus }">
+                      Mis Oferas
+                    </router-link>
+                  </li>
+                </ul>
+              </div> 
               <router-link :to="{ path: '/postuladosall/' + idus }" class="nav-item nav-link" v-if="mostrarOpciones"
                 :class="{ 'active': $route.path === '/postuladosall/' + idus }">Todos los Postulados</router-link>
               <router-link :to="{ path: '/estadopostulacionall/' + idus }" class="nav-item nav-link" v-if="mostrarOpciones"

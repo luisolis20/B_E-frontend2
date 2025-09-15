@@ -159,7 +159,6 @@ export default {
             currentPage: 1,
             lastPage: 1,
             buscando: false,
-            // Estado del tooltip imagen
             showTooltipbuscar: false, hoveringTooltipbuscar: false,
         }
     },

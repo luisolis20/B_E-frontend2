@@ -54,7 +54,7 @@ export default {
                     this.descripcion = response.data.data[0].descripcion;
                     this.fotografia = response.data.data[0].fotografia;
                     this.previewFoto = 'data:image/jpeg;base64,' + response.data.data[0].fotografia;
-                    console.log(this.fotografia);
+                    //console.log(this.fotografia);
                     this.tiempo_emprendimiento = response.data.data[0].tiempo_emprendimiento;
                     this.horarios_atencion = response.data.data[0].horarios_atencion;
                     this.direccion = response.data.data[0].direccion;
@@ -63,7 +63,7 @@ export default {
                     this.sitio_web = response.data.data[0].sitio_web;
                     this.redes_sociales = response.data.data[0].redes_sociales;
                     this.est = response.data.data[0].estado_empren;
-                    console.log(this.est);
+                    //console.log(this.est);
                     if(this.est==1){
                         this.estado_empren="Disponible"
                     }else if(this.est==2){
@@ -76,6 +76,8 @@ export default {
                 } 
 
             } catch (error) {
+                console.error('Error al obtener la emprendimiento:', error);
+                mostraralertas('Error al obtener la emprendimiento. Por favor, inténtelo de nuevo.', 'error');
 
             }
 
