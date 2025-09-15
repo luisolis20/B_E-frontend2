@@ -249,7 +249,7 @@ export default {
         },
 
         descargarCSV() {
-            const headers = ['ID', 'Empresa', 'Oferta', 'Cédula', 'Apellidos', 'Email', 'Fecha de Postulación', 'Estado'];
+            const headers = ['ID', 'Emprendimiento', 'Oferta', 'Cédula', 'Apellidos', 'Email', 'Fecha de Postulación', 'Estado'];
             const rows = this.postulacionespr.map(post => [
                 post.id,
                 post.Empresa,

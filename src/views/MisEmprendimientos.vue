@@ -147,6 +147,7 @@
 import axios from 'axios';
 import { useRoute } from 'vue-router';
 import { confimar,confimarhabi } from '@/assets/scripts/scriptfunciones/funciones';
+import script2 from '@/assets/scripts/custom.js';
 export default {
     data() {
         return {
@@ -261,18 +262,7 @@ export default {
             }
         },
 
-        formatFecha(fecha) {
-            if (!fecha) return '';
-            // Convierte a objeto Date (JS entiende bien "YYYY-MM-DD HH:mm:ss" si es ISO)
-            const normalizada = fecha.replace(' ', 'T');
-            return new Date(normalizada + '-05:00').toLocaleString('es-EC', {
-                day: '2-digit',
-                month: '2-digit',
-                year: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit'
-            });
-        },
+       
         toggleTooltip(field) {
             if (field === "buscar") this.showTooltipbuscar = !this.showTooltipbuscar;
         },
@@ -292,7 +282,8 @@ export default {
                     this[state] = false;
                 }
             });
-        }
-    }
+        },
+    },
+    mixins: [script2],
 }
 </script>

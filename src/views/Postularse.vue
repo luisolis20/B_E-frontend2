@@ -3,6 +3,8 @@
         <div class="container py-3">
             <div class="mb-5 text-center mx-auto wow fadeIn" data-wow-delay="0.1s" style="max-width: 800px;">
                 <h1 class="display-2 text-primary">Detalles de la Oferta</h1>
+                <p class="text-dark">Estos son los datos de la oferta. Te recordamos que si no posees un CVN no vas a poder postular a la oferta, revisa
+                en tu perfil tu CVN antes de postular.</p>
             </div>
             <div class="row justify-content-center">
                 <div class="col-md-10">
@@ -14,9 +16,9 @@
                         </div>
                         <form>
                             <div class="row gx-4 gy-3">
-                                <div class="col-lg-6 wow fadeIn" data-wow-delay="0.1s">
+                               <div class="col-lg-6 wow fadeIn" data-wow-delay="0.1s">
                                     <div class="form-group">
-                                        <label for="Examplename" class="form-label text-dark">Empresa</label>
+                                        <label for="Examplename" class="form-label text-dark">Nombre del Emprendimiento</label>
                                         <input type="text" v-model="empresa" class="form-control py-3 border-1 text-dark" id="Examplename" disabled>
                                     </div>
                                 </div>
@@ -29,8 +31,8 @@
                                 </div>
                                 <div class="col-lg-6 wow fadeIn" data-wow-delay="0.1s">
                                     <div class="form-group">
-                                        <label for="Examplename" class="form-label text-dark">Jefe de la Empresa</label>
-                                        <input type="text" v-model="jefe" class="form-control py-3 border-1 text-dark" id="Examplename"
+                                        <label for="Examplename" class="form-label text-dark">Dueño del emprendimiento</label>
+                                        <input type="text" :value="Nombres + ' ' + Apellidos + ' ' + ApellidosM"  class="form-control py-3 border-1 text-dark" id="Examplename"
                                         disabled>
                                     </div>
                                 </div>
@@ -70,16 +72,17 @@
                                 </div>
                                 <div class="col-lg-12 wow fadeIn" data-wow-delay="0.1s">
                                     <div class="form-group">
-                                        <label for="Examplename" class="form-label text-dark">Requisitos</label>
-                                        <textarea type="text" v-model="requisitos" class="form-control py-3 border-1 text-dark" id="Examplename"
-                                        disabled>
+                                         <label for="exampletextarea" class="form-label text-dark">Descripción</label>
+                                        <textarea name="text" v-model="descripcion" class="form-control border-1 text-dark" id="exampletextarea" cols="30"
+                                                rows="5" disabled></textarea>
                                     </div>
                                 </div>
+                               
                                 
                                 <div class="col-lg-12  wow fadeIn" data-wow-delay="0.1s">
                                     <div class="form-group">
-                                        <label for="exampletextarea" class="form-label text-dark">Descripción</label>
-                                        <textarea name="text" v-model="descripcion" class="form-control border-1 text-dark" id="exampletextarea" disabled></textarea>
+                                        <label for="exampletextarea" class="form-label text-dark">Requisitos</label>
+                                        <textarea cols="30" rows="5" name="text" v-model="requisitos" class="form-control border-1 text-dark" id="exampletextarea" disabled></textarea>
                                     </div>
                                 </div>
                                 <div class="col-12 wow fadeIn" data-wow-delay="0.1s">
@@ -91,15 +94,20 @@
                                             
                                         <div class="mt-4" v-if="postulosii">
                                             
+                                            <label for="" class="text-success">Usted  {{mi_cvn}}, puedes verlo en tu <router-link :to="{ path: '/perfil/' + this.ide }">perfil</router-link></label>
                                             
                                             <div v-if="new Date(this.Fechafinofer) <= new Date()" class="col-12 text-center wow fadeIn" data-wow-delay="0.1s">
                                                 <label for="" class="text-danger">La Oferta ya caducó, por ende no puedes postular a ella</label>
                                             </div>
                                             <div v-else class="col-12 text-center wow fadeIn" data-wow-delay="0.1s">
-                                                <button v-on:click="guardar" class="btn btn-primary btn-primary-outline-0 py-3 px-5 text-white">Si, Deseo Postularme</button>
+                                                <p class="text-dark">Al postularte a esta oferta la empresa verá tu CVN y datos personales, sabiendo esto ¿Deseas postularte?</p>
+                                                <div>
+                                                    <button v-on:click="guardar" class="btn btn-primary btn-primary-outline-0 py-3 px-5 text-white">Si, Deseo Postularme</button>
+                                                    &nbsp;&nbsp;&nbsp;&nbsp;
+                                                    <router-link :to="{ path: '/principal/' + this.ide }" class="btn btn-danger btn-primary-outline-0 py-3 px-5 text-white">No, No Deseo Postularme</router-link>
+                                                </div>
                                             </div>
                                             <br>
-                                            <label for="" class="text-success">Usted  {{mi_cvn}}, puedes verlo en tu <router-link :to="{ path: '/perfil/' + this.ide }">perfil</router-link></label>
                                         </div>
                                         <div class="mt-4" v-else>
                                             <div class="col-12 text-center wow fadeIn" data-wow-delay="0.1s">
@@ -107,7 +115,7 @@
                                                 <p class="text-dark"><i class="fa fa-check text-primary me-3"></i>Ir a la página oficial del CVN dando clic <a href="http://vinculacionconlasociedad.utelvt.edu.ec/cvn/home" target="_blank"
                                                     rel="noopener noreferrer">aquí</a></p>
                                                 <p class="text-dark"><i class="fa fa-check text-primary me-3"></i>Volver a postular a la oferta</p>
-                                                <label for="" class="text-danger">Si el problema persiste comunícate con nosotros/as al correo: </label>
+                                                <label for="" class="text-danger">Si el problema persiste comunícate con nosotros/as al correo: vinculacion@utelvt.edu.ec</label>
                                             </div>
                                         </div>
                                     </div>
@@ -133,7 +141,12 @@
 import { useRoute } from 'vue-router';
 import axios from 'axios';
 import store from '@/store';
-import {mostraralertas, enviarsolig, mostraralertas2} from '@/assets/scripts/scriptfunciones/funciones';
+import {mostraralertas, enviarsolig, mostraralertas2,enviarsolig23} from '@/assets/scripts/scriptfunciones/funciones';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 
 export default {
@@ -335,7 +348,17 @@ export default {
             };
 
             if (this.si_cvn) {
-                enviarsolig('POST', parametros, 'http://backendbolsaempleo.test/api/b_e/vin/postulacions', 'Postulado con Exito');
+                const response = await enviarsolig23('POST', parametros, 'http://backendbolsaempleo.test/api/b_e/vin/postulacions', 'Postulado con éxito');
+                const fechaEcuador = dayjs().tz('America/Guayaquil').format('YYYY-MM-DDTHH:mm:ss');
+                const thisidpostu = response.data.id;
+                //console.log(thisidpostu);
+                const parametros2 = {
+                    postulacion_id: thisidpostu,
+                    estado: "En proceso",
+                    fecha: fechaEcuador,
+                    detalle_estado: "Verificando Datos de postulación",
+                };
+                axios.post('http://backendbolsaempleo.test/api/b_e/vin/estadopostuser', parametros2)
                 this.$router.push('/principal/' + this.ide);
             } else {
                 mostraralertas2("Por requisitos del sistema no puedes postularte hasta que tengas tu CVN. Ve a tu perfil y crea tu CVN", "warning");

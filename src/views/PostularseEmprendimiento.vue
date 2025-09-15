@@ -94,15 +94,20 @@
                                             
                                         <div class="mt-4" v-if="postulosii">
                                             
+                                            <label for="" class="text-success">Usted  {{mi_cvn}}, puedes verlo en tu <router-link :to="{ path: '/perfil/' + this.ide }">perfil</router-link></label>
                                             
                                             <div v-if="new Date(this.Fechafinofer) <= new Date()" class="col-12 text-center wow fadeIn" data-wow-delay="0.1s">
                                                 <label for="" class="text-danger">La Oferta ya caducó, por ende no puedes postular a ella</label>
                                             </div>
                                             <div v-else class="col-12 text-center wow fadeIn" data-wow-delay="0.1s">
-                                                <button v-on:click="guardar" class="btn btn-primary btn-primary-outline-0 py-3 px-5 text-white">Si, Deseo Postularme</button>
+                                                <p class="text-dark">Al postularte a esta oferta, el dueño del emprendimiento verá tu CVN y datos personales, sabiendo esto ¿Deseas postularte?</p>
+                                                <div>
+                                                    <button v-on:click="guardar" class="btn btn-primary btn-primary-outline-0 py-3 px-5 text-white">Si, Deseo Postularme</button>
+                                                    &nbsp;&nbsp;&nbsp;&nbsp;
+                                                    <router-link :to="{ path: '/principal/' + this.ide }" class="btn btn-danger btn-primary-outline-0 py-3 px-5 text-white">No, No Deseo Postularme</router-link>
+                                                </div>
                                             </div>
                                             <br>
-                                            <label for="" class="text-success">Usted  {{mi_cvn}}, puedes verlo en tu <router-link :to="{ path: '/perfil/' + this.ide }">perfil</router-link></label>
                                         </div>
                                         <div class="mt-4" v-else>
                                             <div class="col-12 text-center wow fadeIn" data-wow-delay="0.1s">
@@ -110,7 +115,7 @@
                                                 <p class="text-dark"><i class="fa fa-check text-primary me-3"></i>Ir a la página oficial del CVN dando clic <a href="http://vinculacionconlasociedad.utelvt.edu.ec/cvn/home" target="_blank"
                                                     rel="noopener noreferrer">aquí</a></p>
                                                 <p class="text-dark"><i class="fa fa-check text-primary me-3"></i>Volver a postular a la oferta</p>
-                                                <label for="" class="text-danger">Si el problema persiste comunícate con nosotros/as al correo: </label>
+                                                <label for="" class="text-danger">Si el problema persiste comunícate con nosotros/as al siguente correo: vinculacion@utelvt.edu.ec</label>
                                             </div>
                                         </div>
                                     </div>
@@ -354,7 +359,7 @@ export default {
             };
 
             if (this.si_cvn) {
-                const response = await enviarsolig23('POST', parametros, 'http://backendbolsaempleo.test/api/b_e/vin/postulacionemprendi', 'Postulado con Exito');
+                const response = await enviarsolig23('POST', parametros, 'http://backendbolsaempleo.test/api/b_e/vin/postulacionemprendi', 'Postulado con éxito');
                 
                 const fechaEcuador = dayjs().tz('America/Guayaquil').format('YYYY-MM-DDTHH:mm:ss');
                 const thisidpostu = response.data.id;

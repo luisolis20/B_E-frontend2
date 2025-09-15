@@ -3,6 +3,8 @@
         <div class="container py-5">
             <div class="mb-5 text-center mx-auto wow fadeIn" data-wow-delay="0.1s" style="max-width: 800px;">
                 <h1 class="display-2 text-primary">Edita Tu Oferta Laboral</h1>
+                <p class="text-dark">Aquí puedes editar los datos de tu oferta laboral publicada en la bolsa de
+                    empleo.</p>
             </div>
             <div class="row justify-content-center">
                 <div class="col-md-10">
@@ -307,7 +309,7 @@ export default {
             categoriaSeleccionada:'',
             Fechafinofer:'',
             ur3:'http://backendbolsaempleo.test/api/b_e/vin/oferta_empleos_emprendimientos2',
-            empresa_id:'',
+            emprendimiento_id:'',
             cargando: false,
             showTooltiptitulo: false,
             hoveringTooltiptitulo: false,
@@ -332,7 +334,7 @@ export default {
         this.ide = ruta.params.id;
         this.idus = ruta.params.secondId;
         this.ur3 +=  '/'+this.idus;
-        console.log(this.ur3)
+        //console.log(this.ur3)
         this.getOfertas();
         
         
@@ -397,7 +399,7 @@ export default {
         },
 
        
-        actualizar(event){
+        async actualizar(event){
             event.preventDefault();
             if(this.titulo.trim()==''){
                 mostraralertas('Ingrese Titulo de la Oferta','warning','titulo');
@@ -414,6 +416,15 @@ export default {
             else if(this.modalidad.trim()==''){
                 mostraralertas('Ingrese modalidad','warning','modalidad');
             }
+            else if(this.tipo_contrato.trim()==''){
+                mostraralertas('Ingrese tipo de contrato','warning','tipo_contrato');
+            }
+            else if(this.categoriaSeleccionada.trim()==''){
+                mostraralertas('Seleccione una categoria','warning','categoria');
+            }
+            else if(this.Fechafinofer.trim()==''){
+                mostraralertas('Ingrese fecha de vigencia de la oferta','warning','fecha');
+            }
             
             
             else{
@@ -426,11 +437,12 @@ export default {
                     categoria:this.categoriaSeleccionada,
                     modalidad:this.modalidad.trim(),
                     fechaFinOferta:this.Fechafinofer,
-                    empresa_id:this.ide
+                    estado_ofert_empr: 2,
+                    emprendimiento_id:this.ide
 
                 }
                
-                enviarsoliedit('PUT',parametros,this.ur3,'Oferta Actualizada')
+                await enviarsoliedit('PUT',parametros,this.ur3,'Oferta Actualizada')
                 this.$router.push('/emprendimientosofertview/'+store.state.idusu);
             }
         },

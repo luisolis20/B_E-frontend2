@@ -52,7 +52,7 @@
                             <th scope="col">Tipo de contrato</th>
                             <th scope="col">Modalidad</th>
                             <th scope="col">Categoría</th>
-                            <th scope="col">Registrado</th>
+                            <th scope="col">Registrado/Actualizado</th>
                             <th scope="col">Finalización de la Oferta</th>
                             <th scope="col">Estado de la Oferta</th>
                             <th scope="col">Acciones</th>
@@ -70,7 +70,7 @@
                             <td v-text="ofe.tipo_contrato"></td>
                             <td v-text="ofe.modalidad"></td>
                             <td v-text="ofe.categoria"></td>
-                            <td v-text="new Date(ofe.created_at).toLocaleDateString('es-EC', {timeZone: 'America/Guayaquil'})"></td>
+                            <td v-text="new Date(ofe.updated_at).toLocaleDateString('es-EC', {timeZone: 'America/Guayaquil'})"></td>
                             <td v-text="new Date(ofe.fechaFinOferta).toLocaleDateString('es-EC', {timeZone: 'America/Guayaquil'})"></td>
                             <td>
                                 <button v-if="new Date(ofe.fechaFinOferta) <= new Date()" class="btn btn-danger fw-bold">Oferta Caducada</button>

@@ -3,6 +3,7 @@
         <div class="container py-3">
             <div class="mb-5 text-center mx-auto wow fadeIn" data-wow-delay="0.1s" style="max-width: 800px;">
                 <h1 class="display-2 text-primary">Tu Empresa</h1>
+                <p class="text-dark">En este apartado visualizarás los datos de tu empresa, no podrás editarlo. Aquí lo que harás es crear una oferta laboral para tu empresa</p>
             </div>
             <div class="row justify-content-center">
                 <div class="col-md-10">
@@ -185,7 +186,7 @@ export default {
                 res=>{
                     this.ruce=res.data.data.ruc;
                     this.nombree=res.data.data.empresacorta;
-                    this.ciudade=res.data.data.lugar;
+                    this.ciudade=res.data.data.ciudad;
                     this.paise=res.data.data.pais;
                     this.telefonoe=res.data.data.telefono;
                     this.direccione=res.data.data.direccion;

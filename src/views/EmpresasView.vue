@@ -13,8 +13,8 @@
                     <form class="d-none d-md-flex ms-4">
                         <div class="input-with-icon col-sm-6">
                             <input class="form-control py-3 border-1 text-dark lg" type="search"
-                                placeholder="Buscar ruc de la empresa..." v-model="searchQuery"
-                                @input="filterResults" @keypress="onlyNumbers">
+                                placeholder="Buscar ruc de la empresa..." v-model="searchQuery" @input="filterResults"
+                                @keypress="onlyNumbers">
                             <!-- Botón de ayuda -->
                             <span class="help-icon" @mouseenter="showTooltipbuscar = true"
                                 @mouseleave="hideOnLeave('buscar')" @click.stop="toggleTooltip('buscar')"
@@ -38,13 +38,10 @@
                             <th scope="col">Id</th>
                             <th scope="col">Ruc</th>
                             <th scope="col">Empresa</th>
-                            <th scope="col">Ciudad</th>
-                            <th scope="col">Pais</th>
                             <th scope="col">Representante</th>
-                            <th scope="col">Telefono</th>
                             <th scope="col">Creada</th>
-                            <th scope="col">Actualizada</th>
-                            <th scope="col">Fin de relación</th>
+                            <th scope="col">Fin de Convenio</th>
+                            <th scope="col">Cant. Ofer</th>
                             <th scope="col">Estado</th>
                             <th scope="col"></th>
                         </tr>
@@ -60,35 +57,39 @@
                             <td v-text="emp.idempresa"></td>
                             <td v-text="emp.ruc"></td>
                             <td v-text="emp.empresacorta"></td>
-                            <td v-text="emp.ciudad"></td>
-                            <td v-text="emp.pais"></td>
                             <td v-text="emp.representante"></td>
-                            <td v-text="emp.telefono"></td>
                             <td>{{ formatFecha(emp.created_at) }}</td>
-                            <td>{{ formatFecha(emp.updated_at) }}</td>
-                             <td>{{ formatFecha(emp.fechafin)}}
-                                <label v-if="new Date(emp.fechafin) <= new Date()"
-                                    class="text-danger fw-bold">(Relación Caducada)</label>
-                                <label v-else class="text-success fw-bold">(Relacion Vigente)</label>
+                            <td>{{ formatFecha(emp.fechafin) }}
+                                <label v-if="new Date(emp.fechafin) <= new Date()" class="text-danger fw-bold">(Convenio
+                                    Caducado)</label>
+                                <label v-else class="text-success fw-bold">(Convenio Vigente)</label>
                             </td>
+                            <td class="text-center">({{ emp.total_ofertas }})</td>
                             <td>
                                 <button v-if="emp.estado_empr == 1" class="btn btn-success fw-bold">
                                     Habilitada</button>
-                                <button v-if="emp.estado_empr == 0" class="btn btn-danger fw-bold"> Deshabilitada</button>
+                                <button v-if="emp.estado_empr == 0" class="btn btn-danger fw-bold">
+                                    Deshabilitada</button>
                             </td>
                             <td>
-                                <router-link :to="{ path: '/viewE/' + emp.idempresa }" class="btn btn-info" title="Ver empresa" v-if="emp.estado_empr == 1">
+                                <router-link :to="{ path: '/viewE/' + emp.idempresa }" class="btn btn-info"
+                                    title="Ver empresa"
+                                    v-if="emp.estado_empr == 1 && new Date(emp.fechafin) >= new Date()">
                                     <i class="fa-solid fa-eye"></i>
                                 </router-link>
                                 &nbsp;
-                                <router-link :to="{ path: '/editE/' + emp.idempresa }" class="btn btn-warning" title="Editar empresa" v-if="emp.estado_empr == 1">
+                                <router-link :to="{ path: '/editE/' + emp.idempresa }" class="btn btn-warning"
+                                    title="Editar empresa" v-if="emp.estado_empr == 1">
                                     <i class="fa-solid fa-edit"></i>
                                 </router-link>
                                 &nbsp;
-                                 <button class="btn btn-danger" v-on:click="eliminar(emp.idempresa, emp.empresacorta)" v-if="emp.estado_empr == 1" title="Inhabilitar empresa">
+                                <button class="btn btn-danger" v-on:click="eliminar(emp.idempresa, emp.empresacorta)"
+                                    v-if="emp.estado_empr == 1 && new Date(emp.fechafin) >= new Date() && emp.total_ofertas == 0"
+                                    title="Inhabilitar empresa">
                                     <i class="fa-solid fa-trash"></i>
                                 </button>
-                                 <button class="btn btn-success" v-on:click="habilitar(emp.empresacorta)" v-if="emp.estado_empr == 0" title="Habilitar empresa">
+                                <button class="btn btn-success" v-on:click="habilitar(emp.empresacorta)"
+                                    v-if="emp.estado_empr == 0" title="Habilitar empresa">
                                     <i class="fas fa-redo"></i>
                                 </button>
 
@@ -110,35 +111,35 @@
                     para añadirla</router-link>
             </div>
         </div>
-        
-        <div v-else>
-                <br><br><br>
 
-                <div class="d-flex justify-content-center mb-4">
-                    <button @click="previousPage" :disabled="currentPage === 1 || buscando"
-                        class="btn btn-primary text-white">
-                        Anterior
-                    </button>&nbsp;
-                    <span class="text-dark">Página {{ currentPage }} de {{ lastPage }}</span>&nbsp;
-                    <button @click="nextPage" :disabled="currentPage === lastPage || buscando"
-                        class="btn btn-primary text-white">
-                        Siguiente
-                    </button>
-                </div>
-                &nbsp;&nbsp;&nbsp;&nbsp;
-                <div class="d-flex justify-content-center">
-                    <button class="btn btn-primary text-white" @click="actualizar">Actualizar Datos</button>
-                </div>
-                <div class="mt-5">
-                    <label class="border-0 border-bottom rounded me-5 py-3 mb-4 text-dark"> ¿Eres dueño o formas parte de
-                    una empresa? </label>
-                    <router-link :to="{ path: '/empresascreate/' + idus }"
-                        class="btn border-secondary rounded-pill px-4 py-3 text-primary" type="button">Haz Click Aquí
-                    para añadirla</router-link>
-                </div>
-                <br><br>
-                
+        <div v-else>
+            <br><br><br>
+
+            <div class="d-flex justify-content-center mb-4">
+                <button @click="previousPage" :disabled="currentPage === 1 || buscando"
+                    class="btn btn-primary text-white">
+                    Anterior
+                </button>&nbsp;
+                <span class="text-dark">Página {{ currentPage }} de {{ lastPage }}</span>&nbsp;
+                <button @click="nextPage" :disabled="currentPage === lastPage || buscando"
+                    class="btn btn-primary text-white">
+                    Siguiente
+                </button>
             </div>
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            <div class="d-flex justify-content-center">
+                <button class="btn btn-primary text-white" @click="actualizar">Actualizar Datos</button>
+            </div>
+            <div class="mt-5">
+                <label class="border-0 border-bottom rounded me-5 py-3 mb-4 text-dark"> ¿Eres dueño o formas parte de
+                    una empresa? </label>
+                <router-link :to="{ path: '/empresascreate/' + idus }"
+                    class="btn border-secondary rounded-pill px-4 py-3 text-primary" type="button">Haz Click Aquí
+                    para añadirla</router-link>
+            </div>
+            <br><br>
+
+        </div>
 
     </div>
 
@@ -164,7 +165,7 @@ export default {
             currentPage: 1,
             lastPage: 1,
             buscando: false,
-             showTooltipbuscar: false, hoveringTooltipbuscar: false,
+            showTooltipbuscar: false, hoveringTooltipbuscar: false,
         }
     },
     mounted() {
@@ -229,8 +230,8 @@ export default {
                 this.updateFilteredData();
             }
         },
-        
-        
+
+
         toggleTooltip(field) {
             if (field === "buscar") this.showTooltipbuscar = !this.showTooltipbuscar;
         },
@@ -267,13 +268,13 @@ export default {
         },
         habilitar(nombre) {
             try {
-                mostraralertas('Para habilitar la empresa '+nombre+', debes comunicarte con el administrador del sistema', 'warning');
+                mostraralertas('Para habilitar la empresa ' + nombre + ', debes comunicarte con el administrador del sistema', 'warning');
             } catch (error) {
                 console.error("Error al habilitar la empresa:", error);
                 this.cargando = false;
             }
         },
-       
+
     },
     mixins: [script2],
 }

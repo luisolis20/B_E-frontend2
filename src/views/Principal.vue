@@ -72,29 +72,47 @@
 
                       </div>
                       <div class="p-4 rounded-bottom">
-                        <h4>{{ ofe.titulo }}</h4>
-                        <h6>Fecha de publicación: {{ new Date(ofe.created_at).toLocaleDateString('es-ES') }}</h6>
-                        <div v-if="new Date(ofe.fechaFinOferta) > new Date() && tiemposRestantes[ofe.id]">
-                          <h6 class="text-success">
-                            {{ calcularDiasRestantes(ofe.fechaFinOferta) }} - Tiempo restante:
-                            <span :class="{
-                              'text-success': !tiemposRestantes[ofe.id].includes('Caducada'),
-                              'text-danger': tiemposRestantes[ofe.id].includes('Caducada')
-                            }">
-                              {{ tiemposRestantes[ofe.id] }}
-                            </span>
-                          </h6>
-                        </div>
-                        <div v-else>
-                          <h6 class="text-danger">La oferta ya caducó</h6>
-                        </div>
-                        <h6>Categoría / Área: {{ ofe.categoria }}</h6>
-                        <p class="text-dark">Descripcion: {{ ofe.descripcion }}</p>
-                        <div class="d-flex justify-content-between flex-lg-wrap">
-                          <p class="text-dark fs-5 fw-bold mb-0">Nombre de la Empresa: {{ ofe.Empresa }}</p>
-                          <router-link :to="{ path: '/postularse/' + idus + '/' + ofe.id }"
-                            class="btn border border-secondary rounded-pill px-3 text-primary"><i
-                              class="fa-solid fa-eye me-2 icom"></i> Ver Detalle</router-link>
+                        <div class="row">
+                          <div class="col-md-12 col-lg-3">
+                              <div class="text-center">
+
+                                <img v-if="ofe.imagen" :src="'data:image/jpeg;base64,' + ofe.imagen"
+                                  width="100%" height="300" style="border-radius: 10px; object-fit: cover;" />
+                                <img v-else src="https://emprendedores.biz/wp-content/uploads/2023/08/QEE-2.png"
+                                  width="100%" height="300" style="border-radius: 10px; object-fit: cover;" />
+                              </div>
+
+
+                            </div>
+                            <div class="col-md-12 col-lg-8">
+                              <h4>{{ ofe.titulo }}</h4>
+                              <h6>Fecha de publicación: {{ new Date(ofe.created_at).toLocaleDateString('es-ES') }}</h6>
+                              <div v-if="new Date(ofe.fechaFinOferta) > new Date() && tiemposRestantes[ofe.id]">
+                                <h6 class="text-success">
+                                  {{ calcularDiasRestantes(ofe.fechaFinOferta) }} - Tiempo restante:
+                                  <span :class="{
+                                    'text-success': !tiemposRestantes[ofe.id].includes('Caducada'),
+                                    'text-danger': tiemposRestantes[ofe.id].includes('Caducada')
+                                  }">
+                                    {{ tiemposRestantes[ofe.id] }}
+                                  </span>
+                                </h6>
+                              </div>
+                              <div v-else>
+                                <h6 class="text-danger">La oferta ya caducó</h6>
+                              </div>
+                              <h6>Categoría / Área: {{ ofe.categoria }}</h6>
+                              <p class="text-dark">Descripcion: {{ ofe.descripcion }}</p>
+                              <div class="d-flex justify-content-between flex-lg-wrap">
+                                <p class="text-dark fs-5 fw-bold mb-0">Nombre de la Empresa: {{ ofe.Empresa }}</p>
+                              </div>
+                              <div class="text-center">
+                              <br><br><br>
+                                <router-link :to="{ path: '/postularse/' + idus + '/' + ofe.id }"
+                                  class="btn border border-secondary rounded-pill px-3 text-primary"><i
+                                    class="fa-solid fa-eye me-2 icom"></i> Ver Detalle Completo</router-link>
+                              </div>
+                            </div>
                         </div>
                       </div>
 
@@ -125,7 +143,8 @@
                 <h4 class="mb-0 display-4">Ofertas en sitios webs</h4>
                 <p class="text-dark">Aquí encontrarás ofertas en sitios webs, si deseas verlos puedes dar clic y te
                   lllevará al sitio donde se encuentra publicado</p><br>
-                <form class="container-fluid row g-1 mt-1">
+                  <h3>Aun no se pueden ver ofertas de sitios web</h3>
+                <!--<form class="container-fluid row g-1 mt-1">
                   <div class="row">
                     <div class="col-lg-12">
                       <div class="col-sm-6 col-md-6 col-xl-5">
@@ -171,6 +190,8 @@
                   &nbsp;&nbsp;&nbsp;&nbsp;
                   <div class="owl-carousel vegetable-carousel justify-content-center">
                     &nbsp;&nbsp;&nbsp;&nbsp;
+                    <h3>Aun no se pueden ver ofertas de sitios web</h3>
+                     
                     <div v-for="ofe in ofertasFiltradas.slice(0, 10)" :key="ofe.id"
                       class="border border-primary rounded position-relative vesitable-item mx-2 my-3">
 
@@ -215,7 +236,7 @@
                 </form>
                 <div v-if="ofertas.length === 0" class="text-center">
                   <h3>No hay Ofertas publicadas</h3>
-                </div>
+                </div>-->
 
                 <br><br>
 
@@ -361,17 +382,7 @@
                 <b class="text-dark">Noticias de Vinculación con la Sociedad</b>
                 <div class="rounded overflow-hidden">
                   <img :src="publicacionPrincipal.full_picture" class="img-fluid rounded img-zoomin w-100" alt="">
-                  <div class="d-flex justify-content-center px-4 position-absolute flex-wrap"
-                    style="bottom: 10px; left: 0;">
-                    <a href="#" class="text-white me-3 link-hover"><i class="fa fa-thumbs-up"></i> {{
-                      estadisticas?.reacciones }} Reacciones</a>
-                    <a href="#" class="text-white me-3 link-hover"><i class="fa fa-eye"></i>{{ estadisticas?.vistas }}
-                      Vistas </a>
-                    <a href="#" class="text-white me-3 link-hover"><i class="fa fa-comment-dots"></i> {{
-                      estadisticas?.comentarios }} Comentarios</a>
-                    <a href="#" class="text-white link-hover"><i class="fa fa-arrow-up"></i> {{
-                      estadisticas?.compartidas }} Compartidas</a>
-                  </div>
+                  
                 </div>
 
                 &nbsp;&nbsp;&nbsp;&nbsp;

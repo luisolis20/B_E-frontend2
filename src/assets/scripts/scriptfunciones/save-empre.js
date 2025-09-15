@@ -87,7 +87,7 @@ export default {
 
 
         },
-        guardar(event) {
+        async guardar(event) {
             event.preventDefault();
             try {
                 if (this.ruc == '') {
@@ -172,7 +172,6 @@ export default {
 
 
                     }
-
                     enviarsolig('POST', parametros, 'http://backendbolsaempleo.test/api/b_e/vin/empresas', 'Empresa Creada');
                     this.$router.push('/empresas/' + this.idus);
                 }

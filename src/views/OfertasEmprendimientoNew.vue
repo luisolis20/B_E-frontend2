@@ -397,6 +397,15 @@ export default {
             else if (this.modalidad.trim() == '') {
                 mostraralertas('Ingrese la modalidad', 'warning', 'modalidad');
             }
+            else if (this.tipo_contrato.trim() == '') {
+                mostraralertas('Seleccione el tipo de contrato', 'warning', 'tipo_contrato');
+            }
+            else if (this.categoriaSeleccionada.trim() == '') {
+                mostraralertas('Seleccione la categoría', 'warning', 'categoria');
+            }
+            else if (this.Fechafinofer.trim() == '') {
+                mostraralertas('Seleccione la fecha de vigencia', 'warning', 'fecha');
+            }
 
 
             else {
@@ -409,6 +418,7 @@ export default {
                     categoria: this.categoriaSeleccionada,
                     fechaFinOferta: this.Fechafinofer,
                     modalidad: this.modalidad.trim(),
+                    estado_ofert_empr: 2,
                     emprendimiento_id: this.idus
 
                 }

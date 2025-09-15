@@ -122,11 +122,11 @@
                                     <i class="fa-solid fa-eye"></i>
                                 </router-link>
                                 &nbsp;
-                                <button v-if="mostrarOpciones3 && ofe.estado_ofert == 1" class="btn btn-danger"
+                                <button v-if="mostrarOpciones3 && ofe.estado_ofert == 1 &&  ofe.total_postulados == 0" class="btn btn-danger"
                                     v-on:click="eliminar(ofe.id, ofe.titulo)">
                                     <i class="fa-solid fa-trash"></i>
                                 </button>
-                                <button v-if="mostrarOpciones3 && ofe.estado_ofert == 0" class="btn btn-success"
+                                <button v-if="mostrarOpciones3 && ofe.estado_ofert == 0 && new Date(ofe.fechaFinOferta) >= new Date()" class="btn btn-success"
                                     v-on:click="habilitar(ofe.id, ofe.titulo)">
                                     <i class="fas fa-redo"></i>
                                 </button>
@@ -452,7 +452,7 @@ export default {
                     this.actualizar   // 👈 callback para refrescar la tabla al confirmar
                 );
             } catch (error) {
-                console.error("Error al eliminar el emprendimiento:", error);
+                console.error("Error al eliminar la oferta:", error);
                 this.cargando = false;
             }
 
@@ -463,26 +463,15 @@ export default {
                     'http://backendbolsaempleo.test/api/b_e/vin/oferta__empleoshabi/',
                     id,
                     'Hbailitar registro',
-                    '¿Desea habilitar el emprendimiento ' + nombre + '?',
+                    '¿Desea habilitar la oferta ' + nombre + '?',
                     this.actualizar   // 👈 callback para refrescar la tabla al confirmar
                 );
             } catch (error) {
-                console.error("Error al eliminar el emprendimiento:", error);
+                console.error("Error al eliminar la oferta:", error);
                 this.cargando = false;
             }
         },
-        formatFecha(fecha) {
-            if (!fecha) return '';
-            // Convierte a objeto Date (JS entiende bien "YYYY-MM-DD HH:mm:ss" si es ISO)
-            const normalizada = fecha.replace(' ', 'T');
-            return new Date(normalizada + '-05:00').toLocaleString('es-EC', {
-                day: '2-digit',
-                month: '2-digit',
-                year: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit'
-            });
-        },
+        
 
     },
     mixins: [script2],
