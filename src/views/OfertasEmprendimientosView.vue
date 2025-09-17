@@ -136,7 +136,7 @@
             return{
                 ide:0,
                 idus:0,
-                url21:'http://vinculacionconlasociedad.utelvt.edu.ec/backendbolsaempleo/api/b_e/vin/oferta_empleos_emprendimiento',
+                url21:'http://backendbolsaempleo.test/api/b_e/vin/oferta_empleos_emprendimiento',
                 ofertas:[],
                 filteredofertas: [],
                 searchQuery: '',
@@ -230,7 +230,7 @@
             },
             eliminar(id,nombre){
                 try {
-                    confimar('http://vinculacionconlasociedad.utelvt.edu.ec/backendbolsaempleo/api/b_e/vin/oferta_empleos_emprendimiento/',id,'Eliminar registro','¿Realmente desea eliminar la oferta'+nombre+'?', this.actualizar);
+                    confimar('http://backendbolsaempleo.test/api/b_e/vin/oferta_empleos_emprendimiento/',id,'Eliminar registro','¿Realmente desea eliminar la oferta'+nombre+'?', this.actualizar);
                     
                 } catch (error) {
                     console.error("Error al eliminar:", error);

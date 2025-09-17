@@ -23,7 +23,7 @@
                 <select v-model="filtroEstado" @change="filtrarOfertas" class="form-select text-dark" id="filtroEstado">
                     <option value="todas">Todas</option>
                     <option value="Aceptada">Aceptada</option>
-                    <option value="Rechazada">Rehcazada</option>
+                    <option value="Rechazada">Rechazada</option>
                     <option value="En proceso">En proceso</option>
                 </select>
             </div>
@@ -36,7 +36,7 @@
                             <th scope="col">Empresa</th>
                             <th scope="col">Oferta</th>
                             <th scope="col">Céd del Postulante</th>
-                            <th scope="col">Apellidos del Postulante</th>
+                            <th scope="col">Postulante</th>
                             <th scope="col">Email</th>
                             <th scope="col">Estado</th>
                             <th scope="col">Fecha que Postuló</th>
@@ -141,7 +141,7 @@ export default {
     data() {
         return {
             idus: 0,
-            url213: 'http://vinculacionconlasociedad.utelvt.edu.ec/backendbolsaempleo/api/b_e/vin/postulacions2empre',
+            url213: 'http://backendbolsaempleo.test/api/b_e/vin/postulacions2empre',
             postulacionespr: [],
             filteredpostulaciones: [],
             searchQuery: '',
@@ -347,7 +347,7 @@ export default {
             });
         },
         eliminar(id, nombre) {
-            confimar('http://vinculacionconlasociedad.utelvt.edu.ec/backendbolsaempleo/api/b_e/vin/postulacions/', id, 'Eliminar registro', '¿Realmente desea eliminar a ' + nombre + '?');
+            confimar('http://backendbolsaempleo.test/api/b_e/vin/postulacions/', id, 'Eliminar registro', '¿Realmente desea eliminar a ' + nombre + '?');
             this.cargando = false;
             this.$router.push('/principal/' + this.idus);
 

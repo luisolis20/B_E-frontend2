@@ -122,12 +122,13 @@
                                     <i class="fa-solid fa-eye"></i>
                                 </router-link>
                                 &nbsp;
-                                <button v-if="mostrarOpciones3 && ofe.estado_ofert == 1 &&  ofe.total_postulados == 0" class="btn btn-danger"
-                                    v-on:click="eliminar(ofe.id, ofe.titulo)">
+                                <button v-if="mostrarOpciones3 && ofe.estado_ofert == 1 && ofe.total_postulados == 0"
+                                    class="btn btn-danger" v-on:click="eliminar(ofe.id, ofe.titulo)">
                                     <i class="fa-solid fa-trash"></i>
                                 </button>
-                                <button v-if="mostrarOpciones3 && ofe.estado_ofert == 0 && new Date(ofe.fechaFinOferta) >= new Date()" class="btn btn-success"
-                                    v-on:click="habilitar(ofe.id, ofe.titulo)">
+                                <button
+                                    v-if="mostrarOpciones3 && ofe.estado_ofert == 0 && new Date(ofe.fechaFinOferta) >= new Date()"
+                                    class="btn btn-success" v-on:click="habilitar(ofe.id, ofe.titulo)">
                                     <i class="fas fa-redo"></i>
                                 </button>
 
@@ -222,8 +223,8 @@ export default {
     data() {
         return {
             idus: 0,
-            url255: 'http://vinculacionconlasociedad.utelvt.edu.ec/backendbolsaempleo/api/b_e/vin/consultanopostofert',
-            url2552: 'http://vinculacionconlasociedad.utelvt.edu.ec/backendbolsaempleo/api/b_e/vin/oferta__empleos',
+            url255: 'http://backendbolsaempleo.test/api/b_e/vin/consultanopostofert',
+            url2552: 'http://backendbolsaempleo.test/api/b_e/vin/oferta__empleos',
 
             ofertas: [],
             filteredofertas: [],
@@ -296,16 +297,17 @@ export default {
             const conteoOfertas = {};
             const conteoPostulados = {};
 
+            // Contamos ofertas y postulados por empresa
             this.ofertas.forEach(post => {
                 if (!conteoOfertas[post.Empresa]) {
                     conteoOfertas[post.Empresa] = 0;
                     conteoPostulados[post.Empresa] = 0;
                 }
-                conteoOfertas[post.Empresa]++; // cuenta de ofertas
-                conteoPostulados[post.Empresa] += post.total_postulados || 0; // suma de postulados
+                conteoOfertas[post.Empresa]++;
+                conteoPostulados[post.Empresa] += post.total_postulados || 0;
             });
 
-            const etiquetas = Object.keys(conteoOfertas);
+            const empresas = Object.keys(conteoOfertas);
             const datosOfertas = Object.values(conteoOfertas);
             const datosPostulados = Object.values(conteoPostulados);
 
@@ -314,41 +316,92 @@ export default {
             }
 
             const ctx = document.getElementById('graficoOfertas');
-            const colores1 = etiquetas.map(() => `hsl(${Math.floor(Math.random() * 360)}, 70%, 60%)`);
-            const colores2 = etiquetas.map(() => `hsl(${Math.floor(Math.random() * 360)}, 70%, 40%)`);
+
+            // Colores fijos para que coincidan con las etiquetas
+            const colorOfertas = "hsl(120, 80%, 50%)";   // Verde
+            const colorPostulados = "hsl(220, 80%, 50%)"; // Azul
 
             this.grafico = new Chart(ctx, {
                 type: 'bar',
                 data: {
-                    labels: etiquetas,
+                    labels: empresas,
                     datasets: [
                         {
-                            label: 'Cantidad de Ofertas',
+                            label: 'Ofertas',
                             data: datosOfertas,
-                            backgroundColor: colores1,
-                            borderColor: colores1,
+                            backgroundColor: colorOfertas,
+                            borderColor: colorOfertas,
                             borderWidth: 1
                         },
                         {
-                            label: 'Cantidad de Postulados',
+                            label: 'Postulados',
                             data: datosPostulados,
-                            backgroundColor: colores2,
-                            borderColor: colores2,
+                            backgroundColor: colorPostulados,
+                            borderColor: colorPostulados,
                             borderWidth: 1
                         }
                     ]
                 },
                 options: {
                     responsive: true,
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                title: function (context) {
+                                    return `Empresa: ${context[0].label}`;
+                                },
+                                label: function (context) {
+                                    return `${context.dataset.label}: ${context.raw}`;
+                                }
+                            }
+                        }
+                    },
                     scales: {
+                        x: {
+                            ticks: {
+                                callback: function (value, index) {
+                                    const empresa = this.getLabelForValue(value);
+                                    return [
+                                        `Empresa: ${empresa}`,
+                                        `Ofertas: ${datosOfertas[index]}`,
+                                        `Postulados: ${datosPostulados[index]}`
+                                    ];
+                                }
+                            }
+                        },
                         y: {
                             beginAtZero: true,
                             stepSize: 1
                         }
                     }
-                }
+                },
+                plugins: [{
+                    // 🔹 Plugin para colorear cada parte del tick
+                    id: 'customLabels',
+                    afterDraw(chart) {
+                        const ctx = chart.ctx;
+                        chart.scales.x.ticks.forEach((tick, i) => {
+                            const x = chart.scales.x.getPixelForTick(i);
+                            const y = chart.scales.x.bottom + 10;
+
+                            ctx.save();
+                            ctx.textAlign = 'center';
+                            ctx.textBaseline = 'top';
+                            ctx.fillStyle = '#000';
+                            ctx.fillText(`Empresa: ${empresas[i]}`, x, y);
+
+                            ctx.fillStyle = colorOfertas;
+                            ctx.fillText(`Ofertas: ${datosOfertas[i]}`, x, y + 15);
+
+                            ctx.fillStyle = colorPostulados;
+                            ctx.fillText(`Postulados: ${datosPostulados[i]}`, x, y + 30);
+                            ctx.restore();
+                        });
+                    }
+                }]
             });
         },
+
 
         calcularDiasRestantes(fechaFin) {
             const hoy = new Date();
@@ -445,7 +498,7 @@ export default {
         },
         eliminar(id, nombre) {
             try {
-                confimar('http://vinculacionconlasociedad.utelvt.edu.ec/backendbolsaempleo/api/b_e/vin/oferta__empleos/',
+                confimar('http://backendbolsaempleo.test/api/b_e/vin/oferta__empleos/',
                     id,
                     'Inhabilitar registro',
                     '¿Realmente desea inhabilitar la oferta ' + nombre + '?',
@@ -460,7 +513,7 @@ export default {
         habilitar(id, nombre) {
             try {
                 confimarhabi(
-                    'http://vinculacionconlasociedad.utelvt.edu.ec/backendbolsaempleo/api/b_e/vin/oferta__empleoshabi/',
+                    'http://backendbolsaempleo.test/api/b_e/vin/oferta__empleoshabi/',
                     id,
                     'Hbailitar registro',
                     '¿Desea habilitar la oferta ' + nombre + '?',
@@ -471,7 +524,7 @@ export default {
                 this.cargando = false;
             }
         },
-        
+
 
     },
     mixins: [script2],

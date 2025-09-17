@@ -23,12 +23,11 @@
                             <th scope="col">Id</th>
                             <th scope="col">Empresa</th>
                             <th scope="col">Oferta</th>
-                            <th scope="col">Descripcion</th>
                             <th scope="col">Céd del Postulante</th>
                             <th scope="col">Apellidos del Postulante</th>
                             <th scope="col">Email</th>
                             <th scope="col">Estado</th>
-                            <th scope="col">Registrado</th>
+                            <th scope="col">Postulado</th>
                         </tr>
                     </thead>
                     <tbody id="contenido">
@@ -42,7 +41,6 @@
                             <td v-text="post.id"></td>
                             <td v-text="post.Empresa"></td>
                             <td v-text="post.Oferta"></td>
-                            <td v-text="post.descripcion"></td>
                             <td v-text="post.CIInfPer"></td>
                             <td v-text="post.NombInfPer + ' ' + post.ApellInfPer + ' ' + post.ApellMatInfPer"></td>
                             <td v-text="post.mailPer"></td>
@@ -112,7 +110,7 @@ export default {
     data() {
         return {
             idus: 0,
-            url213: 'http://vinculacionconlasociedad.utelvt.edu.ec/backendbolsaempleo/api/b_e/vin/postulacionemprendi',
+            url213: 'http://backendbolsaempleo.test/api/b_e/vin/postulacionemprendi',
             postulacionespr: [],
             filteredpostulaciones: [],
             searchQuery: '',

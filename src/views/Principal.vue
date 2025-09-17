@@ -543,8 +543,8 @@ export default {
   data() {
     return {
       idus: 0,
-      url255: 'http://vinculacionconlasociedad.utelvt.edu.ec/backendbolsaempleo/api/b_e/vin/consultanopostofert',
-      url2552: 'http://vinculacionconlasociedad.utelvt.edu.ec/backendbolsaempleo/api/b_e/vin/consultanopostempre',
+      url255: 'http://backendbolsaempleo.test/api/b_e/vin/consultanopostofert',
+      url2552: 'http://backendbolsaempleo.test/api/b_e/vin/consultanopostempre',
       ofertas: [],
       ofertas_emprendi: [],
       categoriaSeleccionada: '',

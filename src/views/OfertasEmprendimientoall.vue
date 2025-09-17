@@ -224,7 +224,7 @@ export default {
     data() {
         return {
             idus: 0,
-            url255: 'http://vinculacionconlasociedad.utelvt.edu.ec/backendbolsaempleo/api/b_e/vin/consultanopostempre',
+            url255: 'http://backendbolsaempleo.test/api/b_e/vin/consultanopostempre',
             ofertas: [],
             filteredofertas: [],
             searchQuery: '',
@@ -351,7 +351,7 @@ export default {
             }
         },
         eliminar(id, nombre) {
-            confimar('http://vinculacionconlasociedad.utelvt.edu.ec/backendbolsaempleo/api/b_e/vin/oferta__empleos/', id, 'Eliminar registro', '¿Realmente desea eliminar a ' + nombre + '?');
+            confimar('http://backendbolsaempleo.test/api/b_e/vin/oferta__empleos/', id, 'Eliminar registro', '¿Realmente desea eliminar a ' + nombre + '?');
             this.cargando = false;
             this.$router.push('/principal/' + this.idus);
 

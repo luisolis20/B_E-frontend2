@@ -162,7 +162,7 @@ export default {
         return {
             ide: 0,
             idus: 0,
-            url21: 'http://vinculacionconlasociedad.utelvt.edu.ec/backendbolsaempleo/api/b_e/vin/oferta__empleos',
+            url21: 'http://backendbolsaempleo.test/api/b_e/vin/oferta__empleos',
             ofertas: [],
             filteredofertas: [],
             searchQuery: '',
@@ -256,7 +256,7 @@ export default {
         },
         eliminar(id, nombre) {
             try {
-                confimar('http://vinculacionconlasociedad.utelvt.edu.ec/backendbolsaempleo/api/b_e/vin/oferta__empleos/',
+                confimar('http://backendbolsaempleo.test/api/b_e/vin/oferta__empleos/',
                     id,
                     'Inhabilitar registro',
                     '¿Realmente desea inhabilitar la oferta ' + nombre + '?',
@@ -271,7 +271,7 @@ export default {
          habilitar(id, nombre) {
             try {
                 confimarhabi(
-                    'http://vinculacionconlasociedad.utelvt.edu.ec/backendbolsaempleo/api/b_e/vin/oferta__empleoshabi/',
+                    'http://backendbolsaempleo.test/api/b_e/vin/oferta__empleoshabi/',
                     id,
                     'Hbailitar registro',
                     '¿Desea habilitar la oferta ' + nombre + '?',

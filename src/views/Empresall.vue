@@ -88,7 +88,7 @@
         data(){
             return{
                 idus:0,
-                url255:'http://vinculacionconlasociedad.utelvt.edu.ec/backendbolsaempleo/api/b_e/vin/empresas',
+                url255:'http://backendbolsaempleo.test/api/b_e/vin/empresas',
                 empresasprac: [],
                 filteredempresas: [],
                 searchQuery: '',
@@ -162,7 +162,7 @@
                 }
             },
             eliminar(id,nombre){
-                confimar('http://vinculacionconlasociedad.utelvt.edu.ec/backendbolsaempleo/api/b_e/vin/empresas/',id,'Eliminar registro','¿Realmente desea eliminar a '+nombre+'?');
+                confimar('http://backendbolsaempleo.test/api/b_e/vin/empresas/',id,'Eliminar registro','¿Realmente desea eliminar a '+nombre+'?');
                 this.cargando = false;
                 this.$router.push('/principal/'+this.idus);
 

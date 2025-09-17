@@ -3,11 +3,12 @@
         <div class="container">
             <div class="row g-5 align-items-center">
                 <div class="col-lg-5 wow bounceInUp" data-wow-delay="0.1s">
-                <!-- Main Post Section Start
-                    <img v-if="imagen" :src="imagen" id="fotoimg" class="img-fluid rounded" alt="">
+
+                    <img v-if="fotografia" :src="'data:image/jpeg;base64,' + fotografia" id="fotoimg" width="500"
+                        height="500" style="border-radius: 10px;" alt="">
                     <img v-else
                         src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/User_icon_2.svg/768px-User_icon_2.svg.png"
-                        id="fotoimg" class="img-fluid rounded" alt="">-->
+                        id="fotoimg" class="img-fluid rounded" alt="">
                 </div>
                 <div class="col-lg-7 wow bounceInUp" data-wow-delay="0.3s">
                     <small
@@ -16,27 +17,28 @@
                     <h1 class="display-5 mb-4"> Datos del Postulante </h1>
 
                     <div class="row g-4 text-dark mb-5">
-                        <div class="col-sm-6">
-                            <i class="fas fa-share text-primary me-2"></i>Cédula: {{ CIInfPer }} 
+                        <div class="col-sm-12">
+                            <i class="fas fa-share text-primary me-2"></i><b>Cédula: </b> {{ CIInfPer }}
+                        </div>
+                        <div class="col-sm-12">
+                            <i class="fas fa-share text-primary me-2"></i><b>Nombres y apellidos: </b> {{ NombInfPer }}
+                            {{ ApellInfPer
+                            }}{{ ApellMatInfPer }}
+                        </div>
+                        <div class="col-sm-12">
+                            <i class="fas fa-share text-primary me-2"></i><b>Email: </b> {{ mailPer }}
                         </div>
                         <div class="col-sm-6">
-                            <i class="fas fa-share text-primary me-2"></i>Nombres y apellidos: {{ NombInfPer }} {{ ApellInfPer
-                            }}{{ ApellMatInfPer }} 
+                            <i class="fas fa-share text-primary me-2"></i><b>Teléfono: </b>{{ Telf1InfPer }}
                         </div>
                         <div class="col-sm-6">
-                            <i class="fas fa-share text-primary me-2"></i>Email: {{ mailPer }}
+                            <i class="fas fa-share text-primary me-2"></i><b>Ciudad: </b>{{ CiudadPer }}
+                        </div>
+                        <div class="col-sm-12">
+                            <i class="fas fa-share text-primary me-2"></i><b>Dirección: </b>{{ DirecDomicilioPer }}
                         </div>
                         <div class="col-sm-6">
-                            <i class="fas fa-share text-primary me-2"></i>Teléfono: {{ Telf1InfPer }}
-                        </div>
-                        <div class="col-sm-6">
-                            <i class="fas fa-share text-primary me-2"></i>Ciudad: {{ CiudadPer }}
-                        </div>
-                        <div class="col-sm-6">
-                            <i class="fas fa-share text-primary me-2"></i>Dirección: {{ DirecDomicilioPer }}
-                        </div>
-                        <div class="col-sm-6">
-                            <i class="fas fa-share text-primary me-2"></i>Hoja de Vida:
+                            <i class="fas fa-share text-primary me-2"></i><b>Hoja de Vida:</b>
                             <br><br><br>
                             <button v-on:click="visualizarCV" type="button"
                                 class="btn border-secondary py-3 px-4 text-uppercase w-100 text-primary">Visualizar
@@ -46,48 +48,54 @@
                     </div>
                     <div class="row g-5 align-items-center" v-if="si_postula">
                         <div class="col-12">
-                           <label class="text-danger" >Esta postulación ya ha sido {{ detalle_si }}</label>
-                            
+                            <label class="text-danger">Esta postulación ya ha sido {{ detalle_si }}</label>
+
                         </div>
-                        
+
                     </div>
                     <div class="row g-5 align-items-center" v-else>
                         <div class="col-6">
-                            <a v-on:click="aceptarpost" class="btn btn-primary py-3 px-5 rounded-pill text-white">Aceptar Postulación<i
+                            <a v-on:click="aceptarpost"
+                                class="btn btn-primary py-3 px-5 rounded-pill text-white">Aceptar Postulación<i
                                     class="fas fa-arrow-right ps-2"></i></a>
-                            
+
                         </div>
                         <div class="col-6">
-                            <a v-on:click="rechazarpost" class="btn btn-primary py-3 px-5 rounded-pill text-white">Rechazar Postulación<i
+                            <a v-on:click="rechazarpost"
+                                class="btn btn-primary py-3 px-5 rounded-pill text-white">Rechazar Postulación<i
                                     class="fas fa-arrow-right ps-2"></i></a>
-                            
+
                         </div>
                     </div>
                     <br><br>
                     <div class="col-12 wow fadeIn" data-wow-delay="0.1s" v-if="aceptado_post">
                         <div class="form-group">
-                            <label for="exampletextarea" class="form-label text-dark">Detalle el motivo por el cual aceptó la Postulación</label>
-                            <textarea name="text" v-model="detalle_estadio" class="form-control border-1 text-dark" id="detalle_estadio" cols="30"
-                            rows="5" ></textarea>
+                            <label for="exampletextarea" class="form-label text-dark">Detalle el motivo por el cual
+                                aceptó la Postulación</label>
+                            <textarea name="text" v-model="detalle_estadio" class="form-control border-1 text-dark"
+                                id="detalle_estadio" cols="30" rows="5"></textarea>
                         </div>
                         <br><br>
-                         <div class="col-6">
-                            <a v-on:click="aceptarpost2" class="btn btn-primary py-3 px-5 rounded-pill text-white">Enviar<i
+                        <div class="col-6">
+                            <a v-on:click="aceptarpost2"
+                                class="btn btn-primary py-3 px-5 rounded-pill text-white">Enviar<i
                                     class="fas fa-paper-plane ps-2"></i></a>
-                            
+
                         </div>
                     </div>
                     <div class="col-12 wow fadeIn" data-wow-delay="0.1s" v-if="rechazado_post">
                         <div class="form-group">
-                            <label for="exampletextarea" class="form-label text-dark">Detalle el motivo por el cual rechazó la Postulación</label>
-                            <textarea name="text" v-model="detalle_estadio" class="form-control border-1 text-dark" id="detalle_estadio" cols="30"
-                            rows="5" ></textarea>
+                            <label for="exampletextarea" class="form-label text-dark">Detalle el motivo por el cual
+                                rechazó la Postulación</label>
+                            <textarea name="text" v-model="detalle_estadio" class="form-control border-1 text-dark"
+                                id="detalle_estadio" cols="30" rows="5"></textarea>
                         </div>
                         <br><br>
-                         <div class="col-6">
-                            <a v-on:click="rechazarpost2" class="btn btn-primary py-3 px-5 rounded-pill text-white">Enviar<i
+                        <div class="col-6">
+                            <a v-on:click="rechazarpost2"
+                                class="btn btn-primary py-3 px-5 rounded-pill text-white">Enviar<i
                                     class="fas fa-paper-plane ps-2"></i></a>
-                            
+
                         </div>
                     </div>
                 </div>
@@ -99,7 +107,7 @@
 @import url('@/assets/styles/styles.css');
 </style>
 <script>
-import { mostraralertas, enviarsoliedit,enviarsolig,enviarsoli } from '@/assets/scripts/scriptfunciones/funciones';
+import { mostraralertas, enviarsoliedit, enviarsolig, enviarsoli } from '@/assets/scripts/scriptfunciones/funciones';
 import { useRoute } from 'vue-router';
 import axios from 'axios';
 import store from '@/store';
@@ -115,10 +123,11 @@ export default {
         return {
             id: 0,
             idus: 0,
+            idusest: 0,
             aceptado_post: false,
             rechazado_post: false,
             detalle_estadio: "",
-           //Datos Personales
+            //Datos Personales
             urlinformacionpersonal: "http://vinculacionconlasociedad.utelvt.edu.ec/cvubackendv2/api/cvn/v1/informacionpersonal",
             iddatos_personales: 0,
             datos_personales: null,
@@ -135,6 +144,7 @@ export default {
             Telf1InfPer: "",
             mailPer: "",
             edad: "",
+            fotografia: "",
             //Formacion Academica
             urlformacion_academica: "http://vinculacionconlasociedad.utelvt.edu.ec/cvubackendv2/api/cvn/v1/formacion_academica",
             urlfichasocioeconomica: "http://vinculacionconlasociedad.utelvt.edu.ec/cvubackendv2/api/cvn/v1/fichasocioeconomica",
@@ -340,70 +350,81 @@ export default {
                 investigacion: '', // URL de investigación y publicaciones
                 otrosDatos: '', // URL de otros datos relevantes
             },
-            url44: 'http://vinculacionconlasociedad.utelvt.edu.ec/backendbolsaempleo/api/b_e/vin/consultapostuserestado2',
+            url44: 'http://backendbolsaempleo.test/api/b_e/vin/consultapostuserestado2',
             cargando: false,
             si_postula: false,
             postulacionespr: [],
             detalle_si: "",
-            
+            company_name: "",
+            job_offer: "",
+            urlest: "http://backendbolsaempleo.test/api/b_e/vin/estadopostuser",
+
         }
     },
     mounted() {
         const ruta = useRoute();
         this.id = ruta.params.id;
         this.idus = ruta.params.secondId;
+        this.idusest = ruta.params.thirdId;
         this.url44 += '/' + this.id;
+        this.urlest += '/' + this.idusest;
         this.urlinformacionpersonal += '/' + this.idus;
-            this.urlformacion_academica += '/' + this.idus;
-            this.urlexperiencia_profesionale += '/' + this.idus;
-            this.urlinvestigacion_publicacione += '/' + this.idus;
-            this.urlidioma += '/' + this.idus;
-            this.urlhabilidades_informatica += '/' + this.idus;
-            this.urlotros_datos_relevante += '/' + this.idus;
-            this.urlinformacion_contacto += '/' + this.idus;
-            this.urldeclaracion_personal += '/' + this.idus;
-            this.urlcursoscapacitacion += '/' + this.idus;
-            this.urlfichasocioeconomica += '/' + this.idus;
-            Promise.all([
-                this.getDatosPersonales(),
-                this.getDeclaracionPersonal(),
-                this.getFormacionAcademica(),
-                this.getExperienciasProfesionales(),
-                this.getInvestigacionPublicaciones(),
-                this.getIdiomas(),
-                this.getHabilidadesInformaticas(),
-                this.getCursosCapacitaciones(),
-                this.getDatosRelevantes(),
-                this.getInformacionContacto(),
-                this.getPostulaciones(),
+        this.urlformacion_academica += '/' + this.idus;
+        this.urlexperiencia_profesionale += '/' + this.idus;
+        this.urlinvestigacion_publicacione += '/' + this.idus;
+        this.urlidioma += '/' + this.idus;
+        this.urlhabilidades_informatica += '/' + this.idus;
+        this.urlotros_datos_relevante += '/' + this.idus;
+        this.urlinformacion_contacto += '/' + this.idus;
+        this.urldeclaracion_personal += '/' + this.idus;
+        this.urlcursoscapacitacion += '/' + this.idus;
+        this.urlfichasocioeconomica += '/' + this.idus;
+        Promise.all([
+            this.getDatosPersonales(),
+            this.getDeclaracionPersonal(),
+            this.getFormacionAcademica(),
+            this.getExperienciasProfesionales(),
+            this.getInvestigacionPublicaciones(),
+            this.getIdiomas(),
+            this.getHabilidadesInformaticas(),
+            this.getCursosCapacitaciones(),
+            this.getDatosRelevantes(),
+            this.getInformacionContacto(),
+            this.getPostulaciones(),
 
-            ])
+        ])
     },
     methods: {
-        async getPostulaciones(){
-            this.cargando=true;
-            try{
-                
+        async getPostulaciones() {
+            this.cargando = true;
+            try {
+
                 const response = await axios.get(this.url44);
                 // Verifica si la respuesta tiene datos válidos
                 const allData = response.data?.data || [];
-                console.log(allData);
                 if (allData.length > 0) {
-                   
-                    this.si_postula = true;
-                    this.detalle_si = allData[0].estado;
-                }else {
+
+                    const detalle_si2 = allData[0].estado;
+                    this.job_offer = allData[0].Oferta;
+                    this.company_name = allData[0].Empresa;
+                    if (detalle_si2 === "En proceso") {
+                        this.si_postula = false;
+                    } else {
+                        this.si_postula = true;
+                        this.detalle_si = detalle_si2;
+                    }
+                } else {
                     this.si_postula = false;
                     this.detalle_si = "";
                 }
-                
+
             }
             catch (error) {
                 console.warn("No hay postulaciones para este usuario");
-                this.postulacionespr = []; 
+                this.postulacionespr = [];
                 this.si_postula = false;
             }
-            
+
         },
         //Datos Personales
         async getDatosPersonales() {
@@ -435,7 +456,7 @@ export default {
                     this.DirecDomicilioPer = data.DirecDomicilioPer;
                     this.Telf1InfPer = data.Telf1InfPer;
                     this.mailPer = data.mailPer;
-                    this.imagen = data.fotografia;
+                    this.fotografia = data.fotografia;
                     const añoActual = new Date().getFullYear();
                     const añoNacimiento = new Date(data.FechNacimPer).getFullYear();
                     this.edad = añoActual - añoNacimiento;
@@ -463,11 +484,11 @@ export default {
             try {
                 const response = await axios.get(this.urlformacion_academica);
                 //console.log(this.estudioactualmentefacultadcarreras);
-                
+
 
                 if (response.data.data && response.data.data.length > 0) {
                     const data = response.data.data;
-                    this.formacion_academicas2= data;
+                    this.formacion_academicas2 = data;
 
                     // Limpiamos los arreglos existentes
                     this.titulosBachiller = [];
@@ -551,7 +572,7 @@ export default {
                 const response = await axios.get(this.urlexperiencia_profesionale);
                 if (response.data.data && response.data.data.length > 0) {
                     const data = response.data.data;
-                    this.experiencia_profesionales2= data;
+                    this.experiencia_profesionales2 = data;
                     this.cargosEmpresas = [];
                     this.cargosPasantias = [];
 
@@ -600,7 +621,7 @@ export default {
                 return response;
 
             } catch (error) {
-                 if (error.response?.status === 404) {
+                if (error.response?.status === 404) {
                     // ✅ Se controla el error y NO se imprime en consola como un error
                     // ⚠️ Importante: No lanzamos el error ni usamos console.error
                     console.warn("El estudiante no ha llenado la experiencia profesional y es su primera vez (404).");
@@ -618,7 +639,7 @@ export default {
                 const response = await axios.get(this.urlinvestigacion_publicacione);
                 if (response.data.data && response.data.data.length > 0) {
                     const data = response.data.data;
-                    this.filteredpublicacion2=data;
+                    this.filteredpublicacion2 = data;
                     this.publicacionesarray = [];
 
                     data.forEach(item => {
@@ -688,7 +709,7 @@ export default {
                 return response;
 
             } catch (error) {
-                 if (error.response?.status === 404) {
+                if (error.response?.status === 404) {
                     // ✅ Se controla el error y NO se imprime en consola como un error
                     // ⚠️ Importante: No lanzamos el error ni usamos console.error
                     console.warn("El estudiante no ha llenado Idiomas y es su primera vez (404).");
@@ -706,7 +727,7 @@ export default {
                 const response = await axios.get(this.urlhabilidades_informatica);
                 if (response.data.data && response.data.data.length > 0) {
                     const data = response.data.data;
-                    this.habilidades_informaticas2=data;
+                    this.habilidades_informaticas2 = data;
                     this.habilidades_comunicativas_array = [];
                     this.habilidades_creativas_array = [];
                     this.habilidades_informaticas_array = [];
@@ -772,7 +793,7 @@ export default {
                 return response;
 
             } catch (error) {
-                 if (error.response?.status === 404) {
+                if (error.response?.status === 404) {
                     // ✅ Se controla el error y NO se imprime en consola como un error
                     // ⚠️ Importante: No lanzamos el error ni usamos console.error
                     console.warn("El estudiante no ha llenado Habilidades y es su primera vez (404).");
@@ -791,7 +812,7 @@ export default {
                 const response = await axios.get(this.urlcursoscapacitacion);
                 if (response.data.data && response.data.data.length > 0) {
                     const data = response.data.data;
-                    this.filteredcursos2=data;
+                    this.filteredcursos2 = data;
                     this.curso_capacitacionarray = [];
 
                     data.forEach(item => {
@@ -823,7 +844,7 @@ export default {
                 return response;
 
             } catch (error) {
-                 if (error.response?.status === 404) {
+                if (error.response?.status === 404) {
                     // ✅ Se controla el error y NO se imprime en consola como un error
                     // ⚠️ Importante: No lanzamos el error ni usamos console.error
                     console.warn("El estudiante no ha llenado Cursos y es su primera vez (404).");
@@ -842,7 +863,7 @@ export default {
                 const response = await axios.get(this.urlotros_datos_relevante);
                 if (response.data.data && response.data.data.length > 0) {
                     const data = response.data.data;
-                    this.otros_datos_relevantes2=data;
+                    this.otros_datos_relevantes2 = data;
                     this.otros_datos_personalesarray = [];
 
                     data.forEach(item => {
@@ -867,7 +888,7 @@ export default {
                 return response;
 
             } catch (error) {
-                 if (error.response?.status === 404) {
+                if (error.response?.status === 404) {
                     // ✅ Se controla el error y NO se imprime en consola como un error
                     // ⚠️ Importante: No lanzamos el error ni usamos console.error
                     console.warn("El estudiante no ha llenado Datos Relevantes y es su primera vez (404).");
@@ -886,7 +907,7 @@ export default {
                 const response = await axios.get(this.urlinformacion_contacto);
                 if (response.data.data && response.data.data.length > 0) {
                     const data = response.data.data;
-                    this.filteredreferencias2=data;
+                    this.filteredreferencias2 = data;
                     this.informacion_contactoarray = [];
 
                     data.forEach(item => {
@@ -932,7 +953,7 @@ export default {
                 const response = await axios.get(this.urldeclaracion_personal);
                 if (response.data.data && response.data.data.length > 0) {
                     const data = response.data.data[0];
-                    this.filtereddeclaracion_personals2=data;
+                    this.filtereddeclaracion_personals2 = data;
                     this.iddeclaracion_personal = data.id;
                     this.texto = data.texto;
 
@@ -943,7 +964,7 @@ export default {
                 return response;
 
             } catch (error) {
-               if (error.response?.status === 404) {
+                if (error.response?.status === 404) {
                     // ✅ Se controla el error y NO se imprime en consola como un error
                     // ⚠️ Importante: No lanzamos el error ni usamos console.error
                     console.warn("El estudiante no ha llenado la declaración personal y es su primera vez (404).");
@@ -1546,66 +1567,93 @@ export default {
             });
         },
         async aceptar() {
-            
-           
+
+
             try {
-                    // Enviar el correo electrónico
-                    const responseCorreo = await axios.post("http://vinculacionconlasociedad.utelvt.edu.ec/backendbolsaempleo/api/b_e/vin/enviar-aceptacion-postulacion", {
-                    
-                        email: this.email.trim(),
-                        firts_name:this.nombre.trim(),
-                    });
+                // Enviar el correo electrónico
+                const responseCorreo = await axios.post("http://backendbolsaempleo.test/api/b_e/vin/enviar-aceptacion-postulacion", {
 
-                    // Verificar si el correo se envió correctamente
-                    if (responseCorreo.status === 200) {
-                        // Si el correo se envió correctamente, proceder a eliminar la postulación
-                    
-                        const responseEliminar = await axios.delete('http://vinculacionconlasociedad.utelvt.edu.ec/backendbolsaempleo/api/b_e/vin/postulacions/' + this.id);
+                    email: this.mailPer.trim(),
+                    firts_name: this.apellidos.trim(),
+                    company_name: this.company_name,
+                    job_offer: this.job_offer,
 
-                        // Verificar si la postulación se eliminó correctamente
-                        if (responseEliminar.status === 200) {
-                            // Mostrar mensaje de éxito al usuario
-                            mostraralertas('Correo enviado y postulación eliminada con éxito', 'success');
-                        
-                        } else {
-                            // Si hubo un error al eliminar la postulación, mostrar mensaje de error
-                            mostraralertas('Error al eliminar la postulación', 'error');
-                        }
-                    } else {
-                        // Si hubo un error al enviar el correo, mostrar mensaje de error
-                        mostraralertas('Error al enviar el correo electrónico', 'error');
-                    }
-                } catch (error) {
-                    console.error(error);
-                    alert("Ocurrió un error al realizar la acción.");
+                });
+                //console.log(responseCorreo);
+
+                // Verificar si el correo se envió correctamente
+                if (responseCorreo.status === 200) {
+                    // Mostrar mensaje de éxito al usuario
+                    // console.log('Correo electrónico enviado con éxito');
+                    this.$router.push('/postuladosall/' + store.state.idusu);
+
+                   
+                } else {
+                    // Si hubo un error al enviar el correo, mostrar mensaje de error
+                     console.log('error al enviar el correo electrónico');
+                     this.$router.push('/postuladosall/' + store.state.idusu);
                 }
-            
-         /*   try {
-
-                const responseCorreo = await axios.post("http://vinculacionconlasociedad.utelvt.edu.ec/backendbolsaempleo/api/b_e/vin/enviar-aceptacion-postulacion",
-                    {
-                        email: this.email.trim(),
-                        firts_name:this.nombre.trim(),
-                    }
-                );
-                console.log(response);
-                mostraralertas('Postulacion Aceptada', 'success');
-                this.$router.push('/principal/' + store.state.idusu);
-
             } catch (error) {
                 console.error(error);
-                alert("Ocurrió un error al enviar el correo electrónico.");
-            }*/
-           
+                alert("Ocurrió un error al realizar la acción.");
+            }
+
+            /*   try {
+   
+                   const responseCorreo = await axios.post("http://backendbolsaempleo.test/api/b_e/vin/enviar-aceptacion-postulacion",
+                       {
+                           email: this.email.trim(),
+                           firts_name:this.nombre.trim(),
+                       }
+                   );
+                   console.log(response);
+                   mostraralertas('Postulacion Aceptada', 'success');
+                   this.$router.push('/principal/' + store.state.idusu);
+   
+               } catch (error) {
+                   console.error(error);
+                   alert("Ocurrió un error al enviar el correo electrónico.");
+               }*/
+
+        },
+        async rechazar() {
+
+
+            try {
+                // Enviar el correo electrónico
+                const responseCorreo = await axios.post("http://backendbolsaempleo.test/api/b_e/vin/enviar-rechazo-postulacion", {
+
+                    email: this.mailPer.trim(),
+                    firts_name: this.apellidos.trim(),
+                    company_name: this.company_name,
+                    job_offer: this.job_offer,
+
+                });
+                if (responseCorreo.status === 200) {
+                    // Mostrar mensaje de éxito al usuario
+                    // console.log('Correo electrónico enviado con éxito');
+                    this.$router.push('/postuladosall/' + store.state.idusu);
+
+                   
+                } else {
+                     console.log('error al enviar el correo electrónico');
+                     this.$router.push('/postuladosall/' + store.state.idusu);
+                }
+            } catch (error) {
+                console.error(error);
+                alert("Ocurrió un error al realizar la acción.");
+            }
+
+
         },
         aceptarpost() {
             this.aceptado_post = true;
-            if(this.rechazado_post){
+            if (this.rechazado_post) {
                 this.rechazado_post = false;
             }
-            
+
         },
-        aceptarpost2() {
+        async aceptarpost2() {
             const fechaEcuador = dayjs().tz('America/Guayaquil').format('YYYY-MM-DDTHH:mm:ss');
 
             const parametros = {
@@ -1614,19 +1662,19 @@ export default {
                 fecha: fechaEcuador,
                 detalle_estado: this.detalle_estadio,
             };
-            enviarsolig('POST', parametros, 'http://vinculacionconlasociedad.utelvt.edu.ec/backendbolsaempleo/api/b_e/vin/estadopostuser', 'Postulación Aceptada');
-            this.$router.push('/principal/' + this.id);
-            
+            await enviarsoliedit('PUT', parametros,this.urlest, 'Postulación Aceptada y Enviada');
+            this.aceptar();
+
         },
         rechazarpost() {
             this.rechazado_post = true;
-            if(this.aceptado_post){
+            if (this.aceptado_post) {
                 this.aceptado_post = false;
             }
 
-            
+
         },
-        rechazarpost2() {
+        async rechazarpost2() {
             const fechaEcuador = dayjs().tz('America/Guayaquil').format('YYYY-MM-DDTHH:mm:ss');
 
             const parametros = {
@@ -1635,11 +1683,12 @@ export default {
                 fecha: fechaEcuador,
                 detalle_estado: this.detalle_estadio,
             };
-            enviarsolig('POST', parametros, 'http://vinculacionconlasociedad.utelvt.edu.ec/backendbolsaempleo/api/b_e/vin/estadopostuser', 'Postulación Rechazada');
-            this.$router.push('/principal/' + this.id);
-            
+            await enviarsoliedit('PUT', parametros,this.urlest, 'Postulación Rechazada y Enviada');
+            this.rechazar();
+            //this.$router.push('/postuladosall/' + store.state.idusu);
+
         },
-       
+
     }
 
 

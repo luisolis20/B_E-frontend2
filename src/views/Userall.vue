@@ -119,7 +119,7 @@ export default {
     data() {
         return {
             idus: 0,
-            url255: 'http://vinculacionconlasociedad.utelvt.edu.ec/backendbolsaempleo/api/b_e/vin/users',
+            url255: 'http://backendbolsaempleo.test/api/b_e/vin/users',
             usuariosarr: [],
             filteredusuarios: [],
             searchQuery: '',
@@ -188,7 +188,7 @@ export default {
         },
         eliminar(id, nombre) {
             try {
-                confimar('http://vinculacionconlasociedad.utelvt.edu.ec/backendbolsaempleo/api/b_e/vin/users/',
+                confimar('http://backendbolsaempleo.test/api/b_e/vin/users/',
                     id, 'Inhabilitar registro',
                     '¿Realmente desea inhabilitar el usuario  ' + nombre + '?',
                     this.actualizar
@@ -203,7 +203,7 @@ export default {
         habilitar(id, nombre) {
             try {
                 confimarhabi(
-                    'http://vinculacionconlasociedad.utelvt.edu.ec/backendbolsaempleo/api/b_e/vin/usershabi/',
+                    'http://backendbolsaempleo.test/api/b_e/vin/usershabi/',
                     id,
                     'Hbailitar registro',
                     '¿Desea habilitar el usuario ' + nombre + '?',

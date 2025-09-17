@@ -136,6 +136,7 @@ export default {
             Telf1InfPer: "",
             mailPer: "",
             edad: "",
+            fotografia: "",
             //Formacion Academica
             urlformacion_academica: "http://vinculacionconlasociedad.utelvt.edu.ec/cvubackendv2/api/cvn/v1/formacion_academica",
             urlfichasocioeconomica: "http://vinculacionconlasociedad.utelvt.edu.ec/cvubackendv2/api/cvn/v1/fichasocioeconomica",
@@ -341,12 +342,12 @@ export default {
                 investigacion: '', // URL de investigación y publicaciones
                 otrosDatos: '', // URL de otros datos relevantes
             },
-            url44: 'http://vinculacionconlasociedad.utelvt.edu.ec/backendbolsaempleo/api/b_e/vin/consultapostuserestado2empr',
+            url44: 'http://backendbolsaempleo.test/api/b_e/vin/consultapostuserestado2empr',
             cargando: false,
             si_postula: false,
             postulacionespr: [],
             detalle_si: "",
-            urlest: "http://vinculacionconlasociedad.utelvt.edu.ec/backendbolsaempleo/api/b_e/vin/estadopostuserempr",
+            urlest: "http://backendbolsaempleo.test/api/b_e/vin/estadopostuserempr",
             
         }
     },
@@ -1561,7 +1562,7 @@ export default {
            
             try {
                     // Enviar el correo electrónico
-                    const responseCorreo = await axios.post("http://vinculacionconlasociedad.utelvt.edu.ec/backendbolsaempleo/api/b_e/vin/enviar-aceptacion-postulacion", {
+                    const responseCorreo = await axios.post("http://backendbolsaempleo.test/api/b_e/vin/enviar-aceptacion-postulacion", {
                     
                         email: this.email.trim(),
                         firts_name:this.nombre.trim(),
@@ -1571,7 +1572,7 @@ export default {
                     if (responseCorreo.status === 200) {
                         // Si el correo se envió correctamente, proceder a eliminar la postulación
                     
-                        const responseEliminar = await axios.delete('http://vinculacionconlasociedad.utelvt.edu.ec/backendbolsaempleo/api/b_e/vin/postulacions/' + this.id);
+                        const responseEliminar = await axios.delete('http://backendbolsaempleo.test/api/b_e/vin/postulacions/' + this.id);
 
                         // Verificar si la postulación se eliminó correctamente
                         if (responseEliminar.status === 200) {
@@ -1593,7 +1594,7 @@ export default {
             
          /*   try {
 
-                const responseCorreo = await axios.post("http://vinculacionconlasociedad.utelvt.edu.ec/backendbolsaempleo/api/b_e/vin/enviar-aceptacion-postulacion",
+                const responseCorreo = await axios.post("http://backendbolsaempleo.test/api/b_e/vin/enviar-aceptacion-postulacion",
                     {
                         email: this.email.trim(),
                         firts_name:this.nombre.trim(),
@@ -1616,7 +1617,7 @@ export default {
             }
             
         },
-        aceptarpost2() {
+        async aceptarpost2() {
             const fechaEcuador = dayjs().tz('America/Guayaquil').format('YYYY-MM-DDTHH:mm:ss');
 
             const parametros = {
@@ -1625,8 +1626,8 @@ export default {
                 fecha: fechaEcuador,
                 detalle_estado: this.detalle_estadio,
             };
-            enviarsoliedit('PUT', parametros,this.urlest, 'Postulación Aceptada');
-            this.$router.push('/principal/' + this.id);
+            await enviarsoliedit('PUT', parametros,this.urlest, 'Postulación Aceptada');
+            this.$router.push('/postuladosallemp/' + this.id);
             
         },
         rechazarpost() {
@@ -1637,7 +1638,7 @@ export default {
 
             
         },
-        rechazarpost2() {
+        async rechazarpost2() {
             const fechaEcuador = dayjs().tz('America/Guayaquil').format('YYYY-MM-DDTHH:mm:ss');
 
             const parametros = {
@@ -1646,8 +1647,8 @@ export default {
                 fecha: fechaEcuador,
                 detalle_estado: this.detalle_estadio,
             };
-            enviarsoliedit('PUT', parametros,this.urlest, 'Postulación Rechazada');
-            this.$router.push('/principal/' + this.id);
+            await enviarsoliedit('PUT', parametros,this.urlest, 'Postulación Rechazada');
+            this.$router.push('/postuladosallemp/' + this.id);
             
         },
        

@@ -146,7 +146,7 @@ const routes = [
     component: Estadopostulacionall
   },
   {
-    path: '/perfilpostulados/:id/:secondId',
+    path: '/perfilpostulados/:id/:secondId/:thirdId',
     name: 'perfilpostulados',
     component: Perfilpostulado
   },
