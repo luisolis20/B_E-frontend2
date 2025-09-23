@@ -6,15 +6,16 @@
       <div class="d-flex justify-content-between">
         <div class="top-info ps-2">
           <small class="me-3"><i class="fas fa-building me-2 text-white"></i> <a href="#" class="text-white">{{ role
-          }}</a></small>
+              }}</a></small>
           <small class="me-3"><i class="fas fa-envelope me-2 text-white"></i><a href="#" class="text-white">{{ emaile
-          }}</a></small>
+              }}</a></small>
           <small class="me-3"><i class="fas fa-user me-2 text-white"></i><a href="#" class="text-white">{{ idus
-          }}</a></small>
+              }}</a></small>
           <small class="me-3"><i class="fas fa-map-marker-alt me-2 text-secondary"></i> <a href="#Comentario"
-                  class="text-white">Universidad Técnica "Luis Vargas Torres" de Esmeraldas, Nuevos Horizontes, Esmeraldas, Ecuador</a></small>
-              <small class="me-3"><i class="fas fa-envelope me-2 text-secondary"></i><a href="#Comentario"
-                  class="text-white">vinculacion@utelvt.edu.ec</a></small>
+              class="text-white">Universidad Técnica "Luis Vargas Torres" de Esmeraldas, Nuevos Horizontes, Esmeraldas,
+              Ecuador</a></small>
+          <small class="me-3"><i class="fas fa-envelope me-2 text-secondary"></i><a href="#Comentario"
+              class="text-white">vinculacion@utelvt.edu.ec</a></small>
         </div>
 
       </div>
@@ -36,65 +37,73 @@
                 v-if="mostrarOp">Home</router-link>
               <router-link :to="{ path: '/principal/' + idus }" class="nav-item nav-link"
                 :class="{ 'active': $route.path === '/principal/' + idus }">Inicio</router-link>
-               <div class="nav-item dropdown" v-if="mostrarOpciones">
+              <div class="nav-item dropdown" v-if="mostrarOpciones">
                 <a class="nav-link dropdown-toggle" href="#" id="dropdownPostulaciones" role="button"
-                  data-bs-toggle="dropdown" aria-expanded="false" :class="{ 'active': $route.path.startsWith('/empresas/') || $route.path.startsWith('/ofertas/') || $route.path.startsWith('/aceptacionview/') || $route.path.startsWith('/rechazoview/') }"
-                  >
+                  data-bs-toggle="dropdown" aria-expanded="false"
+                  :class="{ 'active': $route.path.startsWith('/empresas/') || $route.path.startsWith('/ofertas/') || $route.path.startsWith('/aceptacionview/') || $route.path.startsWith('/rechazoview/') }">
                   Ver
                 </a>
-                <ul class="dropdown-menu dropdown-menu-end border-0 rounded-0 rounded-bottom m-0" aria-labelledby="dropdownPostulaciones">
+                <ul class="dropdown-menu dropdown-menu-end border-0 rounded-0 rounded-bottom m-0"
+                  aria-labelledby="dropdownPostulaciones">
                   <li>
-                    <router-link class="dropdown-item" :to="{ path: '/empresas/' + idus }" :class="{ 'active': $route.path === '/empresas/' + idus }">
-                       Mis Empresas
+                    <router-link class="dropdown-item" :to="{ path: '/empresas/' + idus }"
+                      :class="{ 'active': $route.path === '/empresas/' + idus }">
+                      Mis Empresas
                     </router-link>
                   </li>
                   <li>
-                    <router-link class="dropdown-item" :to="{ path: '/ofertas/' + idus }" :class="{ 'active': $route.path === '/ofertas/' + idus }">
+                    <router-link class="dropdown-item" :to="{ path: '/ofertas/' + idus }"
+                      :class="{ 'active': $route.path === '/ofertas/' + idus }">
                       Mis Oferas
                     </router-link>
                   </li>
                 </ul>
-              </div> 
+              </div>
               <router-link :to="{ path: '/postuladosall/' + idus }" class="nav-item nav-link" v-if="mostrarOpciones"
                 :class="{ 'active': $route.path === '/postuladosall/' + idus }">Todos los Postulados</router-link>
-              <router-link :to="{ path: '/estadopostulacionall/' + idus }" class="nav-item nav-link" v-if="mostrarOpciones"
-                :class="{ 'active': $route.path === '/estadopostulacionall/' + idus }">Estado de Postulaciones</router-link>
-              
-                <!-- 🔽 DROPDOWN para Mis Postulaciones -->
+
+
+              <!-- 🔽 DROPDOWN para Mis Postulaciones -->
               <div class="nav-item dropdown" v-if="mostrarOpciones2">
                 <a class="nav-link dropdown-toggle" href="#" id="dropdownPostulaciones" role="button"
-                  data-bs-toggle="dropdown" aria-expanded="false" :class="{ 'active': $route.path.startsWith('/mispostulaciones/') || $route.path.startsWith('/mispostulacionesemp/') || $route.path.startsWith('/aceptacionview/') || $route.path.startsWith('/rechazoview/') }"
-                  >
+                  data-bs-toggle="dropdown" aria-expanded="false"
+                  :class="{ 'active': $route.path.startsWith('/mispostulaciones/') || $route.path.startsWith('/mispostulacionesemp/') || $route.path.startsWith('/aceptacionview/') || $route.path.startsWith('/rechazoview/') }">
                   Postulaciones
                 </a>
-                <ul class="dropdown-menu dropdown-menu-end border-0 rounded-0 rounded-bottom m-0" aria-labelledby="dropdownPostulaciones">
+                <ul class="dropdown-menu dropdown-menu-end border-0 rounded-0 rounded-bottom m-0"
+                  aria-labelledby="dropdownPostulaciones">
                   <li>
-                    <router-link class="dropdown-item" :to="{ path: '/mispostulaciones/' + idus }" :class="{ 'active': $route.path === '/mispostulaciones/' + idus }">
-                       Mis Postulaciones a Ofertas de Empresas
+                    <router-link class="dropdown-item" :to="{ path: '/mispostulaciones/' + idus }"
+                      :class="{ 'active': $route.path === '/mispostulaciones/' + idus }">
+                      Mis Postulaciones a Ofertas de Empresas
                     </router-link>
                   </li>
                   <li>
-                    <router-link class="dropdown-item" :to="{ path: '/mispostulacionesemp/' + idus }" :class="{ 'active': $route.path === '/mispostulacionesemp/' + idus }">
+                    <router-link class="dropdown-item" :to="{ path: '/mispostulacionesemp/' + idus }"
+                      :class="{ 'active': $route.path === '/mispostulacionesemp/' + idus }">
                       Mis Postulaciones a OFertas de Emprendimientos
                     </router-link>
                   </li>
                 </ul>
               </div>
-               <!-- 🔽 DROPDOWN para Mis Emprendimientos -->
+              <!-- 🔽 DROPDOWN para Mis Emprendimientos -->
               <div class="nav-item dropdown" v-if="mostrarOpciones2">
                 <a class="nav-link dropdown-toggle" href="#" id="dropdownEmprendimientos" role="button"
-                  data-bs-toggle="dropdown" aria-expanded="false" :class="{ 'active': $route.path.startsWith('/misemprendimientos/') || $route.path.startsWith('/emprendimientosofertview/') || $route.path.startsWith('/estadisticas-emprendimiento/') }"
-                  >
+                  data-bs-toggle="dropdown" aria-expanded="false"
+                  :class="{ 'active': $route.path.startsWith('/misemprendimientos/') || $route.path.startsWith('/emprendimientosofertview/') || $route.path.startsWith('/estadisticas-emprendimiento/') }">
                   Emprendimientos
                 </a>
-                <ul class="dropdown-menu dropdown-menu-end border-0 rounded-0 rounded-bottom m-0" aria-labelledby="dropdownEmprendimientos">
+                <ul class="dropdown-menu dropdown-menu-end border-0 rounded-0 rounded-bottom m-0"
+                  aria-labelledby="dropdownEmprendimientos">
                   <li>
-                    <router-link class="dropdown-item" :to="{ path: '/misemprendimientos/' + idus }" :class="{ 'active': $route.path === '/misemprendimientos/' + idus }">
+                    <router-link class="dropdown-item" :to="{ path: '/misemprendimientos/' + idus }"
+                      :class="{ 'active': $route.path === '/misemprendimientos/' + idus }">
                       Ver Emprendimientos
                     </router-link>
                   </li>
                   <li>
-                    <router-link class="dropdown-item" :to="{ path: '/emprendimientosofertview/' + idus }" :class="{ 'active': $route.path === '/emprendimientosofertview/' + idus }">
+                    <router-link class="dropdown-item" :to="{ path: '/emprendimientosofertview/' + idus }"
+                      :class="{ 'active': $route.path === '/emprendimientosofertview/' + idus }">
                       Mis Ofertas de Emprendimientos
                     </router-link>
                   </li>
@@ -106,37 +115,71 @@
                 </ul>
               </div>
               <!-- 🔼 -->
-              <router-link :to="{ path: '/mispostulacionesestado/' + idus }" class="nav-item nav-link" v-if="mostrarOpciones2"
-                :class="{ 'active': $route.path === '/mispostulacionesestado/' + idus }">Estado de mis Postulaciones</router-link>
-               <!-- 🔽 DROPDOWN para Mis Emprendimientos -->
+              <router-link :to="{ path: '/mispostulacionesestado/' + idus }" class="nav-item nav-link"
+                v-if="mostrarOpciones2" :class="{ 'active': $route.path === '/mispostulacionesestado/' + idus }">Estado
+                de mis Postulaciones</router-link>
+              <!-- 🔽 DROPDOWN para Mis Emprendimientos -->
               <div class="nav-item dropdown" v-if="mostrarOpciones2">
                 <a class="nav-link dropdown-toggle" href="#" id="dropdownOfertas" role="button"
-                  data-bs-toggle="dropdown" aria-expanded="false" :class="{ 'active': $route.path.startsWith('/ofertasall/') || $route.path.startsWith('//') || $route.path.startsWith('//') }"
-                  >
+                  data-bs-toggle="dropdown" aria-expanded="false"
+                  :class="{ 'active': $route.path.startsWith('/ofertasall/') || $route.path.startsWith('/ofertasallemp/') }">
                   Ofertas de Empleo
                 </a>
-                <ul class="dropdown-menu dropdown-menu-end border-0 rounded-0 rounded-bottom m-0" aria-labelledby="dropdownOfertas">
+                <ul class="dropdown-menu dropdown-menu-end border-0 rounded-0 rounded-bottom m-0"
+                  aria-labelledby="dropdownOfertas">
                   <li>
-                    <router-link class="dropdown-item" :to="{ path: '/ofertasall/' + idus }" :class="{ 'active': $route.path === '/ofertasall/' + idus }">
+                    <router-link class="dropdown-item" :to="{ path: '/ofertasall/' + idus }"
+                      :class="{ 'active': $route.path === '/ofertasall/' + idus }">
                       Ofertas de Empleo en Empresas
                     </router-link>
                   </li>
                   <li>
-                    <router-link class="dropdown-item" :to="{ path: '/ofertasallemp/' + idus }" :class="{ 'active': $route.path === '/ofertasallemp/' + idus }">
-                    Ofertas de Emprendimientos
+                    <router-link class="dropdown-item" :to="{ path: '/ofertasallemp/' + idus }"
+                      :class="{ 'active': $route.path === '/ofertasallemp/' + idus }">
+                      Ofertas de Emprendimientos
                     </router-link>
                   </li>
-                 
+
                 </ul>
               </div>
               <!-- 🔼 -->
-              
+             
+               <!-- 🔽 DROPDOWN para Mis Emprendimientos -->
+                 <div class="nav-item dropdown" v-if="mostrarOpciones3">
+                <a class="nav-link dropdown-toggle" href="#" id="dropdownOfertas" role="button"
+                  data-bs-toggle="dropdown" aria-expanded="false"
+                  :class="{ 'active': $route.path.startsWith('/empresall/') || $route.path.startsWith('/emprendimientosall/')}">
+                  Registros
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end border-0 rounded-0 rounded-bottom m-0"
+                  aria-labelledby="dropdownOfertas">
+                  <li>
+                    <router-link class="dropdown-item" :to="{ path: '/empresall/' + idus }"
+                      :class="{ 'active': $route.path === '/empresall/' + idus }">
+                      Empresas
+                    </router-link>
+                  </li>
+                  <li>
+                    <router-link class="dropdown-item" :to="{ path: '/emprendimientosall/' + idus }"
+                      :class="{ 'active': $route.path === '/emprendimientosall/' + idus }">
+                      Emprendimientos
+                    </router-link>
+                  </li>
+
+                </ul>
+              </div>
+
               <router-link :to="{ path: '/ofertasall/' + idus }" class="nav-item nav-link" v-if="mostrarOpciones3"
                 :class="{ 'active': $route.path === '/ofertasall/' + idus }">Ofertas de Empleo</router-link>
+              <router-link :to="{ path: '/estadopostulacionall/' + idus }" class="nav-item nav-link"
+                v-if="mostrarOpciones3" :class="{ 'active': $route.path === '/estadopostulacionall/' + idus }">Estado de
+                Postulaciones</router-link>
+              <router-link :to="{ path: '/about/' + idus }" class="nav-item nav-link" v-if="mostrarOpciones3"
+                :class="{ 'active': $route.path === '/about/' + idus }">Nuevo</router-link>
+
               <router-link :to="{ path: '/userall/' + idus }" class="nav-item nav-link" v-if="mostrarOpciones3"
                 :class="{ 'active': $route.path === '/userall/' + idus }">Usuarios Registrados</router-link>
-              <router-link :to="{ path: '/empresall/' + idus }" class="nav-item nav-link" v-if="mostrarOpciones3"
-                :class="{ 'active': $route.path === '/empresall/' + idus }">Empresas Registradas</router-link>
+
               <a href="#" v-on:click="cerrarsesion" class="nav-item nav-link">Cerrar
                 Sesión</a>
             </div>
@@ -152,7 +195,8 @@
                     <span class="fs-6 fw-light">({{ vistos }})</span>
                     <!-- Actualiza el número dinámicamente -->
                   </a>
-                  <div class="dropdown-menu animate slide dropdown-menu-start dropdown-menu-lg-end p-3" style="min-width: 400px;">
+                  <div class="dropdown-menu animate slide dropdown-menu-start dropdown-menu-lg-end p-3"
+                    style="min-width: 400px;">
                     <h4 class="d-flex justify-content-between align-items-center mb-3">
                       <span class="text-primary">Postulados Recientemente</span>
                       <span class="badge bg-primary rounded-pill">{{ vistos }}</span>
@@ -170,31 +214,33 @@
                               </a>
                             </h5>
                             <small>{{ post.Oferta }}</small>
-                          
+
                           </div>
                           <div class="col-lg-6">
-                           
+
                             <div class="text-end">
                               <small class="text-muted">
-                               {{ formatearTiempoPersonalizado(post.created_at, 'postulado') }}
+                                {{ formatearTiempoPersonalizado(post.created_at, 'postulado') }}
                               </small>
                             </div>
-                          
+
                           </div>
                           <div class="col-lg-12 d-flex flex-wrap justify-content-center">
-                              <router-link :to="{ path: '/perfilpostulados/' + post.id + '/' + post.CIInfPer }"
-                                class="d-block fw-medium text-capitalize mt-2" @click="marcarComoVista(post.id)">Ver detalle
-                                completo</router-link>
+                            <router-link :to="{ path: '/perfilpostulados/' + post.id + '/' + post.CIInfPer }"
+                              class="d-block fw-medium text-capitalize mt-2" @click="marcarComoVista(post.id)">Ver
+                              detalle
+                              completo</router-link>
                           </div>
                         </div>
-                        
-                        
+
+
 
                         <!-- Tiempo transcurrido -->
                       </li>
                     </ul>
                     <div class="d-flex flex-wrap justify-content-center">
-                      <router-link :to="{ path: '/postuladosall/' + idus }" class="w-100 btn btn-primary text-white" type="submit">Ver todos los postulados</router-link>
+                      <router-link :to="{ path: '/postuladosall/' + idus }" class="w-100 btn btn-primary text-white"
+                        type="submit">Ver todos los postulados</router-link>
                     </div>
                   </div>
                 </li>
@@ -206,7 +252,8 @@
                     <i class="fas fa-bell"></i>
                     <span class="fs-6 fw-light">({{ vistos2 }})</span>
                   </a>
-                  <div class="dropdown-menu animate slide dropdown-menu-start dropdown-menu-lg-end p-3" style="min-width: 400px;">
+                  <div class="dropdown-menu animate slide dropdown-menu-start dropdown-menu-lg-end p-3"
+                    style="min-width: 400px;">
                     <h4 class="d-flex justify-content-between align-items-center mb-3">
                       <span class="text-primary">Notificaciones</span>
                       <span class="badge bg-primary rounded-pill">{{ vistos2 }}</span>
@@ -219,38 +266,39 @@
                             <h5>
                               <a> {{ est.Empresa }}</a>
                             </h5>
-                            
-                          
+
+
                           </div>
-                          
-                          
+
+
                           <div class="col-lg-6">
-                           
-                            
+
+
                             <small class="text-primary" v-if="est.estado == 'Aceptada'">
                               {{ formatearTiempoPersonalizado(est.created_at, 'aceptada') }}
                             </small>
                             <small v-else class="text-danger" v-if="est.estado == 'Rechazada'">
                               {{ formatearTiempoPersonalizado(est.created_at, 'rechazada') }}
                             </small>
-                          
+
                           </div>
                           <div class="col-lg-12 d-flex flex-wrap justify-content-center">
-                            
+
                             <small>Título de la Oferta: {{ est.Oferta }}</small>
-                          
+
                           </div>
-                          <div class="col-lg-12 d-flex flex-wrap justify-content-center" v-if="est.estado == 'Aceptada'">
-                              <router-link :to="{ path: '/aceptacionview/' + est.IDEmpresa + '/' + est.IDOferta }"
-                                class="d-block fw-medium text-capitalize mt-2" @click="marcarComoVista(est.id)">Ver
-                                detalle
-                                completo</router-link>
+                          <div class="col-lg-12 d-flex flex-wrap justify-content-center"
+                            v-if="est.estado == 'Aceptada'">
+                            <router-link :to="{ path: '/aceptacionview/' + est.IDEmpresa + '/' + est.IDOferta }"
+                              class="d-block fw-medium text-capitalize mt-2" @click="marcarComoVista(est.id)">Ver
+                              detalle
+                              completo</router-link>
                           </div>
                           <div v-else class="col-lg-12 d-flex flex-wrap justify-content-center">
-                              <router-link :to="{ path: '/rechazoview/' + est.IDEmpresa + '/' + est.IDOferta }"
-                                class="d-block fw-medium text-capitalize mt-2" @click="marcarComoVista(est.id)">Ver
-                                detalle
-                                completo</router-link>
+                            <router-link :to="{ path: '/rechazoview/' + est.IDEmpresa + '/' + est.IDOferta }"
+                              class="d-block fw-medium text-capitalize mt-2" @click="marcarComoVista(est.id)">Ver
+                              detalle
+                              completo</router-link>
                           </div>
                         </div>
                       </li>
@@ -289,7 +337,7 @@ import store from '@/store';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import localizedFormat from 'dayjs/plugin/localizedFormat';
-import 'dayjs/locale/es'; 
+import 'dayjs/locale/es';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 
@@ -306,7 +354,7 @@ export default {
       vistos2: 0,
       cargando: false,
       actualizador: null,
-      
+
     }
   },
   watch: {
@@ -330,7 +378,7 @@ export default {
     this.vistos2 = JSON.parse(this.$store.state.postulacionesVistasacept || '[]');
 
     if (customscript.computed.rolUsuario() == 'Estudiante') {
-      
+
       this.idus2 = this.$route.params.id;
 
       if (this.idus2) {
@@ -343,11 +391,11 @@ export default {
       this.getPostulaciones();
     }
 
-    
+
 
 
   },
-  
+
   methods: {
     cerrarsesion() {
       console.clear();
@@ -357,7 +405,7 @@ export default {
     },
     async getPostulaciones() {
       this.cargando = true;
-      
+
       try {
         const [postulacionesRes, excluidasRes] = await Promise.all([
           axios.get(`${this.url213}?all=true`),
@@ -454,16 +502,16 @@ export default {
     formatoFechaHora(fecha) {
       return dayjs(fecha).tz("America/Guayaquil").format('D [de] MMMM [de] YYYY, HH:mm');
     },
-    async Obtnenernotifi(cedula){
-      
+    async Obtnenernotifi(cedula) {
+
     },
     // Filtrar postulaciones no vistas
     filtrarNoVistas() {
       return this.postulaciones;
     },
     filtrarNoVistas2() {
-      
-       
+
+
       const noVistas = this.postulacionesacepta.filter(post => post.estado == 'Aceptada' || post.estado == 'Rechazada');
       this.vistos2 = noVistas.length;
       return noVistas;

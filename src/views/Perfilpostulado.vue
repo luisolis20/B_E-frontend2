@@ -1579,12 +1579,7 @@ export default {
                     job_offer: this.job_offer,
 
                 });
-                //console.log(responseCorreo);
-
-                // Verificar si el correo se envió correctamente
                 if (responseCorreo.status === 200) {
-                    // Mostrar mensaje de éxito al usuario
-                    // console.log('Correo electrónico enviado con éxito');
                     this.$router.push('/postuladosall/' + store.state.idusu);
 
                    
@@ -1598,22 +1593,7 @@ export default {
                 alert("Ocurrió un error al realizar la acción.");
             }
 
-            /*   try {
-   
-                   const responseCorreo = await axios.post("http://backendbolsaempleo.test/api/b_e/vin/enviar-aceptacion-postulacion",
-                       {
-                           email: this.email.trim(),
-                           firts_name:this.nombre.trim(),
-                       }
-                   );
-                   console.log(response);
-                   mostraralertas('Postulacion Aceptada', 'success');
-                   this.$router.push('/principal/' + store.state.idusu);
-   
-               } catch (error) {
-                   console.error(error);
-                   alert("Ocurrió un error al enviar el correo electrónico.");
-               }*/
+          
 
         },
         async rechazar() {

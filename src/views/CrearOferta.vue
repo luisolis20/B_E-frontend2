@@ -2,16 +2,23 @@
     <div class="container-fluid RSVP-form py-3" id="weddingRsvp">
         <div class="container py-3">
             <div class="mb-5 text-center mx-auto wow fadeIn" data-wow-delay="0.1s" style="max-width: 800px;">
-                <h1 class="display-2 text-primary">Tu Empresa</h1>
-                <p class="text-dark">En este apartado visualizarás los datos de tu empresa, no podrás editarlo. Aquí lo que harás es crear una oferta laboral para tu empresa</p>
+                <h1 class="display-2 text-primary" v-if="mostrarOpciones">Tu Empresa</h1>
+                <p class="text-dark"  v-if="mostrarOpciones">En este apartado visualizarás los datos de tu empresa, no podrás editarlo. Aquí lo que harás es crear una oferta laboral para tu empresa</p>
+                <h1 class="display-2 text-primary" >Datos de la Empresa</h1>
+                <p class="text-dark">Aquí podrás ver la información a detalle de la empresa</p>
             </div>
             <div class="row justify-content-center">
                 <div class="col-md-10">
                     <div class="p-5 border-secondary position-relative" style="border-style: double;">
                         <div class="fw-bold text-primary bg-white d-flex align-items-center justify-content-center position-absolute border-secondary p-2 wow fadeIn"
                             data-wow-delay="0.1s"
-                            style="width: 75%; border-style: double; top: 0; left: 50%; transform: translate(-50%, -50%);">
+                            style="width: 75%; border-style: double; top: 0; left: 50%; transform: translate(-50%, -50%);"  v-if="mostrarOpciones">
                             Estos son los datos de tu Empresa
+                        </div>
+                        <div class="fw-bold text-primary bg-white d-flex align-items-center justify-content-center position-absolute border-secondary p-2 wow fadeIn"
+                            data-wow-delay="0.1s"
+                            style="width: 75%; border-style: double; top: 0; left: 50%; transform: translate(-50%, -50%);">
+                            Estos son los datos de la Empresa
                         </div>
                         <form>
                             <div class="row gx-4 gy-3">
@@ -116,7 +123,7 @@
                                 </div>
                                
                                 <div class="col-12 wow fadeIn" data-wow-delay="0.1s">
-                                    <div class="text-center border border-secondary p-4 my-4 position-relative">
+                                    <div class="text-center border border-secondary p-4 my-4 position-relative" v-if="mostrarOpciones">
                                         <div class="fw-bold text-primary bg-white d-flex align-items-center justify-content-center position-absolute border-secondary p-2"
                                             style="width: 50%; border-style: double; top: 0; left: 50%; transform: translate(-50%, -50%);">
                                             ¿Deseas Crear Oferta de Empleo?
@@ -149,6 +156,7 @@
 import { useRoute } from 'vue-router';
 import axios from 'axios';
 import store from '@/store';
+import script2 from '@/assets/scripts/custom.js';
 
 export default {
    data(){
@@ -205,6 +213,7 @@ export default {
         
         
 
-    }
+    },
+    mixins: [script2],
 };
 </script>

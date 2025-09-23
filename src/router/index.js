@@ -36,7 +36,9 @@ import Userall from '../views/Userall.vue'
 import AdminEdit from '../views/AdminEdit.vue'
 import AdminCreatedUsers from '../views/AdminCreatedUsers.vue'
 import Empresall from '../views/Empresall.vue'
+import Emprendimientosall from '../views/Emprendimientosall.vue'
 import MisEmprendimientos from '../views/MisEmprendimientos.vue'
+import AboutView from '../views/AboutView.vue'
 
 const routes = [
   {
@@ -231,13 +233,16 @@ const routes = [
     component: Empresall
   },
   {
-    path: '/about',
+    path: '/emprendimientosall/:id',
+    name: 'emprendimientosall',
+    component: Emprendimientosall
+  },
+  {
+    path: '/about/:id',
     name: 'about',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
-  }
+    component: AboutView
+  },
+  
 ]
 
 const router = createRouter({

@@ -20,8 +20,8 @@
                 <h6 class="text-center">Haz clic en el cuadro de abajo para añadir la foto de tu emprendimiento. La foto
                   debe tener un tamaño máximo de 320x240 píxeles.</h6>
                 <div class="input-with-icon">
-                  <input ref="fileFoto" @change="cargarfoto" type="file"
-                    accept="image/jpeg, image/jpg" class="form-control text-dark mt-2">
+                  <input ref="fileFoto" @change="cargarfoto" type="file" accept="image/jpeg, image/jpg"
+                    class="form-control text-dark mt-2">
 
                   <!-- Botón de ayuda -->
                   <span class="help-icon" @mouseenter="showTooltipimagen = true" @mouseleave="hideOnLeave('imagen')"
@@ -36,8 +36,11 @@
                   </div>
                 </div>
                 <br>
-                 <p v-if="Errorfoto" class="text-danger text-center">Si tienes problemas en añadir la foto puedes dar <a href="https://www.iloveimg.com/es/redimensionar-imagen" target="_blank">clic aquí</a>. Te llevará a una página donde podrás 
-                 ajustar tu foto al tamaño solicitado. Si no deseas añadir la foto puedes dejar en blanco y dar clic en guardar</p>
+                <p v-if="Errorfoto" class="text-danger text-center">Si tienes problemas en añadir la foto puedes dar <a
+                    href="https://www.iloveimg.com/es/redimensionar-imagen" target="_blank">clic aquí</a>. Te llevará a
+                  una página donde podrás
+                  ajustar tu foto al tamaño solicitado. Si no deseas añadir la foto puedes dejar en blanco y dar clic en
+                  guardar</p>
               </div>
 
               <div class="col-lg-8">
@@ -68,7 +71,8 @@
                         <!-- Tooltip -->
                         <div v-if="showTooltipRuc" class="tooltip-box" ref="tooltipBoxRuc"
                           @mouseenter="hoveringTooltipRuc = true" @mouseleave="hideOnLeave('ruc')">
-                          El RUC debe ser válido. Si no tiene, ingrese <b>0000000000000</b>, para que no le aparezca el mensaje de error
+                          El RUC debe ser válido. Si no tiene, ingrese <b>0000000000000</b>, para que no le aparezca el
+                          mensaje de error
                           <!-- Flechita -->
                           <div class="tooltip-arrow"></div>
                         </div>
@@ -166,7 +170,7 @@
                     <!-- Campo Email con tooltip -->
                     <div class="col-lg-6 relative">
                       <div class="input-with-icon">
-                        <input type="email" v-model="email_contacto" id="email_contacto"  @input="validateEmail"
+                        <input type="email" v-model="email_contacto" id="email_contacto" @input="validateEmail"
                           placeholder="Email del emprendimiento..." autocomplete="on" required>
                         <span class="help-icon" @mouseenter="showTooltipemail = true" @mouseleave="hideOnLeave('email')"
                           @click.stop="toggleTooltip('email')" ref="tooltipIconemail">❓</span>
@@ -265,6 +269,39 @@
       </div>
     </div>
   </div>
+  <!-- Modal de Verificación de Código -->
+  <div class="modal fade show d-block" tabindex="-1" aria-labelledby="modalVerificacionLabel" aria-hidden="true"
+    v-if="mostrarModal">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+
+        <!-- Encabezado -->
+        <div class="modal-header">
+          <h1 class="modal-title fs-5 text-dark" id="modalVerificacionLabel">Verificación de Correo</h1>
+        </div>
+
+        <!-- Cuerpo -->
+        <div class="modal-body">
+          <form @submit.prevent="verificarCodigo">
+            <div class="mb-3">
+              <label for="codigo-verificacion" class="col-form-label text-dark">Ingrese el código enviado a su
+                correo:</label>
+              <input type="text" class="form-control text-dark" id="codigo-verificacion" v-model="codigov" required>
+            </div>
+            <p class="text-danger" v-if="intentosRestantes < 3">
+              Intentos restantes: {{ intentosRestantes }}
+            </p>
+          </form>
+        </div>
+
+        <!-- Footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn text-secondary" @click="cerrarModal">Cancelar</button>
+          <button type="button" class="btn text-primary" @click="verificarCodigo">Validar Código</button>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 <style>
 @import url('@/assets/styles/styles.css');
@@ -302,7 +339,7 @@ export default {
       correoErrornue: false,
       correoErrornuetelf: false,
       correoErrornueRucf: false,
-      
+
 
     };
   },
@@ -359,23 +396,23 @@ export default {
     },
     validateNumber() {
       this.ruc = this.ruc.replace(/\D/g, '').slice(0, 13);
-      if(this.ruc.length !== 13){
+      if (this.ruc.length !== 13) {
         this.correoErrornueRucf = true;
       } else {
         this.correoErrornueRucf = false;
       }
-      
-      
+
+
     },
     validateNumberT() {
       this.telefono_contacto = this.telefono_contacto.replace(/\D/g, '').slice(0, 10);
-      if(this.telefono_contacto.length !== 10){
+      if (this.telefono_contacto.length !== 10) {
         this.correoErrornuetelf = true;
       } else {
         this.correoErrornuetelf = false;
       }
-      
-      
+
+
     },
     validateEmail() {
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;

@@ -323,6 +323,7 @@ export default {
                 const response = await axios.get(this.urlinformacionpersonal);
                 if (response.data.data && response.data.data.length > 0) {
                     const data = response.data.data[0];
+                    console.log(data);
                     this.CIInfPer = data.CIInfPer;
                     this.ApellInfPer = data.ApellInfPer;
                     this.ApellMatInfPer = data.ApellMatInfPer;
@@ -1550,7 +1551,7 @@ export default {
         async getUsuairoSS() {
             try {
                 const response = await axios.get(this.url);
-                if (response){
+                if (response) {
                     const data = response.data.data;
                     this.nombre = data.name;
                     this.email = data.email;
@@ -1560,7 +1561,7 @@ export default {
             } catch (error) {
                 return null;
             }
-            
+
         },
         async actualizar(event) {
             event.preventDefault();
@@ -1596,7 +1597,42 @@ export default {
                 // Remover el prefijo data:image/ de la cadena base64
                 this.imagen = reader.result.replace(/^data:image\/(png|jpeg|jpg|gif);base64,/, "");
             }.bind(this);  // Importante: Usa .bind(this) para acceder a `this.imagen`
+        },
+        downloadFoto() {
+            if (!this.fotografia) {
+                mostraralertas("No hay fotografía disponible para descargar", "warning");
+                return;
+            }
+
+            try {
+                // Convierte base64 a binario
+                const byteCharacters = atob(this.fotografia);
+                const byteNumbers = new Array(byteCharacters.length);
+
+                for (let i = 0; i < byteCharacters.length; i++) {
+                    byteNumbers[i] = byteCharacters.charCodeAt(i);
+                }
+
+                const byteArray = new Uint8Array(byteNumbers);
+
+                // Crea un Blob con tipo JPG
+                const blob = new Blob([byteArray], { type: "image/jpeg" });
+
+                // Crea un enlace temporal y lo dispara para descargar
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement("a");
+                link.href = url;
+                link.download = `${this.CIInfPer || "fotografia"}.jpg`; // nombre del archivo
+                link.click();
+
+                // Limpieza
+                URL.revokeObjectURL(url);
+            } catch (error) {
+                console.error("Error al descargar la foto:", error);
+                mostraralertas("Error al descargar la foto", "error");
+            }
         }
+
 
     },
     mixins: [customscript]

@@ -8,6 +8,7 @@
 
             <p class="text-dark text-center">En este apartado tendrás todos tus empresas creadas. Podrás buscar tu
                 empresa por el Ruc</p>
+                
             <div class="row gx-4 gy-3 d-flex justify-content-center">
                 <div class="col-lg-12">
                     <form class="d-none d-md-flex ms-4">
@@ -84,7 +85,7 @@
                                 </router-link>
                                 &nbsp;
                                 <button class="btn btn-danger" v-on:click="eliminar(emp.idempresa, emp.empresacorta)"
-                                    v-if="emp.estado_empr == 1 && new Date(emp.fechafin) >= new Date() && emp.total_ofertas == 0"
+                                    v-if="emp.estado_empr == 1 && new Date(emp.fechafin) <= new Date() && emp.total_ofertas == 0"
                                     title="Inhabilitar empresa">
                                     <i class="fa-solid fa-trash"></i>
                                 </button>

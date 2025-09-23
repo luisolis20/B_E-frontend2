@@ -1,4 +1,4 @@
-import { mostraralertas, enviarsolig,enviarsoliedit } from '@/assets/scripts/scriptfunciones/funciones';
+import { mostraralertas, enviarsolig, enviarsoliedit } from '@/assets/scripts/scriptfunciones/funciones';
 import { useRoute } from 'vue-router';
 import axios from 'axios';
 import store from '@/store';
@@ -13,8 +13,8 @@ export default {
             ruc: '',
             nombre_emprendimiento: '',
             descripcion: '',
-            fotografia: '',   
-            previewFoto: '',  
+            fotografia: '',
+            previewFoto: '',
             tiempo_emprendimiento: '',
             horarios_atencion: '',
             direccion: '',
@@ -28,6 +28,12 @@ export default {
             Errorfoto: false,
             guardaremprendimiento: true,
             ur3: 'http://backendbolsaempleo.test/api/b_e/vin/consultarediremp',
+            // Verificación de correo
+            mostrarModal: false,
+            codigov: "",
+            codigoVerificacion: "",
+            intentosRestantes: 3,
+            correoValidado: false,
 
         }
     },
@@ -37,17 +43,17 @@ export default {
         this.idus2 = ruta.params.id;
         //console.log(this.idus);
         if (store.state.idusu != this.idus) {
-                    this.ur3 += '/' + this.idus2;
-        
-                    this.url += '/' + this.idus;
-                    this.getEmprendiemi();
-                }
+            this.ur3 += '/' + this.idus2;
+
+            this.url += '/' + this.idus;
+            this.getEmprendiemi();
+        }
     },
     methods: {
         async getEmprendiemi() {
             try {
                 const response = await axios.get(this.ur3);
-                //console.log(response.data.data);
+                console.log(response.data.data[0]);
 
 
                 if (response.data.data) {
@@ -67,16 +73,16 @@ export default {
                     this.redes_sociales = response.data.data[0].redes_sociales;
                     this.est = response.data.data[0].estado_empren;
                     //console.log(this.est);
-                    if(this.est==1){
-                        this.estado_empren="Disponible"
-                    }else if(this.est==2){
-                        this.estado_empren="En Revisión"
+                    if (this.est == 1) {
+                        this.estado_empren = "Disponible"
+                    } else if (this.est == 2) {
+                        this.estado_empren = "En Revisión"
                     }
-                    else{
-                        this.estado_empren="No Disponible"
+                    else {
+                        this.estado_empren = "No Disponible"
                     }
 
-                } 
+                }
 
             } catch (error) {
                 console.error('Error al obtener la emprendimiento:', error);
@@ -89,9 +95,9 @@ export default {
         guardar(event) {
             try {
                 event.preventDefault();
-                
 
-                
+
+
                 if (this.ruc == '') {
                     mostraralertas('Ingrese ruc de la empresa', 'warning', 'ruc');
                 } else if (this.nombre_emprendimiento == '') {
@@ -112,24 +118,12 @@ export default {
                     mostraralertas('Ingrese sitio web del emprendimiento', 'warning', 'sitio');
                 } else if (this.redes_sociales == '') {
                     mostraralertas('Ingrese redes sociales del emprendimiento', 'warning', 'redes');
+                }
+                else if (!this.email_contacto.endsWith("@gmail.com")) {
+                    mostraralertas('El correo de Empresa debe ser de Gmail (@gmail.com)', 'error', 'email');
                 } else {
-                    var parametros = {
-                        ruc: this.ruc,
-                        nombre_emprendimiento: this.nombre_emprendimiento,
-                        descripcion: this.descripcion,
-                        fotografia: this.fotografia,
-                        tiempo_emprendimiento: this.tiempo_emprendimiento,
-                        horarios_atencion: this.horarios_atencion,
-                        direccion: this.direccion,
-                        telefono_contacto: this.telefono_contacto,
-                        email_contacto: this.email_contacto,
-                        sitio_web: this.sitio_web,
-                        redes_sociales: this.redes_sociales,
-                        estado_empren: 2,
-                        CIInfPer: this.idus
-                    };
-                    enviarsolig('POST', parametros, 'http://backendbolsaempleo.test/api/b_e/vin/emprendimientos_E', 'Emprendimiento Creado');
-                    this.$router.push('/misemprendimientos/' + this.idus);
+                    this.enviarCodigo();
+
                 }
             } catch (error) {
                 console.error('Error al guardar el emprendimiento:', error);
@@ -139,10 +133,10 @@ export default {
         async actualizar(event) {
             try {
                 event.preventDefault();
-                if(this.estado_empren=="Disponible"){
-                    this.est=1;
-                }else{
-                    this.est=0;
+                if (this.estado_empren == "Disponible") {
+                    this.est = 1;
+                } else {
+                    this.est = 0;
                 }
                 if (this.ruc == '') {
                     mostraralertas('Ingrese ruc de la empresa', 'warning', 'ruc');
@@ -182,8 +176,8 @@ export default {
                         estado_empren: 2,
                         CIInfPer: this.idususuario
                     };
-                    await enviarsoliedit('PUT',parametros,this.url,'Emprendimiento Actualizado');
-                    this.$router.push('/misemprendimientos/'+store.state.idusu);
+                    await enviarsoliedit('PUT', parametros, this.url, 'Emprendimiento Actualizado');
+                    this.$router.push('/misemprendimientos/' + store.state.idusu);
                     //window.location.reload();
                 }
             } catch (error) {
@@ -191,7 +185,91 @@ export default {
                 mostraralertas('Error al guardar el emprendimiento. Por favor, inténtelo de nuevo.', 'error');
             }
         },
+        async enviarCodigo() {
+            try {
 
+                const response = await axios.post("http://backendbolsaempleo.test/api/b_e/vin/enviar-correo",
+                    {
+                        email: this.email_contacto.trim(),
+                    }
+                );
+                this.mostrarModal = true; // Mostrar modal para ingresar el código
+                this.intentosRestantes = 3; // Reiniciar intentos
+                this.codigoVerificacion = response.data.data;
+
+            } catch (error) {
+                console.error(error);
+                mostraralertas("Ocurrió un error al enviar el correo electrónico.", "error");
+            }
+
+        },
+        // ✅ Validar el código ingresado
+        verificarCodigo() {
+            if (this.codigov === this.codigoVerificacion) {
+                this.correoValidado = true;
+                this.mostrarModal = false;
+                this.procesarGuardar();
+            } else {
+                this.intentosRestantes--;
+                if (this.intentosRestantes > 0) {
+                    mostraralertas(`Código incorrecto. Intentos restantes: ${this.intentosRestantes}`, "warning");
+                } else {
+                    mostraralertas("Ha superado el número máximo de intentos.", "error");
+                    this.mostrarModal = false;
+                    this.$router.push('/principal/' + store.state.idusu); // 🔹 Redirige a página principal
+                }
+            }
+        },
+
+        // ✅ Guardar usuario en backend
+        procesarGuardar() {
+            var parametros = {
+                ruc: this.ruc,
+                nombre_emprendimiento: this.nombre_emprendimiento,
+                descripcion: this.descripcion,
+                fotografia: this.fotografia,
+                tiempo_emprendimiento: this.tiempo_emprendimiento,
+                horarios_atencion: this.horarios_atencion,
+                direccion: this.direccion,
+                telefono_contacto: this.telefono_contacto,
+                email_contacto: this.email_contacto,
+                sitio_web: this.sitio_web,
+                redes_sociales: this.redes_sociales,
+                estado_empren: 2,
+                CIInfPer: this.idus
+            };
+            enviarsolig('POST', parametros, 'http://backendbolsaempleo.test/api/b_e/vin/emprendimientos_E', 'Emprendimiento Creado');
+            this.$router.push('/misemprendimientos/' + this.idus);
+        },
+        async revisar() {
+
+
+            try {
+                // Enviar el correo electrónico
+                const responseCorreo = await axios.post("http://backendbolsaempleo.test/api/b_e/vin/revision-emprendimiento", {
+
+                    email: this.email_contacto.trim(),
+                    firts_name: this.apellidos.trim(),
+                    nombreEmprendimiento: this.idus,
+
+                });
+                if (responseCorreo.status === 200) {
+                    this.$router.push('/misemprendimientos/' + store.state.idusu);
+
+
+                } else {
+                    // Si hubo un error al enviar el correo, mostrar mensaje de error
+                    console.log('error al enviar el correo electrónico');
+                    this.$router.push('/misemprendimientos/' + store.state.idusu);
+                }
+            } catch (error) {
+                console.error(error);
+                alert("Ocurrió un error al realizar la acción.");
+            }
+
+
+
+        },
         cargarfoto(event) {
             const file = event.target.files[0];
             if (!file) return;
@@ -228,6 +306,18 @@ export default {
                     this.fotografia = reader.result.replace(/^data:image\/(jpeg|jpg);base64,/, ""); // Base64 limpio
                 };
             };
+        },
+        cerrarModal() {
+           
+            this.mostrarModal = false;
+            this.codigov = "";
+            this.codigoVerificacion = "";
+            this.intentosRestantes = 3;
+
+            // Control de flujo
+            this.cargando = false;
+            this.correoValidado = false;
+
         }
 
 

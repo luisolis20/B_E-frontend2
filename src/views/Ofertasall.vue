@@ -199,11 +199,13 @@
             &nbsp;&nbsp;&nbsp;&nbsp;
             <div class="d-flex justify-content-center">
                 <button class="btn btn-primary text-white" @click="actualizar">Actualizar Datos</button>
+                 &nbsp;&nbsp;&nbsp;
+                <button class="btn btn-primary text-white" @click="descargarCSV" v-if="mostrarOpciones3">Descargar en formato CSV</button>
             </div>
 
         </div>
     </div>
-    <div class="container mt-5">
+    <div class="container mt-5" v-if="mostrarOpciones3">
         <h4 class="text-center mb-3">Estadísticas de ofertas por empresas</h4>
         <canvas id="graficoOfertas" height="100"></canvas>
     </div>
@@ -292,6 +294,38 @@ export default {
             } finally {
                 this.cargando = false;
             }
+        },
+        descargarCSV() {
+            const headers = ['ID', 'Empresa', 'Título', 'Categoría', 'Tipo de Contrato', 'Jefe', 'Fin de Oferta', 'Estado de Oferta', 'Publicada', 'Actualizada', 'Cant. Postulados', 'Estado'];
+            const rows = this.ofertas.map(post => [
+                post.id,
+                //ruc de la empresa salga correctamente
+                post.Empresa,
+                post.titulo,
+                post.categoria,
+                post.tipo_contrato,
+                post.Jefe,
+                new Date(post.fechaFinOferta).toLocaleString('es-EC', { timeZone: 'America/Guayaquil' }),
+                (new Date(post.fechaFinOferta) <= new Date()) ? 'Oferta Caducada' : 'Oferta Vigente',
+                new Date(post.created_at).toLocaleString('es-EC', { timeZone: 'America/Guayaquil' }),
+                new Date(post.updated_at).toLocaleString('es-EC', { timeZone: 'America/Guayaquil' }),
+                post.total_postulados,
+                (post.estado_ofert == 1) ? 'Habilitado' : 'Deshabilitado',
+            ]);
+
+            let csvContent = 'data:text/csv;charset=utf-8,\uFEFF';
+            csvContent += headers.join(';') + '\n';
+            rows.forEach(row => {
+                csvContent += row.join(';') + '\n';
+            });
+
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement('a');
+            link.setAttribute('href', encodedUri);
+            link.setAttribute('download', 'Ofertas_Registradas.csv');
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
         },
         generarGrafico() {
             const conteoOfertas = {};
@@ -515,7 +549,7 @@ export default {
                 confimarhabi(
                     'http://backendbolsaempleo.test/api/b_e/vin/oferta__empleoshabi/',
                     id,
-                    'Hbailitar registro',
+                    'Habilitar registro',
                     '¿Desea habilitar la oferta ' + nombre + '?',
                     this.actualizar   // 👈 callback para refrescar la tabla al confirmar
                 );
