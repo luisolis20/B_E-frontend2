@@ -284,8 +284,8 @@
         <div class="modal-body">
           <form @submit.prevent="verificarCodigo">
             <div class="mb-3">
-              <label for="codigo-verificacion" class="col-form-label text-dark">Ingrese el código enviado a su
-                correo:</label>
+              <label for="codigo-verificacion" class="col-form-label text-dark">Ingrese el código enviado al
+                correo: {{ email_contacto }}</label>
               <input type="text" class="form-control text-dark" id="codigo-verificacion" v-model="codigov" required>
             </div>
             <p class="text-danger" v-if="intentosRestantes < 3">

@@ -323,7 +323,7 @@ export default {
                 const response = await axios.get(this.urlinformacionpersonal);
                 if (response.data.data && response.data.data.length > 0) {
                     const data = response.data.data[0];
-                    console.log(data);
+                    //console.log(data);
                     this.CIInfPer = data.CIInfPer;
                     this.ApellInfPer = data.ApellInfPer;
                     this.ApellMatInfPer = data.ApellMatInfPer;

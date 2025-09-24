@@ -28,6 +28,7 @@ export default {
             Errorfoto: false,
             guardaremprendimiento: true,
             ur3: 'http://backendbolsaempleo.test/api/b_e/vin/consultarediremp',
+            urlinformacionpersonal: "http://vinculacionconlasociedad.utelvt.edu.ec/cvubackendv2/api/cvn/v1/informacionpersonal",
             // Verificación de correo
             mostrarModal: false,
             codigov: "",
@@ -41,6 +42,7 @@ export default {
         const ruta = useRoute();
         this.idus = ruta.params.id;
         this.idus2 = ruta.params.id;
+        this.urlinformacionpersonal += '/' + store.state.idusu;
         //console.log(this.idus);
         if (store.state.idusu != this.idus) {
             this.ur3 += '/' + this.idus2;
@@ -160,24 +162,11 @@ export default {
                     mostraralertas('Ingrese sitio web del emprendimiento', 'warning', 'sitio');
                 } else if (this.redes_sociales == '') {
                     mostraralertas('Ingrese redes sociales del emprendimiento', 'warning', 'redes');
+                }
+                else if (!this.email_contacto.endsWith("@gmail.com")) {
+                    mostraralertas('El correo de Empresa debe ser de Gmail (@gmail.com)', 'error', 'email');
                 } else {
-                    var parametros = {
-                        ruc: this.ruc,
-                        nombre_emprendimiento: this.nombre_emprendimiento,
-                        descripcion: this.descripcion,
-                        fotografia: this.fotografia,
-                        tiempo_emprendimiento: this.tiempo_emprendimiento,
-                        horarios_atencion: this.horarios_atencion,
-                        direccion: this.direccion,
-                        telefono_contacto: this.telefono_contacto,
-                        email_contacto: this.email_contacto,
-                        sitio_web: this.sitio_web,
-                        redes_sociales: this.redes_sociales,
-                        estado_empren: 2,
-                        CIInfPer: this.idususuario
-                    };
-                    await enviarsoliedit('PUT', parametros, this.url, 'Emprendimiento Actualizado');
-                    this.$router.push('/misemprendimientos/' + store.state.idusu);
+                     this.enviarCodigo();
                     //window.location.reload();
                 }
             } catch (error) {
@@ -197,6 +186,8 @@ export default {
                 this.intentosRestantes = 3; // Reiniciar intentos
                 this.codigoVerificacion = response.data.data;
 
+
+
             } catch (error) {
                 console.error(error);
                 mostraralertas("Ocurrió un error al enviar el correo electrónico.", "error");
@@ -208,7 +199,13 @@ export default {
             if (this.codigov === this.codigoVerificacion) {
                 this.correoValidado = true;
                 this.mostrarModal = false;
-                this.procesarGuardar();
+                if (store.state.idusu != this.idus) {
+                    this.revisar2();
+                }else{
+                    this.revisar();
+                }
+                //this.revisar();
+
             } else {
                 this.intentosRestantes--;
                 if (this.intentosRestantes > 0) {
@@ -241,20 +238,76 @@ export default {
             enviarsolig('POST', parametros, 'http://backendbolsaempleo.test/api/b_e/vin/emprendimientos_E', 'Emprendimiento Creado');
             this.$router.push('/misemprendimientos/' + this.idus);
         },
+        async procesarActualizar() {
+            var parametros = {
+                ruc: this.ruc,
+                nombre_emprendimiento: this.nombre_emprendimiento,
+                descripcion: this.descripcion,
+                fotografia: this.fotografia,
+                tiempo_emprendimiento: this.tiempo_emprendimiento,
+                horarios_atencion: this.horarios_atencion,
+                direccion: this.direccion,
+                telefono_contacto: this.telefono_contacto,
+                email_contacto: this.email_contacto,
+                sitio_web: this.sitio_web,
+                redes_sociales: this.redes_sociales,
+                estado_empren: 2,
+                CIInfPer: this.idususuario
+            };
+            await enviarsoliedit('PUT', parametros, this.url, 'Emprendimiento Actualizado');
+            this.$router.push('/misemprendimientos/' + store.state.idusu);
+        },
         async revisar() {
 
 
             try {
                 // Enviar el correo electrónico
+                const response = await axios.get(this.urlinformacionpersonal);
+                const data = response.data.data[0];
+                const apellidos = data.ApellInfPer + ' ' + data.ApellMatInfPer + ' ' + data.NombInfPer;
                 const responseCorreo = await axios.post("http://backendbolsaempleo.test/api/b_e/vin/revision-emprendimiento", {
 
                     email: this.email_contacto.trim(),
-                    firts_name: this.apellidos.trim(),
-                    nombreEmprendimiento: this.idus,
+                    firts_name: apellidos,
+                    nombreEmprendimiento: this.nombre_emprendimiento,
 
                 });
                 if (responseCorreo.status === 200) {
+                    this.procesarGuardar();
+                    //this.$router.push('/misemprendimientos/' + store.state.idusu);
+
+
+                } else {
+                    // Si hubo un error al enviar el correo, mostrar mensaje de error
+                    console.log('error al enviar el correo electrónico');
                     this.$router.push('/misemprendimientos/' + store.state.idusu);
+                }
+            } catch (error) {
+                console.error(error);
+                alert("Ocurrió un error al realizar la acción.");
+            }
+
+
+
+        },
+        async revisar2() {
+
+
+            try {
+                // Enviar el correo electrónico
+                const response = await axios.get(this.urlinformacionpersonal);
+                const data = response.data.data[0];
+                const apellidos = data.ApellInfPer + ' ' + data.ApellMatInfPer + ' ' + data.NombInfPer;
+                const responseCorreo = await axios.post("http://backendbolsaempleo.test/api/b_e/vin/revision-actualizacion-emprendimiento", {
+
+                    email: this.email_contacto.trim(),
+                    firts_name: apellidos,
+                    nombreEmprendimiento: this.nombre_emprendimiento,
+
+                });
+                if (responseCorreo.status === 200) {
+                    this.procesarActualizar();
+                    //this.$router.push('/misemprendimientos/' + store.state.idusu);
 
 
                 } else {
@@ -308,7 +361,7 @@ export default {
             };
         },
         cerrarModal() {
-           
+
             this.mostrarModal = false;
             this.codigov = "";
             this.codigoVerificacion = "";
