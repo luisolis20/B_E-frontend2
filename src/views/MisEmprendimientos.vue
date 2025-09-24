@@ -65,12 +65,12 @@
                             <td class="text-center">({{ emp.total_ofertas }})</td>
                             <td>
                                 <button v-if="emp.estado_empren == 1" class="btn btn-success fw-bold">
-                                    Vigente</button>
-                                <button v-if="emp.estado_empren == 0" class="btn btn-danger fw-bold"> No Vigente</button>
+                                    Aprobado</button>
+                                <button v-if="emp.estado_empren == 0" class="btn btn-danger fw-bold"> No Aprobado</button>
                                 <label v-if="emp.estado_empren == 2"class=" text-info fw-bold"> En revisión </label>
                             </td>
                             <td>
-                                <router-link :to="{ path: '/viewEmp/' + emp.id }" class="btn btn-info" title="Ver emprendimiento" v-if="emp.estado_empren == 1">
+                                <router-link :to="{ path: '/viewEmp/' + emp.id }" class="btn btn-info" title="Ver emprendimiento" v-if="emp.estado_empren == 1 || emp.estado_empren == 0 || emp.estado_empren == 2">
                                     <i class="fa-solid fa-eye"></i>
                                 </router-link>
                                 &nbsp;
@@ -78,12 +78,9 @@
                                     <i class="fa-solid fa-edit"></i>
                                 </router-link>
                                 &nbsp;
-                                <button class="btn btn-danger" v-on:click="eliminar(emp.id, emp.nombre_emprendimiento)" v-if="emp.estado_empren == 1 && emp.total_ofertas == 0">
-                                    <i class="fa-solid fa-trash"></i>
-                                </button>
-                                <button class="btn btn-success" v-on:click="habilitar(emp.id, emp.nombre_emprendimiento)" v-if="emp.estado_empren == 0">
-                                    <i class="fas fa-redo"></i>
-                                </button>
+                                
+                               
+                               
 
 
                             </td>

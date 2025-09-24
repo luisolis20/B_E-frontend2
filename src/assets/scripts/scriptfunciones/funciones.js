@@ -32,7 +32,7 @@ export function confimar(urlconslash, id, titulo, mensaje, actualizarTabla) {
         },
     });
 
-    swalwithboostrapbutton.fire({
+    return swalwithboostrapbutton.fire({
         title: titulo,
         text: mensaje,
         icon: 'question',
@@ -41,18 +41,21 @@ export function confimar(urlconslash, id, titulo, mensaje, actualizarTabla) {
         cancelButtonText: '<i class="fa-solid fa-ban"></i> Cancelar'
     }).then((res) => {
         if (res.isConfirmed) {
-            axios.delete(url)   // 👈 Ya NO mandamos { data: { id } }
+            return axios.delete(url)   // 👈 Ya NO mandamos { data: { id } }
                 .then((response) => {
                     mostraralertas(response.data.mensaje ?? 'Eliminado con éxito', 'success');
                     if (typeof actualizarTabla === "function") {
                         actualizarTabla(); // 🔄 refrescar tabla
                     }
+                    return response.data;
                 })
                 .catch(() => {
                     mostraralertas('Error al eliminar', 'error');
+                    throw new Error('Error al eliminar');
                 });
         } else {
             mostraralertas('Operación cancelada', 'info');
+            return null;
         }
     });
 }
@@ -66,7 +69,7 @@ export function confimarhabi(urlconslash, id, titulo, mensaje, actualizarTabla) 
         },
     });
 
-    swalwithboostrapbutton.fire({
+    return swalwithboostrapbutton.fire({
         title: titulo,
         text: mensaje,
         icon: 'question',
@@ -75,18 +78,21 @@ export function confimarhabi(urlconslash, id, titulo, mensaje, actualizarTabla) 
         cancelButtonText: '<i class="fa-solid fa-ban"></i> Cancelar'
     }).then((res) => {
         if (res.isConfirmed) {
-            axios.delete(url)   // 👈 Ya NO mandamos { data: { id } }
+            return axios.delete(url)   // 👈 Ya NO mandamos { data: { id } }
                 .then((response) => {
                     mostraralertas(response.data.mensaje ?? 'Habilitado con éxito', 'success');
                     if (typeof actualizarTabla === "function") {
                         actualizarTabla(); // 🔄 refrescar tabla
                     }
+                    return response.data;
                 })
                 .catch(() => {
-                    mostraralertas('Error al eliminar', 'error');
+                    mostraralertas('Error al habilitar', 'error');
+                    throw new Error('Error al habilitar');
                 });
         } else {
             mostraralertas('Operación cancelada', 'info');
+            return null;
         }
     });
 }

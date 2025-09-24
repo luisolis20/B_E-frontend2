@@ -2,8 +2,10 @@
     <div class="container-fluid RSVP-form py-3" id="weddingRsvp">
         <div class="container py-3">
             <div class="mb-5 text-center mx-auto wow fadeIn" data-wow-delay="0.1s" style="max-width: 800px;">
-                <h1 class="display-2 text-primary">Tu Emprendimiento</h1>
-                <p class="text-dark">En este apartado visualizarás los datos de tu emprendimiento, no podrás editarlo. Aquí lo que harás es crear una oferta laboral para tu emprendimiento</p>
+                <h1 class="display-2 text-primary" v-if="mostrarOpciones2">Tu Emprendimiento</h1>
+                <p class="text-dark"  v-if="mostrarOpciones2">En este apartado visualizarás los datos de tu emprendimiento, no podrás editarlo. Aquí lo que harás es crear una oferta laboral para tu emprendimiento</p>
+                <h1 class="display-2 text-primary" v-if="mostrarOpciones3">Datos del Emprendimiento</h1>
+                <p class="text-dark" v-if="mostrarOpciones3">En este apartado visualizarás los datos del emprendimiento</p>
             </div>
             <div class="row justify-content-center">
                 <div class="col-md-10">
@@ -116,12 +118,12 @@
                                     <div class="text-center border border-secondary p-4 my-4 position-relative">
                                         <div class="fw-bold text-primary bg-white d-flex align-items-center justify-content-center position-absolute border-secondary p-2"
                                             style="width: 50%; border-style: double; top: 0; left: 50%; transform: translate(-50%, -50%);">
-                                            El emprendimiento no está disponible para crear ofertas de empleo
+                                            El emprendimiento no cumplió con los requisitos necesarios para ser aprobado 
                                         </div>
                                         
                                     </div>
                                 </div>
-                                 <div class="col-12 wow fadeIn" data-wow-delay="0.1s"  v-if="est==2">
+                                 <div class="col-12 wow fadeIn" data-wow-delay="0.1s"  v-if="est==2 && mostrarOpciones">
                                     <div class="text-center border border-secondary p-4 my-4 position-relative">
                                         <div class="fw-bold text-primary bg-white d-flex align-items-center justify-content-center position-absolute border-secondary p-2"
                                             style="width: 50%; border-style: double; top: 0; left: 50%; transform: translate(-50%, -50%);">
@@ -151,6 +153,7 @@
 import { useRoute } from 'vue-router';
 import axios from 'axios';
 import store from '@/store';
+import script2 from '@/assets/scripts/custom.js';
 
 export default {
     data() {
@@ -221,6 +224,7 @@ export default {
 
 
 
-    }
+    },
+    mixins: [script2],
 };
 </script>

@@ -20,7 +20,7 @@
                 <table class="table table-hover">
                     <thead>
                         <tr>
-                             <th scope="col">Id</th>
+                            <th scope="col">Id</th>
                             <th scope="col">Ruc</th>
                             <th scope="col">Emprendimiento</th>
                             <th scope="col">Dueño</th>
@@ -42,32 +42,39 @@
                             <td v-text="emp.id"></td>
                             <td v-text="emp.ruc"></td>
                             <td v-text="emp.nombre_emprendimiento"></td>
-                            <td v-if="emp.CIInfPer===this.idus">Yo</td>
+                            <td v-if="emp.CIInfPer === this.idus">Yo</td>
 
                             <td v-else v-text="emp.ApellInfPer + ' ' + emp.ApellMatInfPer + ' ' + emp.NombInfPer"></td>
                             <td>{{ formatFecha(emp.created_at) }}</td>
                             <td>{{ formatFecha(emp.updated_at) }}</td>
                             <td class="text-center">({{ emp.total_ofertas }})</td>
                             <td>
+                                <button v-if="emp.estado_empren == 0" class="btn btn-danger fw-bold"> No
+                                    Aprobado</button>
                                 <button v-if="emp.estado_empren == 1" class="btn btn-success fw-bold">
-                                    Vigente</button>
-                                <button v-if="emp.estado_empren == 0" class="btn btn-danger fw-bold"> No Vigente</button>
-                                <label v-if="emp.estado_empren == 2"class=" text-info fw-bold"> En revisión </label>
+                                    Aprobado</button>
+                                <label v-if="emp.estado_empren == 2" class=" text-info fw-bold"> En revisión </label>
                             </td>
                             <td>
-                                <router-link :to="{ path: '/viewEmp/' + emp.id }" class="btn btn-info" title="Ver emprendimiento" v-if="emp.estado_empren == 1">
+                                <router-link :to="{ path: '/viewEmp/' + emp.id }" class="btn btn-info"
+                                    title="Ver emprendimiento" v-if="emp.estado_empren == 1 || emp.estado_empren == 2">
                                     <i class="fa-solid fa-eye"></i>
                                 </router-link>
                                 &nbsp;
-                                <router-link :to="{ path: '/editEmp/' + emp.id }" class="btn btn-warning" title="Editar emprendimiento" v-if="emp.estado_empren == 1 || emp.estado_empren == 2">
+                                <router-link :to="{ path: '/editEmp/' + emp.id }" class="btn btn-warning"
+                                    title="Editar emprendimiento" v-if="emp.estado_empren == 1 && mostrarOpciones2">
                                     <i class="fa-solid fa-edit"></i>
                                 </router-link>
                                 &nbsp;
-                                <button class="btn btn-danger" v-on:click="eliminar(emp.id, emp.nombre_emprendimiento)" v-if="emp.estado_empren == 1 && emp.total_ofertas == 0">
-                                    <i class="fa-solid fa-trash"></i>
-                                </button>
-                                <button class="btn btn-success" v-on:click="habilitar(emp.id, emp.nombre_emprendimiento)" v-if="emp.estado_empren == 2">
+                                <button class="btn btn-success"
+                                    v-on:click="habilitar(emp.id, emp.nombre_emprendimiento)"
+                                    v-if="emp.estado_empren == 2">
                                     <i class="fas fa-redo"></i>
+                                </button>
+                                &nbsp;
+                                <button class="btn btn-danger" v-on:click="eliminar(emp.id, emp.nombre_emprendimiento)"
+                                    v-if="emp.estado_empren == 2">
+                                    <i class="fa-solid fa-trash"></i>
                                 </button>
 
 
@@ -107,7 +114,7 @@
 import script2 from '@/assets/scripts/custom.js';
 import axios from 'axios';
 import { useRoute } from 'vue-router';
-import { confimar,confimarhabi } from '@/assets/scripts/scriptfunciones/funciones';
+import { confimar, confimarhabi } from '@/assets/scripts/scriptfunciones/funciones';
 import { Chart, registerables } from 'chart.js';
 Chart.register(...registerables);
 export default {
@@ -115,7 +122,8 @@ export default {
         return {
             idus: 0,
             url255: 'http://backendbolsaempleo.test/api/b_e/vin/emprendimientos_E',
-             emprendimientoemp: [],
+            urlinformacionpersonal: "http://vinculacionconlasociedad.utelvt.edu.ec/cvubackendv2/api/cvn/v1/informacionpersonal",
+            emprendimientoemp: [],
             filteredemprend: [],
             searchQuery: '',
             cargando: false,
@@ -137,7 +145,7 @@ export default {
                 const response = await axios.get(`${this.url255}?all=true`);
                 const allData = response.data.data;
                 //console.log(allData);
-                
+
                 this.emprendimientoemp = allData;
                 this.lastPage = Math.ceil(this.emprendimientoemp.length / 10);
                 this.updateFilteredData();
@@ -194,34 +202,83 @@ export default {
                 this.updateFilteredData();
             }
         },
-        eliminar(id, nombre) {
+        async eliminar(id, nombre) {
             try {
-                confimar(
+                const w = await confimar(
                     'http://backendbolsaempleo.test/api/b_e/vin/consultaredirempelim/',
                     id,
-                    'Inhabilitar registro',
-                    '¿Realmente desea inhabilitar el emprenidmiento  ' + nombre + '?',
+                    'No aprobar Emprendimiento',
+                    '¿Realmente desea no aprobar el emprendimiento  ' + nombre + '?',
                     this.actualizar   // 👈 callback para refrescar la tabla al confirmar
                 );
+                if (w.mensaje === 'Inhabilitado con Éxito!!') {
+                    this.urlinformacionpersonal += '/' + w.data.CIInfPer;
+                    const response = await axios.get(this.urlinformacionpersonal);
+                    const data = response.data.data[0];
+                    const apellidos = data.ApellInfPer + ' ' + data.ApellMatInfPer + ' ' + data.NombInfPer;
+                    const responseCorreo = await axios.post("http://backendbolsaempleo.test/api/b_e/vin/enviar-rechazo-emprendimiento", {
+
+                        email: w.data.email_contacto,
+                        firts_name: apellidos,
+                        company_name: nombre,
+
+                    });
+                    if (responseCorreo.status === 200) {
+                        console.log('Correo enviado y emprendimiento no aprobado', 'success');
+
+                       this.actualizar();
+
+                    } else {
+                        // Si hubo un error al enviar el correo, mostrar mensaje de error
+                        console.log('error al enviar el correo electrónico');
+                       this.actualizar();
+                    }
+                }
             } catch (error) {
                 console.error("Error al eliminar el emprendimiento:", error);
                 this.cargando = false;
             }
         },
-        habilitar(id, nombre) {
+        async habilitar(id, nombre) {
             try {
-                confimarhabi(
+                const w = await confimarhabi(
                     'http://backendbolsaempleo.test/api/b_e/vin/consultaredirempelim2/',
                     id,
-                    'Hbailitar registro',
-                    '¿Desea habilitar el emprendimiento ' + nombre + '?',
+                    'Aprobar Emprendimiento',
+                    '¿Desea aprobar el emprendimiento ' + nombre + '?',
                     this.actualizar   // 👈 callback para refrescar la tabla al confirmar
                 );
+
+                if (w.mensaje === 'Habilitado con Éxito!!') {
+                    this.urlinformacionpersonal += '/' + w.data.CIInfPer;
+                    const response = await axios.get(this.urlinformacionpersonal);
+                    const data = response.data.data[0];
+                    const apellidos = data.ApellInfPer + ' ' + data.ApellMatInfPer + ' ' + data.NombInfPer;
+                    const responseCorreo = await axios.post("http://backendbolsaempleo.test/api/b_e/vin/enviar-aprobacion-emprendimiento", {
+
+                        email: w.data.email_contacto,
+                        firts_name: apellidos,
+                        company_name: nombre,
+
+                    });
+                    if (responseCorreo.status === 200) {
+                        console.log('Correo enviado y emprendimiento aprobado con éxito', 'success');
+
+                       this.actualizar();
+
+                    } else {
+                        // Si hubo un error al enviar el correo, mostrar mensaje de error
+                        console.log('error al enviar el correo electrónico');
+                        this.actualizar();
+                    }
+                }
+
             } catch (error) {
-                console.error("Error al eliminar el emprendimiento:", error);
+                console.error("Error al aprobar el emprendimiento:", error);
                 this.cargando = false;
             }
         },
+
         descargarCSV() {
             const headers = ['ID', 'Ruc', 'Empresa', 'Representante', 'Creada', 'Actualizada', 'Fin de Convenio', 'Estado de Convenio', 'Cant. Ofer', 'Estado'];
             const rows = this.empresasprac.map(post => [
