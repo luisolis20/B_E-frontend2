@@ -9,7 +9,7 @@ export default {
             idus: 0,
             idususuario: 0,
             est: 0,
-
+            botonesBloqueados: false,
             ruc: '',
             nombre_emprendimiento: '',
             descripcion: '',
@@ -125,6 +125,7 @@ export default {
                     mostraralertas('El correo de Empresa debe ser de Gmail (@gmail.com)', 'error', 'email');
                 } else {
                     this.enviarCodigo();
+                    this.botonesBloqueados = true;
 
                 }
             } catch (error) {
@@ -163,6 +164,7 @@ export default {
                     mostraralertas('El correo de Empresa debe ser de Gmail (@gmail.com)', 'error', 'email');
                 } else {
                     this.enviarCodigo();
+                    this.botonesBloqueados = true;
                     //window.location.reload();
                 }
             } catch (error) {

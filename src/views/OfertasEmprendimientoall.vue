@@ -122,9 +122,9 @@
                             <td v-if="mostrarOpciones3" v-text="formatFecha(ofe.updated_at)"></td>
                             <td v-if="mostrarOpciones3 || mostrarOpciones2">
                                 <button v-if="ofe.estado_ofert_empr == 1" class="btn btn-success fw-bold">
-                                    Habilitado</button>
+                                    Aprobado</button>
                                 <button v-if="ofe.estado_ofert_empr == 0" class="btn btn-danger fw-bold">
-                                    Deshabilitado</button>
+                                    No Aprobado</button>
                                 <label for="" class="text-info fw-bold" v-if="ofe.estado_ofert_empr == 2">En
                                     revisión</label>
                             </td>
@@ -600,9 +600,9 @@ export default {
                     const data = response2.data.data[0];
 
                     const apellidos = data.ApellInfPer + ' ' + data.ApellMatInfPer + ' ' + data.NombInfPer;
-                    const responseCorreo = await axios.post("http://backendbolsaempleo.test/api/b_e/vin/enviar-rechazo-emprendimiento", {
+                    const responseCorreo = await axios.post("http://backendbolsaempleo.test/api/b_e/vin/enviar-oferta-rechazo-emprendimiento", {
 
-                        email: response2.data.email_contacto,
+                        email: data.email_contacto,
                         firts_name: apellidos,
                         nombreOferta: nombre,
 
@@ -639,7 +639,7 @@ export default {
                     //console.log('funciona')
                   this.urlofeempre += '/' + id;
                     const response2 = await axios.get(this.urlofeempre);
-                    console.log(response2);
+                    //console.log(response2);
                     const data = response2.data.data[0];
 
                     const apellidos = data.ApellInfPer + ' ' + data.ApellMatInfPer + ' ' + data.NombInfPer;

@@ -98,7 +98,40 @@
                                             id="exampletextarea" cols="30" rows="5" disabled></textarea>
                                     </div>
                                 </div>
+                                <div class="col-12 wow fadeIn" data-wow-delay="0.1s"
+                                    v-if="mostrarOpciones3 && est == 2">
+                                    <div class="text-center border border-secondary p-4 my-4 position-relative">
+                                        <div class="fw-bold text-primary bg-white d-flex align-items-center justify-content-center position-absolute border-secondary p-2"
+                                            style="width: 50%; border-style: double; top: 0; left: 50%; transform: translate(-50%, -50%);">
+                                            --------------------
+                                        </div>
 
+                                        <div class="mt-4">
+
+                                            <label for="" class="text-success">Esta oferta de empelo fue enviada el
+                                                {{ formatFecha(updated_at) }}</label>
+
+
+                                            <div class="col-12 text-center wow fadeIn" data-wow-delay="0.1s">
+                                                <p class="text-dark">Luego de revisar la oferta. ¿Deseas aceptarla?, al
+                                                    aceptarla o rechazarla le llegará la notificación al correo </p>
+                                                <div>
+                                                    <button :disabled="botonesBloqueados"
+                                                        @click.prevent="habilitar(idus, titulo)"
+                                                        class="btn btn-primary btn-primary-outline-0 py-3 px-5 text-white">Si,
+                                                        Aceptar la oferta</button>
+                                                    &nbsp;&nbsp;&nbsp;&nbsp;
+                                                    <button :disabled="botonesBloqueados"
+                                                        @click.prevent="eliminar(idus, titulo)"
+                                                        class="btn btn-danger btn-primary-outline-0 py-3 px-5 text-white">No,
+                                                        Rechazar la oferta</button>
+                                                </div>
+                                            </div>
+                                            <br>
+                                        </div>
+
+                                    </div>
+                                </div>
                                 <div class="col-12 wow fadeIn" data-wow-delay="0.1s"  v-if="est==1 && mostrarOpciones2">
                                     <div class="text-center border border-secondary p-4 my-4 position-relative">
                                         <div class="fw-bold text-primary bg-white d-flex align-items-center justify-content-center position-absolute border-secondary p-2"
@@ -174,6 +207,8 @@ export default {
             estado_empren: '',
             urk3: 'http://backendbolsaempleo.test/api/b_e/vin/consultarediremp',
             cargando: false,
+            botonesBloqueados: false,
+            urlofeempre: 'http://backendbolsaempleo.test/api/b_e/vin/view-oferta_empleos_emprendimiento',
         }
     },
     mounted() {

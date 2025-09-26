@@ -245,7 +245,7 @@
 
                     <div class="col-lg-12" v-if="!correoErrornue && !correoErrornuetelf && !correoErrornueRucf">
                       <fieldset>
-                        <button type="submit" v-on:click="guardar" id="form-submit" class="orange-button">Guardar
+                        <button type="submit" :disabled="botonesBloqueados" v-on:click="guardar" id="form-submit" class="orange-button">Guardar
                           Datos</button>
                       </fieldset>
                     </div>
@@ -339,6 +339,7 @@ export default {
       correoErrornue: false,
       correoErrornuetelf: false,
       correoErrornueRucf: false,
+      
 
 
     };

@@ -242,7 +242,7 @@
 
                     <div class="col-lg-12" v-if="!correoErrornue && !correoErrornuetelf && !correoErrornueRucf">
                       <fieldset>
-                        <button type="submit" v-on:click="actualizar" id="form-submit" class="orange-button">Actualizar 
+                        <button type="submit" :disabled="botonesBloqueados" v-on:click="actualizar" id="form-submit" class="orange-button">Actualizar 
                           Datos del Emprendimiento</button>
                       </fieldset>
                     </div>
