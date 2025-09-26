@@ -266,6 +266,39 @@
       </div>
     </div>
   </div>
+   <!-- Modal de Verificación de Código -->
+  <div class="modal fade show d-block" tabindex="-1" aria-labelledby="modalVerificacionLabel" aria-hidden="true"
+    v-if="mostrarModal">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+
+        <!-- Encabezado -->
+        <div class="modal-header">
+          <h1 class="modal-title fs-5 text-dark" id="modalVerificacionLabel">Verificación de Correo</h1>
+        </div>
+
+        <!-- Cuerpo -->
+        <div class="modal-body">
+          <form @submit.prevent="verificarCodigo">
+            <div class="mb-3">
+              <label for="codigo-verificacion" class="col-form-label text-dark">Ingrese el código enviado al
+                correo: {{ email_contacto }}</label>
+              <input type="text" class="form-control text-dark" id="codigo-verificacion" v-model="codigov" required>
+            </div>
+            <p class="text-danger" v-if="intentosRestantes < 3">
+              Intentos restantes: {{ intentosRestantes }}
+            </p>
+          </form>
+        </div>
+
+        <!-- Footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn text-secondary" @click="cerrarModal">Cancelar</button>
+          <button type="button" class="btn text-primary" @click="verificarCodigo">Validar Código</button>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 <style>
 @import url('@/assets/styles/styles.css');

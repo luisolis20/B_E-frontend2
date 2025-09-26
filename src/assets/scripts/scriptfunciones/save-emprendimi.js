@@ -55,7 +55,7 @@ export default {
         async getEmprendiemi() {
             try {
                 const response = await axios.get(this.ur3);
-                console.log(response.data.data[0]);
+                //console.log(response.data.data[0]);
 
 
                 if (response.data.data) {
@@ -75,14 +75,14 @@ export default {
                     this.redes_sociales = response.data.data[0].redes_sociales;
                     this.est = response.data.data[0].estado_empren;
                     //console.log(this.est);
-                    if (this.est == 1) {
+                    /*if (this.est == 1) {
                         this.estado_empren = "Disponible"
                     } else if (this.est == 2) {
                         this.estado_empren = "En Revisión"
                     }
                     else {
                         this.estado_empren = "No Disponible"
-                    }
+                    }*/
 
                 }
 
@@ -135,11 +135,7 @@ export default {
         async actualizar(event) {
             try {
                 event.preventDefault();
-                if (this.estado_empren == "Disponible") {
-                    this.est = 1;
-                } else {
-                    this.est = 0;
-                }
+
                 if (this.ruc == '') {
                     mostraralertas('Ingrese ruc de la empresa', 'warning', 'ruc');
                 } else if (this.nombre_emprendimiento == '') {
@@ -166,7 +162,7 @@ export default {
                 else if (!this.email_contacto.endsWith("@gmail.com")) {
                     mostraralertas('El correo de Empresa debe ser de Gmail (@gmail.com)', 'error', 'email');
                 } else {
-                     this.enviarCodigo();
+                    this.enviarCodigo();
                     //window.location.reload();
                 }
             } catch (error) {
@@ -201,7 +197,7 @@ export default {
                 this.mostrarModal = false;
                 if (store.state.idusu != this.idus) {
                     this.revisar2();
-                }else{
+                } else {
                     this.revisar();
                 }
                 //this.revisar();

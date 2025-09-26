@@ -6,6 +6,18 @@
                 class="d-inline-block fw-bold text-dark text-uppercase bg-light border border-primary rounded-pill px-4 py-1 mb-3">
                 Estas son todas las ofertas de Empleo</small>
 
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            <div class="row gx-4 gy-3 d-flex justify-content-center" v-if="mostrarOpciones3">
+                <div class="col-lg-12">
+                    <form class="d-none d-md-flex ms-4">
+                        <input class="form-control py-3 border-1 text-dark" type="search"
+                            placeholder="Buscar por RUC de la empresa" v-model="searchQuery" @input="filterResults"
+                            @keypress="onlyNumbers">
+                    </form>
+                </div>
+            </div>
+            &nbsp;&nbsp;&nbsp;&nbsp;
+
             <div class="row gx-4 gy-3 d-flex">
                 <div class="mb-3 col-sm-2 col-md-2 col-xl-2">
                     <label for="filtroEstado" class="form-label fw-bold text-dark">Filtrar por estado de la
@@ -118,7 +130,7 @@
                             <td class="text-center" v-if="mostrarOpciones3">({{ ofe.total_postulados }})</td>
                             <td>
                                 <router-link :to="{ path: '/postularse/' + this.idus + '/' + ofe.id }"
-                                    v-if="mostrarOpciones2" class="btn btn-info">
+                                    v-if="mostrarOpciones2 && ofe.estado_ofert == 1" class="btn btn-info">
                                     <i class="fa-solid fa-eye"></i>
                                 </router-link>
                                 &nbsp;
@@ -199,8 +211,9 @@
             &nbsp;&nbsp;&nbsp;&nbsp;
             <div class="d-flex justify-content-center">
                 <button class="btn btn-primary text-white" @click="actualizar">Actualizar Datos</button>
-                 &nbsp;&nbsp;&nbsp;
-                <button class="btn btn-primary text-white" @click="descargarCSV" v-if="mostrarOpciones3">Descargar en formato CSV</button>
+                &nbsp;&nbsp;&nbsp;
+                <button class="btn btn-primary text-white" @click="descargarCSV" v-if="mostrarOpciones3">Descargar en
+                    formato CSV</button>
             </div>
 
         </div>
@@ -240,6 +253,7 @@ export default {
             tabla: false,
             carrousel: true,
             grafico: null,
+            buscando: false,
 
 
         }
@@ -248,7 +262,7 @@ export default {
         const ruta = useRoute();
         this.idus = ruta.params.id;
 
-        if (this.mostrarOpciones2 || this.mostrarOpciones) {
+        if (this.mostrarOpciones2) {
 
             this.getOFertas().then(() => {
                 this.actualizarTiemposRestantes();
@@ -272,7 +286,7 @@ export default {
                 this.ofertas = allData;
                 this.lastPage = Math.ceil(this.ofertas.length / 10);
                 this.updateFilteredData();
-                this.generarGrafico();
+                //this.generarGrafico();
             } catch (error) {
                 console.error("Error al obtener datos:", error);
             } finally {
@@ -435,6 +449,19 @@ export default {
                 }]
             });
         },
+        filterResults() {
+
+            const query = this.searchQuery.trim();
+            if (query) {
+                this.buscando = true;
+                this.filteredofertas = this.ofertas.filter(inves =>
+                    inves.ruc.includes(query)
+                );
+            } else {
+                this.buscando = false;
+                this.actualizar();
+            }
+        },
 
 
         calcularDiasRestantes(fechaFin) {
@@ -503,7 +530,7 @@ export default {
         },
 
         actualizar() {
-            if (this.mostrarOpciones2 || this.mostrarOpciones) {
+            if (this.mostrarOpciones2) {
 
                 this.cargando = true;
                 this.filtroEstado = 'todas';

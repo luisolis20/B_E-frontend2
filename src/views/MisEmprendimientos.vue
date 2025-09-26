@@ -74,7 +74,7 @@
                                     <i class="fa-solid fa-eye"></i>
                                 </router-link>
                                 &nbsp;
-                                <router-link :to="{ path: '/editEmp/' + emp.id }" class="btn btn-warning" title="Editar emprendimiento" v-if="emp.estado_empren == 1">
+                                <router-link :to="{ path: '/editEmp/' + emp.id }" class="btn btn-warning" title="Editar emprendimiento" v-if="emp.estado_empren == 1 || emp.estado_empren == 0">
                                     <i class="fa-solid fa-edit"></i>
                                 </router-link>
                                 &nbsp;

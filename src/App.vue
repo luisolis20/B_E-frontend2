@@ -169,8 +169,31 @@
                 </ul>
               </div>
 
-              <router-link :to="{ path: '/ofertasall/' + idus }" class="nav-item nav-link" v-if="mostrarOpciones3"
-                :class="{ 'active': $route.path === '/ofertasall/' + idus }">Ofertas de Empleo</router-link>
+              
+                <!-- 🔽 DROPDOWN para Mis Ofertas -->
+                  <div class="nav-item dropdown" v-if="mostrarOpciones3">
+                <a class="nav-link dropdown-toggle" href="#" id="dropdownOfertas" role="button"
+                  data-bs-toggle="dropdown" aria-expanded="false"
+                  :class="{ 'active': $route.path.startsWith('/ofertasall/') || $route.path.startsWith('/ofertasallemp/')}">
+                  Ofertas
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end border-0 rounded-0 rounded-bottom m-0"
+                  aria-labelledby="dropdownOfertas">
+                  <li>
+                    <router-link class="dropdown-item" :to="{ path: '/ofertasall/' + idus }"
+                      :class="{ 'active': $route.path === '/ofertasall/' + idus }">
+                      Ofertas de Empleo en Empresas
+                    </router-link>
+                  </li>
+                  <li>
+                    <router-link class="dropdown-item" :to="{ path: '/ofertasallemp/' + idus }"
+                      :class="{ 'active': $route.path === '/ofertasallemp/' + idus }">
+                     Ofertras de Emprendimientos
+                    </router-link>
+                  </li>
+
+                </ul>
+              </div>
               <router-link :to="{ path: '/estadopostulacionall/' + idus }" class="nav-item nav-link"
                 v-if="mostrarOpciones3" :class="{ 'active': $route.path === '/estadopostulacionall/' + idus }">Estado de
                 Postulaciones</router-link>

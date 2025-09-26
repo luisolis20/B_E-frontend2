@@ -69,7 +69,7 @@
                                 <button class="btn btn-success"
                                     v-on:click="habilitar(emp.id, emp.nombre_emprendimiento)"
                                     v-if="emp.estado_empren == 2">
-                                    <i class="fas fa-redo"></i>
+                                    <i class="fas fa-check-double"></i>
                                 </button>
                                 &nbsp;
                                 <button class="btn btn-danger" v-on:click="eliminar(emp.id, emp.nombre_emprendimiento)"

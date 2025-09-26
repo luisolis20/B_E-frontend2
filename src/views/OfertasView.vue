@@ -63,7 +63,7 @@
                             <th scope="col">Finalización de la Oferta</th>
                             <th scope="col">Cant. Post</th>
                             <th scope="col">Estado de la Oferta</th>
-                            <th scope="col">Acciones</th>
+                            <th scope="col"></th>
                         </tr>
                     </thead>
                     <tbody id="contenido">

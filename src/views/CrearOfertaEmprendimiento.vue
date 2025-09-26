@@ -12,7 +12,7 @@
                     <div class="p-5 border-secondary position-relative" style="border-style: double;">
                         <div class="fw-bold text-primary bg-white d-flex align-items-center justify-content-center position-absolute border-secondary p-2 wow fadeIn"
                             data-wow-delay="0.1s"
-                            style="width: 75%; border-style: double; top: 0; left: 50%; transform: translate(-50%, -50%);">
+                            style="width: 75%; border-style: double; top: 0; left: 50%; transform: translate(-50%, -50%);" v-if="mostrarOpciones2">
                             Estos son los datos de tu Emprendimiento
                             
                         </div>
@@ -99,7 +99,7 @@
                                     </div>
                                 </div>
 
-                                <div class="col-12 wow fadeIn" data-wow-delay="0.1s"  v-if="est==1">
+                                <div class="col-12 wow fadeIn" data-wow-delay="0.1s"  v-if="est==1 && mostrarOpciones2">
                                     <div class="text-center border border-secondary p-4 my-4 position-relative">
                                         <div class="fw-bold text-primary bg-white d-flex align-items-center justify-content-center position-absolute border-secondary p-2"
                                             style="width: 50%; border-style: double; top: 0; left: 50%; transform: translate(-50%, -50%);">
@@ -123,7 +123,7 @@
                                         
                                     </div>
                                 </div>
-                                 <div class="col-12 wow fadeIn" data-wow-delay="0.1s"  v-if="est==2 && mostrarOpciones">
+                                 <div class="col-12 wow fadeIn" data-wow-delay="0.1s"  v-if="est==2 && mostrarOpciones2">
                                     <div class="text-center border border-secondary p-4 my-4 position-relative">
                                         <div class="fw-bold text-primary bg-white d-flex align-items-center justify-content-center position-absolute border-secondary p-2"
                                             style="width: 50%; border-style: double; top: 0; left: 50%; transform: translate(-50%, -50%);">

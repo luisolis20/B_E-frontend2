@@ -2,8 +2,9 @@
     <div class="container-fluid RSVP-form py-5" id="weddingRsvp">
         <div class="container py-3">
             <div class="mb-5 text-center mx-auto wow fadeIn" data-wow-delay="0.1s" style="max-width: 800px;">
-                <h1 class="display-2 text-primary">Crea una Oferta Laboral</h1>
-                <p class="text-dark">Llena el siguiente formulario para publicar una oferta laboral en nuestra
+                <h1 class="display-2 text-primary">Crea una oferta laboral</h1>
+                <p class="text-dark">Llena el siguiente formulario para publicar una oferta laboral de tu emprendimiento
+                    en nuestra
                     plataforma. Puedes dar clic en el icono ❓ para que sepas que colocar</p>
             </div>
             <div class="row justify-content-center">
@@ -268,7 +269,7 @@
                                                 <button v-on:click="guardar"
                                                     class="btn btn-primary btn-primary-outline-0 py-3 px-5 text-white">Publicar
                                                     Oferta</button>
-                                                
+
 
 
                                             </div>
@@ -294,6 +295,7 @@
 import store from '@/store';
 import { mostraralertas, enviarsolig } from '@/assets/scripts/scriptfunciones/funciones';
 import { useRoute } from 'vue-router';
+import axios from 'axios';
 export default {
     data() {
         return {
@@ -324,12 +326,19 @@ export default {
             hoveringTooltiprequisistos: false,
             showTooltipdescripcion: false,
             hoveringTooltipdescripcion: false,
+            nombre_emprendimiento: '',
+            dueño: '',
+            email_contacto: '',
+            url: 'http://backendbolsaempleo.test/api/b_e/vin/view-emprendimiento',
+
         }
     },
-    mounted() {
+    async mounted() {
         const ruta = useRoute();
         this.idus = ruta.params.id;
 
+        this.url += '/' + this.idus;
+        this.getEmprendiemi();
 
     },
     methods: {
@@ -375,8 +384,30 @@ export default {
                 }
             });
         },
+        async getEmprendiemi() {
+            try {
+                const response = await axios.get(this.url);
+                //console.log(response.data.data[0]);
 
-        guardar(event) {
+
+                if (response.data.data) {
+
+                    this.nombre_emprendimiento = response.data.data[0].nombre_emprendimiento;
+                    this.email_contacto = response.data.data[0].email_contacto;
+                    this.dueño = response.data.data[0].ApellInfPer + ' ' + response.data.data[0].ApellMatInfPer + ' ' + response.data.data[0].NombInfPer;
+
+                }
+
+            } catch (error) {
+                console.error('Error al obtener la emprendimiento:', error);
+                mostraralertas('Error al obtener la emprendimiento. Por favor, inténtelo de nuevo.', 'error');
+
+            }
+
+
+        },
+
+        async guardar(event) {
             event.preventDefault();
             if (this.titulo.trim() == '') {
                 mostraralertas('Ingrese el título de la Oferta', 'warning', 'titulo');
@@ -384,7 +415,7 @@ export default {
             else if (this.categoriaSeleccionada.trim() == '') {
                 mostraralertas('Seleccione la categoría de la oferta', 'warning', 'categoria');
             }
-            
+
             else if (this.descripcion.trim() == '') {
                 mostraralertas('Ingrese la descripción de la oferta', 'warning', 'descripcion');
             }
@@ -409,23 +440,60 @@ export default {
 
 
             else {
-                var parametros = {
-                    titulo: this.titulo.trim(),
-                    descripcion: this.descripcion.trim(),
-                    requisistos: this.requisistos.trim(),
-                    jornada: this.jornada.trim(),
-                    tipo_contrato: this.tipo_contrato.trim(),
-                    categoria: this.categoriaSeleccionada,
-                    fechaFinOferta: this.Fechafinofer,
-                    modalidad: this.modalidad.trim(),
-                    estado_ofert_empr: 2,
-                    emprendimiento_id: this.idus
 
-                }
 
-                enviarsolig('POST', parametros, 'http://backendbolsaempleo.test/api/b_e/vin/oferta_empleos_emprendimiento', 'Oferta Creada');
-                this.$router.push('/emprendimientosofertview/' + store.state.idusu);
+                this.revisar();
+
             }
+        },
+        async revisar() {
+
+
+            try {
+                // Enviar el correo electrónico
+
+                const responseCorreo = await axios.post("http://backendbolsaempleo.test/api/b_e/vin/revision-oferta-emprendimiento", {
+
+                    email: this.email_contacto.trim(),
+                    firts_name: this.dueño,
+                    nombreEmprendimiento: this.nombre_emprendimiento,
+                    nombreOferta: this.titulo,
+
+                });
+                if (responseCorreo.status === 200) {
+                    this.procesarpublicacion();
+                    //this.$router.push('/misemprendimientos/' + store.state.idusu);
+
+
+                } else {
+                    // Si hubo un error al enviar el correo, mostrar mensaje de error
+                    console.log('error al enviar el correo electrónico');
+                    this.$router.push('/misemprendimientos/' + store.state.idusu);
+                }
+            } catch (error) {
+                console.error(error);
+                alert("Ocurrió un error al realizar la acción.");
+            }
+
+
+
+        },
+        procesarpublicacion() {
+            var parametros = {
+                titulo: this.titulo.trim(),
+                descripcion: this.descripcion.trim(),
+                requisistos: this.requisistos.trim(),
+                jornada: this.jornada.trim(),
+                tipo_contrato: this.tipo_contrato.trim(),
+                categoria: this.categoriaSeleccionada,
+                fechaFinOferta: this.Fechafinofer,
+                modalidad: this.modalidad.trim(),
+                estado_ofert_empr: 2,
+                emprendimiento_id: this.idus
+
+            }
+            enviarsolig('POST', parametros, 'http://backendbolsaempleo.test/api/b_e/vin/oferta_empleos_emprendimiento', 'Oferta Creada');
+            this.$router.push('/emprendimientosofertview/' + store.state.idusu);
         },
 
 

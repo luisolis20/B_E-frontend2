@@ -2,9 +2,11 @@
     <div class="container-fluid RSVP-form py-3" id="weddingRsvp">
         <div class="container py-3">
             <div class="mb-5 text-center mx-auto wow fadeIn" data-wow-delay="0.1s" style="max-width: 800px;">
-                <h1 class="display-2 text-primary">Postula a esta oferta</h1>
-                <p class="text-dark">Estos son los datos de la oferta. Te recordamos que si no posees un CVN no vas a poder postular a la oferta, revisa
+                <h1 class="display-2 text-primary" v-if="mostrarOpciones2">Postula a esta oferta</h1>
+                <h1 class="display-2 text-primary" v-if="mostrarOpciones3">Oferta enviada</h1>
+                <p class="text-dark" v-if="mostrarOpciones2">Estos son los datos de la oferta. Te recordamos que si no posees un CVN no vas a poder postular a la oferta, revisa
                 en tu perfil tu CVN antes de postular.</p>
+                <p class="text-dark" v-if="mostrarOpciones3 && estado_oferta==2">Estos son los datos de la oferta. Antes de aprobar la oferta, revisa que todos los datos sean correctos.</p>
             </div>
             <div class="row justify-content-center">
                 <div class="col-md-10">
@@ -85,7 +87,7 @@
                                         <textarea cols="30" rows="5" name="text" v-model="requisitos" class="form-control border-1 text-dark" id="exampletextarea" disabled></textarea>
                                     </div>
                                 </div>
-                                <div class="col-12 wow fadeIn" data-wow-delay="0.1s">
+                                <div class="col-12 wow fadeIn" data-wow-delay="0.1s" v-if="mostrarOpciones2">
                                     <div class="text-center border border-secondary p-4 my-4 position-relative">
                                         <div class="fw-bold text-primary bg-white d-flex align-items-center justify-content-center position-absolute border-secondary p-2"
                                             style="width: 50%; border-style: double; top: 0; left: 50%; transform: translate(-50%, -50%);">
@@ -120,6 +122,67 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="col-12 wow fadeIn" data-wow-delay="0.1s"v-if="mostrarOpciones3 && estado_oferta == 2" >
+                                    <div class="text-center border border-secondary p-4 my-4 position-relative">
+                                        <div class="fw-bold text-primary bg-white d-flex align-items-center justify-content-center position-absolute border-secondary p-2"
+                                            style="width: 50%; border-style: double; top: 0; left: 50%; transform: translate(-50%, -50%);">
+                                            ¿Deseas Postularte a esta oferta de empleo? 
+                                        </div>
+                                            
+                                        <div class="mt-4">
+                                            
+                                            <label for="" class="text-success">Esta oferta de empelo fue enviada el {{formatFecha(updated_at)}}</label>
+                                            
+                                            
+                                            <div class="col-12 text-center wow fadeIn" data-wow-delay="0.1s">
+                                                <p class="text-dark">Luego de revisar la oferta. ¿Deseas aceptarla?, al aceptarla o rechazarla le llegará la notificación al correo </p>
+                                                <div>
+                                                    <button v-on:click="eliminar(this.idus, this.titulo)" class="btn btn-primary btn-primary-outline-0 py-3 px-5 text-white">Si, Aceptar la oferta</button>
+                                                    &nbsp;&nbsp;&nbsp;&nbsp;
+                                                    <button v-on:click="habilitar(this.idus, this.titulo)" class="btn btn-danger btn-primary-outline-0 py-3 px-5 text-white">No, Rechazar la oferta</button>
+                                                </div>
+                                            </div>
+                                            <br>
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+                                <div class="col-12 wow fadeIn" data-wow-delay="0.1s" v-if="mostrarOpciones3 && estado_oferta == 1 || estado_oferta == 0">
+                                    <div class="text-center border border-secondary p-4 my-4 position-relative" v-if="estado_oferta == 1">
+                                        <div class="fw-bold text-primary bg-white d-flex align-items-center justify-content-center position-absolute border-secondary p-2"
+                                            style="width: 50%; border-style: double; top: 0; left: 50%; transform: translate(-50%, -50%);" >
+                                            Oferta de Emprenidimiento aprobada 
+                                        </div>
+                                            
+                                        <div class="mt-4">
+                                            
+                                            <label for="" class="text-success">Esta oferta de emprendimiento fue aprobada el: </label>
+                                            
+                                            <div class="col-12 text-center wow fadeIn" data-wow-delay="0.1s">
+                                                <label for="" class="text-dark">{{formatFecha(updated_at)}}</label>
+                                            </div>
+                                            
+                                        </div>
+                                       
+                                    </div>
+                                    <div class="text-center border border-secondary p-4 my-4 position-relative" v-if="estado_oferta == 0">
+                                        <div class="fw-bold text-secondary bg-white d-flex align-items-center justify-content-center position-absolute border-secondary p-2"
+                                            style="width: 50%; border-style: double; top: 0; left: 50%; transform: translate(-50%, -50%);" >
+                                            Oferta de Emprenidimiento no aprobada 
+                                        </div>
+                                            
+                                        <div class="mt-4">
+                                            
+                                            <label for="" class="text-danger">Esta oferta de emprendimiento fue rechazada el: </label>
+                                            
+                                            <div class="col-12 text-center wow fadeIn" data-wow-delay="0.1s">
+                                                <label for="" class="text-dark">{{formatFecha(updated_at)}}</label>
+                                            </div>
+                                            
+                                        </div>
+                                       
+                                    </div>
+                                </div>
                                 
                             </div>
                         </form>
@@ -139,9 +202,10 @@
 <script>
 
 import { useRoute } from 'vue-router';
+import script2 from '@/assets/scripts/custom.js';
 import axios from 'axios';
 import store from '@/store';
-import {mostraralertas, enviarsolig, mostraralertas2, enviarsolig23} from '@/assets/scripts/scriptfunciones/funciones';
+import {mostraralertas, enviarsolig, mostraralertas2, enviarsolig23,confimar, confimarhabi} from '@/assets/scripts/scriptfunciones/funciones';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
@@ -166,6 +230,8 @@ export default {
             Apellidos:'',
             ApellidosM:'',
             Nombres:'',
+            estado_oferta:0,
+            updated_at:'',
             urk32:'http://backendbolsaempleo.test/api/b_e/vin/consultaofertempr',
             url255:'http://backendbolsaempleo.test/api/b_e/vin/postulacionemprendi',
             apiBaseUrl: "http://vinculacionconlasociedad.utelvt.edu.ec/cvubackendv2/api/cvn/v1",
@@ -225,21 +291,25 @@ export default {
         this.urlinformacion_contacto += '/' + this.ide;
         this.urldeclaracion_personal += '/' + this.ide;
         this.urlcursoscapacitacion += '/' + this.ide;
+        if(this.mostrarOpciones2){
+            Promise.all([
+                    this.getUsuario_CVN(),
+                    this.getEmpresa(),
+                    this.getDeclaracionPersonal(),
+                    this.getFormacionAcademica(),
+                    this.getExperienciasProfesionales(),
+                    this.getInvestigacionPublicaciones(),
+                    this.getIdiomas(),
+                    this.getHabilidadesInformaticas(),
+                    this.getCursosCapacitaciones(),
+                    this.getDatosRelevantes(),
+                    this.getInformacionContacto(),
         
-        Promise.all([
-                this.getUsuario_CVN(),
-                this.getEmpresa(),
-                this.getDeclaracionPersonal(),
-                this.getFormacionAcademica(),
-                this.getExperienciasProfesionales(),
-                this.getInvestigacionPublicaciones(),
-                this.getIdiomas(),
-                this.getHabilidadesInformaticas(),
-                this.getCursosCapacitaciones(),
-                this.getDatosRelevantes(),
-                this.getInformacionContacto(),
-    
-            ])
+                ])
+        }else{
+            this.getEmpresa();
+        }
+        
         
         
     },
@@ -339,6 +409,8 @@ export default {
                     this.Apellidos=res.data.data[0].ApellInfPer;
                     this.ApellidosM=res.data.data[0].ApellMatInfPer;
                     this.Nombres=res.data.data[0].NombInfPer;
+                    this.estado_oferta=res.data.data[0].estado_ofert_empr;
+                    this.updated_at=res.data.data[0].updated_at;
 
                 }
             } catch (error) {
@@ -642,9 +714,38 @@ export default {
 
             }
         },
+        eliminar(id, nombre) {
+            try {
+                confimar('http://backendbolsaempleo.test/api/b_e/vin/oferta__empleos/',
+                    id,
+                    'Inhabilitar registro',
+                    '¿Realmente desea inhabilitar la oferta ' + nombre + '?',
+                    this.actualizar   // 👈 callback para refrescar la tabla al confirmar
+                );
+            } catch (error) {
+                console.error("Error al eliminar la oferta:", error);
+                this.cargando = false;
+            }
+
+        },
+        habilitar(id, nombre) {
+            try {
+                confimarhabi(
+                    'http://backendbolsaempleo.test/api/b_e/vin/oferta__empleoshabi/',
+                    id,
+                    'Habilitar registro',
+                    '¿Desea habilitar la oferta ' + nombre + '?',
+                    this.actualizar   // 👈 callback para refrescar la tabla al confirmar
+                );
+            } catch (error) {
+                console.error("Error al eliminar la oferta:", error);
+                this.cargando = false;
+            }
+        },
         
         
 
-    }
+    },
+    mixins: [script2],
 };
 </script>

@@ -2,6 +2,8 @@
     <div class="container-fluid py-3">
         <div class="container-fluid py-3">
             <h1 class="display-5 mb-4" style="text-align: center;"> Ofertas de emprendimientos creadas </h1>
+            <p class="text-dark text-center">En este apartado tendrás todos tus ofertas creadas. Para que tus ofertas estén disponibles deben ser aprobadas por
+            la Dirección de Vincualción con la Sociedad de la UTLVTE. Hasta que estén aprobadas, solo podrás editarlas dando clic en el ícono: <button class="btn btn-warning"><i class="fa-solid fa-edit"></i></button> </p>
             <small class="d-inline-block fw-bold text-dark text-uppercase bg-light border border-primary rounded-pill px-4 py-1 mb-3">
                     Estas son tus Ofertas Creadas</small>
                     
@@ -54,8 +56,9 @@
                             <th scope="col">Categoría</th>
                             <th scope="col">Registrado/Actualizado</th>
                             <th scope="col">Finalización de la Oferta</th>
+                            <th scope="col">Cant. Post</th>
                             <th scope="col">Estado de la Oferta</th>
-                            <th scope="col">Acciones</th>
+                            <th scope="col"></th>
                         </tr>
                     </thead>
                     <tbody id="contenido">
@@ -70,14 +73,26 @@
                             <td v-text="ofe.tipo_contrato"></td>
                             <td v-text="ofe.modalidad"></td>
                             <td v-text="ofe.categoria"></td>
-                            <td v-text="new Date(ofe.updated_at).toLocaleDateString('es-EC', {timeZone: 'America/Guayaquil'})"></td>
-                            <td v-text="new Date(ofe.fechaFinOferta).toLocaleDateString('es-EC', {timeZone: 'America/Guayaquil'})"></td>
+                            <td>{{ formatFecha(ofe.updated_at) }}</td>
+                            <td>{{ new Date(ofe.fechaFinOferta).toLocaleDateString('es-EC', {
+                                timeZone:
+                                    'America/Guayaquil'
+                            }) }}
+                                <label v-if="new Date(ofe.fechaFinOferta) <= new Date()"
+                                    class="text-danger fw-bold">(Oferta Caducada)</label>
+                                <label v-else class="text-success fw-bold">(Oferta Vigente)</label>
+                            </td>
+                           <td class="text-center">({{ ofe.total_postulados }})</td>
                             <td>
-                                <button v-if="new Date(ofe.fechaFinOferta) <= new Date()" class="btn btn-danger fw-bold">Oferta Caducada</button>
-                                <button v-else class="btn btn-success fw-bold">Oferta Vigente</button>
+                                <button v-if="ofe.estado_ofert_empr == 1" class="btn btn-success fw-bold">
+                                    Habilitado</button>
+                                <button v-if="ofe.estado_ofert_empr == 0" class="btn btn-danger fw-bold">
+                                    Deshabilitado</button>
+                                    <label for="" class="text-info fw-bold" v-if="ofe.estado_ofert_empr == 2">En
+                                    revisión</label>
                             </td>
                             <td>
-                                <router-link :to="{path:'/postuladosempr/'+ofe.id}" class="btn btn-info">
+                                <router-link :to="{path:'/postuladosempr/'+ofe.id}" class="btn btn-info" v-if="ofe.total_postulados > 0">
                                    Ver postulados
                                 </router-link>
                                 &nbsp;
@@ -85,10 +100,7 @@
                                     <i class="fa-solid fa-edit"></i>
                                 </router-link>
                                 &nbsp;
-                                <button class="btn btn-danger" v-on:click="eliminar(ofe.id,ofe.Empresa)">
-                                    <i class="fa-solid fa-trash"></i>
-                                </button>
-
+                               
                             </td>
                        </tr>
                         
@@ -131,6 +143,7 @@
     import axios from 'axios';
     import { useRoute } from 'vue-router';
     import { confimar } from '@/assets/scripts/scriptfunciones/funciones';
+    import script2 from '@/assets/scripts/custom.js';
     export default{
         data(){
             return{
@@ -239,6 +252,7 @@
                
 
             }
-        }
+        },
+        mixins: [script2],
     }
 </script>

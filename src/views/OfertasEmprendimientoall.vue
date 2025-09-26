@@ -5,7 +5,17 @@
             <small
                 class="d-inline-block fw-bold text-dark text-uppercase bg-light border border-primary rounded-pill px-4 py-1 mb-3">
                 Estas son todas las ofertas de Empleo</small>
-
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            <div class="row gx-4 gy-3 d-flex justify-content-center" v-if="mostrarOpciones3">
+                <div class="col-lg-12">
+                    <form class="d-none d-md-flex ms-4">
+                        <input class="form-control py-3 border-1 text-dark" type="search"
+                            placeholder="Buscar por cédula del dueño del emprendimiento" v-model="searchQuery"
+                            @input="filterResults" @keypress="onlyNumbers">
+                    </form>
+                </div>
+            </div>
+            &nbsp;&nbsp;&nbsp;&nbsp;
             <div class="row gx-4 gy-3 d-flex">
                 <div class="mb-3 col-sm-2 col-md-2 col-xl-2">
                     <label for="filtroEstado" class="form-label fw-bold text-dark">Filtrar por estado de la
@@ -46,7 +56,7 @@
                         <option value="Otros">Otros</option>
                     </select>
                 </div>
-                <div class="mb-3 col-sm-2 col-md-2 col-xl-2">
+                <div class="mb-3 col-sm-2 col-md-2 col-xl-2" v-if="mostrarOpciones2">
                     <div>
                         <label for="filtroEstado" class="form-label fw-bold text-dark">Modo de visualización:</label>
                     </div>
@@ -65,57 +75,78 @@
                 </div>
 
             </div>
-            <div class="table-container" v-if="tabla">
+            <div class="table-container" v-if="tabla || mostrarOpciones3">
                 <table class="table table-hover">
                     <thead>
                         <tr>
                             <th scope="col">Id</th>
-                            <th scope="col">Empresa</th>
-                            <th scope="col">Título</th>
+                            <th scope="col">Emprenidmiento</th>
+                            <th scope="col">Oferta</th>
                             <th scope="col">Categorías</th>
-                            <th scope="col">Modalidad</th>
-                            <th scope="col">Tipo de Contrato</th>
-                            <th scope="col">Jefe</th>
-                            <th scope="col">Registrado</th>
+                            <th scope="col" v-if="mostrarOpciones2">Modalidad</th>
+                            <th scope="col" v-if="mostrarOpciones2">Tipo de Contrato</th>
+                            <th scope="col">Dueño</th>
                             <th scope="col">Finalización de la Oferta</th>
-                            <th scope="col">Estado de la Oferta</th>
+                            <th scope="col">Publicado</th>
+                            <th scope="col" v-if="mostrarOpciones3">Actualizado</th>
+                            <th scope="col" v-if="mostrarOpciones3 || mostrarOpciones2">Estado</th>
+                            <th scope="col" v-if="mostrarOpciones3">Cant. Post</th>
                             <th scope="col"></th>
                         </tr>
                     </thead>
                     <tbody id="contenido">
                         <tr v-if="this.cargando">
-                            <td colspan="8">
+                            <td colspan="12">
                                 <h3>Cargando....</h3>
                             </td>
                         </tr>
                         <tr v-else v-for="ofe,  in filteredofertas" :key="ofe.id">
 
+
                             <td v-text="ofe.id"></td>
-                            <td v-text="ofe.Empresa"></td>
+                            <td v-text="ofe.Emprendimiento"></td>
                             <td v-text="ofe.titulo"></td>
                             <td v-text="ofe.categoria"></td>
-                            <td v-text="ofe.modalidad"></td>
-                            <td v-text="ofe.tipo_contrato"></td>
-                            <td v-text="ofe.Jefe"></td>
-                            <td v-text="new Date(ofe.created_at).toLocaleDateString('en-US')"></td>
-                            <td
-                                v-text="new Date(ofe.fechaFinOferta).toLocaleDateString('es-EC', { timeZone: 'America/Guayaquil' })">
+                            <td v-text="ofe.modalidad" v-if="mostrarOpciones2"></td>
+                            <td v-text="ofe.tipo_contrato" v-if="mostrarOpciones2"></td>
+                            <td>{{ ofe.ApellInfPer + ' ' + ofe.ApellMatInfPer + ' ' + ofe.NombInfPer }}</td>
+                            <td>{{ new Date(ofe.fechaFinOferta).toLocaleDateString('es-EC', {
+                                timeZone:
+                                    'America/Guayaquil'
+                            }) }}
+                                <label v-if="new Date(ofe.fechaFinOferta) <= new Date()"
+                                    class="text-danger fw-bold">(Oferta Caducada)</label>
+                                <label v-else class="text-success fw-bold">(Oferta Vigente)</label>
                             </td>
-                            <td>
-                                <button v-if="new Date(ofe.fechaFinOferta) <= new Date()"
-                                    class="btn btn-danger fw-bold">Oferta Caducada</button>
-                                <button v-else class="btn btn-success fw-bold">Oferta Vigente</button>
+                            <td v-text="formatFecha(ofe.created_at)"></td>
+                            <td v-if="mostrarOpciones3" v-text="formatFecha(ofe.updated_at)"></td>
+                            <td v-if="mostrarOpciones3 || mostrarOpciones2">
+                                <button v-if="ofe.estado_ofert_empr == 1" class="btn btn-success fw-bold">
+                                    Habilitado</button>
+                                <button v-if="ofe.estado_ofert_empr == 0" class="btn btn-danger fw-bold">
+                                    Deshabilitado</button>
+                                <label for="" class="text-info fw-bold" v-if="ofe.estado_ofert_empr == 2">En
+                                    revisión</label>
                             </td>
+                            <td class="text-center" v-if="mostrarOpciones3">({{ ofe.total_postulados }})</td>
                             <td>
-                                <router-link :to="{ path: '/postularse/' + this.idus + '/' + ofe.id }"
-                                    v-if="mostrarOpciones2" class="btn btn-info">
+                                <router-link :to="{ path: '/postularseempr/' + this.idus + '/' + ofe.id }"
+                                    v-if="mostrarOpciones2 && ofe.estado_ofert_empr == 1 || mostrarOpciones3"
+                                    class="btn btn-info">
                                     <i class="fa-solid fa-eye"></i>
                                 </router-link>
-                                &nbsp;
-                                <button v-if="mostrarOpciones3" class="btn btn-danger"
-                                    v-on:click="eliminar(ofe.id, ofe.Empresa)">
+                                <br> <br>
+                                <button
+                                    v-if="mostrarOpciones3 && ofe.estado_ofert_empr == 1 && ofe.total_postulados == 0 || ofe.estado_ofert_empr == 2"
+                                    class="btn btn-danger" v-on:click="eliminar(ofe.id, ofe.titulo)">
                                     <i class="fa-solid fa-trash"></i>
                                 </button>
+                                <br> <br>
+                                <button v-if="mostrarOpciones3 && ofe.estado_ofert_empr == 2" class="btn btn-success"
+                                    v-on:click="habilitar(ofe.id, ofe.titulo)">
+                                    <i class="fas fa-check-double"></i>
+                                </button>
+
 
 
                             </td>
@@ -125,7 +156,7 @@
                 </table>
             </div>
             <br><br>
-            <div class="owl-carousel vegetable-carousel justify-content-center" v-if="carrousel">
+            <div class="owl-carousel vegetable-carousel justify-content-center" v-if="carrousel && mostrarOpciones2">
                 &nbsp;&nbsp;&nbsp;&nbsp;
                 <div v-for="ofe in filteredofertas" :key="ofe.id"
                     class="border border-primary rounded position-relative vesitable-item mx-2 my-3">
@@ -193,22 +224,27 @@
                 <h3>No hay ofertas disponibles</h3>
             </div>
             <div class="d-flex justify-content-center mb-4">
-                <button @click="previousPage" :disabled="currentPage === 1 || buscando"
-                    class="btn btn-primary text-white">
+                <button @click="previousPage" :disabled="currentPage === 1" class="btn btn-primary text-white">
                     Anterior
                 </button>&nbsp;
                 <span class="text-dark">Página {{ currentPage }} de {{ lastPage }}</span>&nbsp;
-                <button @click="nextPage" :disabled="currentPage === lastPage || buscando"
-                    class="btn btn-primary text-white">
+                <button @click="nextPage" :disabled="currentPage === lastPage" class="btn btn-primary text-white">
                     Siguiente
                 </button>
             </div>
             &nbsp;&nbsp;&nbsp;&nbsp;
             <div class="d-flex justify-content-center">
                 <button class="btn btn-primary text-white" @click="actualizar">Actualizar Datos</button>
+                &nbsp;&nbsp;&nbsp;
+                <button class="btn btn-primary text-white" @click="descargarCSV" v-if="mostrarOpciones3">Descargar en
+                    formato CSV</button>
             </div>
 
         </div>
+    </div>
+    <div class="container mt-5" v-if="mostrarOpciones3">
+        <h4 class="text-center mb-3">Estadísticas de ofertas por empresas</h4>
+        <canvas id="graficoOfertas" height="100"></canvas>
     </div>
     <!-- Cart Page End -->
 </template>
@@ -219,12 +255,16 @@
 import script2 from '@/assets/scripts/custom.js';
 import axios from 'axios';
 import { useRoute } from 'vue-router';
-import { confimar } from '@/assets/scripts/scriptfunciones/funciones';
+import { confimar, confimarhabi } from '@/assets/scripts/scriptfunciones/funciones';
+import { Chart, registerables } from 'chart.js';
+Chart.register(...registerables);
 export default {
     data() {
         return {
             idus: 0,
             url255: 'http://backendbolsaempleo.test/api/b_e/vin/consultanopostempre',
+            url2552: 'http://backendbolsaempleo.test/api/b_e/vin/oferta_empleos_emprendimiento',
+            urlofeempre: 'http://backendbolsaempleo.test/api/b_e/vin/view-oferta_empleos_emprendimiento',
             ofertas: [],
             filteredofertas: [],
             searchQuery: '',
@@ -236,16 +276,23 @@ export default {
             tiemposRestantes: {},
             tabla: false,
             carrousel: true,
+            grafico: null,
+            buscando: false,
 
         }
     },
     mounted() {
         const ruta = useRoute();
         this.idus = ruta.params.id;
-        this.getOFertas().then(() => {
-            this.actualizarTiemposRestantes();
-            setInterval(this.actualizarTiemposRestantes, 1000); // Actualiza cada segundo
-        })
+        if (this.mostrarOpciones2) {
+
+            this.getOFertas().then(() => {
+                this.actualizarTiemposRestantes();
+                setInterval(this.actualizarTiemposRestantes, 1000); // Actualiza cada segundo
+            });
+        } else {
+            this.getOFertas2();
+        }
     },
 
 
@@ -266,6 +313,175 @@ export default {
             } finally {
                 this.cargando = false;
             }
+        },
+        async getOFertas2() {
+            this.cargando = true;
+            try {
+                const response = await axios.get(`${this.url2552}?all=true`);
+                const allData = response.data.data;
+
+                this.ofertas = allData;
+                this.lastPage = Math.ceil(this.ofertas.length / 10);
+                this.updateFilteredData();
+                this.generarGrafico();
+            } catch (error) {
+                console.error("Error al obtener datos:", error);
+            } finally {
+                this.cargando = false;
+            }
+        },
+        filterResults() {
+
+            const query = this.searchQuery.trim();
+            if (query) {
+                this.buscando = true;
+                this.filteredofertas = this.ofertas.filter(inves =>
+                    inves.CIInfPer.includes(query)
+                );
+            } else {
+                this.buscando = false;
+                this.actualizar();
+            }
+        },
+        descargarCSV() {
+            const headers = ['ID', 'Emprenidmiento', 'Título', 'Categoría', 'Tipo de Contrato', 'Jefe', 'Fin de Oferta', 'Estado de Oferta', 'Publicada', 'Actualizada', 'Cant. Postulados', 'Estado'];
+            const rows = this.ofertas.map(post => [
+                post.id,
+                //ruc de la empresa salga correctamente
+                post.Emprendimiento,
+                post.titulo,
+                post.categoria,
+                post.tipo_contrato,
+                post.Jefe,
+                new Date(post.fechaFinOferta).toLocaleString('es-EC', { timeZone: 'America/Guayaquil' }),
+                (new Date(post.fechaFinOferta) <= new Date()) ? 'Oferta Caducada' : 'Oferta Vigente',
+                new Date(post.created_at).toLocaleString('es-EC', { timeZone: 'America/Guayaquil' }),
+                new Date(post.updated_at).toLocaleString('es-EC', { timeZone: 'America/Guayaquil' }),
+                post.total_postulados,
+                (post.estado_ofert_empr == 1) ? 'Habilitado' : 'Deshabilitado',
+            ]);
+
+            let csvContent = 'data:text/csv;charset=utf-8,\uFEFF';
+            csvContent += headers.join(';') + '\n';
+            rows.forEach(row => {
+                csvContent += row.join(';') + '\n';
+            });
+
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement('a');
+            link.setAttribute('href', encodedUri);
+            link.setAttribute('download', 'Ofertas_Registradas.csv');
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        },
+        generarGrafico() {
+            const conteoOfertas = {};
+            const conteoPostulados = {};
+
+            // Contamos ofertas y postulados por empresa
+            this.ofertas.forEach(post => {
+                if (!conteoOfertas[post.Emprendimiento]) {
+                    conteoOfertas[post.Emprendimiento] = 0;
+                    conteoPostulados[post.Emprendimiento] = 0;
+                }
+                conteoOfertas[post.Emprendimiento]++;
+                conteoPostulados[post.Emprendimiento] += post.total_postulados || 0;
+            });
+
+            const empresas = Object.keys(conteoOfertas);
+            const datosOfertas = Object.values(conteoOfertas);
+            const datosPostulados = Object.values(conteoPostulados);
+
+            if (this.grafico) {
+                this.grafico.destroy();
+            }
+
+            const ctx = document.getElementById('graficoOfertas');
+
+            // Colores fijos para que coincidan con las etiquetas
+            const colorOfertas = "hsl(120, 80%, 50%)";   // Verde
+            const colorPostulados = "hsl(220, 80%, 50%)"; // Azul
+
+            this.grafico = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: empresas,
+                    datasets: [
+                        {
+                            label: 'Ofertas',
+                            data: datosOfertas,
+                            backgroundColor: colorOfertas,
+                            borderColor: colorOfertas,
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'Postulados',
+                            data: datosPostulados,
+                            backgroundColor: colorPostulados,
+                            borderColor: colorPostulados,
+                            borderWidth: 1
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                title: function (context) {
+                                    return `Empresa: ${context[0].label}`;
+                                },
+                                label: function (context) {
+                                    return `${context.dataset.label}: ${context.raw}`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            ticks: {
+                                callback: function (value, index) {
+                                    const empresa = this.getLabelForValue(value);
+                                    return [
+                                        `Emprendimiento: ${empresa}`,
+                                        `Ofertas: ${datosOfertas[index]}`,
+                                        `Postulados: ${datosPostulados[index]}`
+                                    ];
+                                }
+                            }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            stepSize: 1
+                        }
+                    }
+                },
+                plugins: [{
+                    // 🔹 Plugin para colorear cada parte del tick
+                    id: 'customLabels',
+                    afterDraw(chart) {
+                        const ctx = chart.ctx;
+                        chart.scales.x.ticks.forEach((tick, i) => {
+                            const x = chart.scales.x.getPixelForTick(i);
+                            const y = chart.scales.x.bottom + 10;
+
+                            ctx.save();
+                            ctx.textAlign = 'center';
+                            ctx.textBaseline = 'top';
+                            ctx.fillStyle = '#000';
+                            ctx.fillText(`Emprendimiento: ${empresas[i]}`, x, y);
+
+                            ctx.fillStyle = colorOfertas;
+                            ctx.fillText(`Ofertas: ${datosOfertas[i]}`, x, y + 15);
+
+                            ctx.fillStyle = colorPostulados;
+                            ctx.fillText(`Postulados: ${datosPostulados[i]}`, x, y + 30);
+                            ctx.restore();
+                        });
+                    }
+                }]
+            });
         },
         calcularDiasRestantes(fechaFin) {
             const hoy = new Date();
@@ -332,12 +548,29 @@ export default {
             this.updateFilteredData();
         },
 
-        actualizar() {
+        async actualizar() {
             this.cargando = true;
             this.filtroEstado = 'todas';
-            this.categoriaSeleccionada = 'Categorías / Área';
-            this.getOFertas()
+            this.categoriaSeleccionada = '';
+            this.currentPage = 1; // Reinicia paginación
+            this.ofertas = [];    // 🔹 Limpia los datos viejos
+            this.filteredofertas = [];
+
+            try {
+                if (this.mostrarOpciones2) {
+                    await this.getOFertas();
+                    this.actualizarTiemposRestantes();
+                } else {
+                    await this.getOFertas2();
+                }
+                this.updateFilteredData(); // 🔹 Fuerza a recalcular el filtrado/paginación
+            } catch (error) {
+                console.error("Error en actualizar:", error);
+            } finally {
+                this.cargando = false;
+            }
         },
+
         nextPage() {
             if (this.currentPage < this.lastPage) {
                 this.currentPage++;
@@ -350,12 +583,89 @@ export default {
                 this.updateFilteredData();
             }
         },
-        eliminar(id, nombre) {
-            confimar('http://backendbolsaempleo.test/api/b_e/vin/oferta__empleos/', id, 'Eliminar registro', '¿Realmente desea eliminar a ' + nombre + '?');
-            this.cargando = false;
-            this.$router.push('/principal/' + this.idus);
+        async eliminar(id, nombre) {
+            try {
+                const response = await confimar('http://backendbolsaempleo.test/api/b_e/vin/oferta_empleos_emprendimiento/',
+                    id,
+                    'Rechazar oferta',
+                    '¿Realmente desea rechazar la oferta ' + nombre + '?',
+                    this.actualizar   // 👈 callback para refrescar la tabla al confirmar
+                );
+                //console.log(response);
+                if (response.mensaje === 'Inhabilitado con Éxito!!') {
+                    
+                    this.urlofeempre += '/' + id;
+                    const response2 = await axios.get(this.urlofeempre);
 
-        }
+                    const data = response2.data.data[0];
+
+                    const apellidos = data.ApellInfPer + ' ' + data.ApellMatInfPer + ' ' + data.NombInfPer;
+                    const responseCorreo = await axios.post("http://backendbolsaempleo.test/api/b_e/vin/enviar-rechazo-emprendimiento", {
+
+                        email: response2.data.email_contacto,
+                        firts_name: apellidos,
+                        nombreOferta: nombre,
+
+                    });
+                    if (responseCorreo.status === 200) {
+                        console.log('Correo enviado y emprendimiento rechazado con éxito', 'success');
+
+                        this.actualizar();
+
+                    } else {
+                        // Si hubo un error al enviar el correo, mostrar mensaje de error
+                        console.log('error al enviar el correo electrónico');
+                        this.actualizar();
+                    }
+                }
+            } catch (error) {
+                console.error("Error al eliminar la oferta:", error);
+                this.cargando = false;
+            }
+
+        },
+        async habilitar(id, nombre) {
+            try {
+                //console.log('funciona')
+                const responsae = await confimarhabi(
+                    'http://backendbolsaempleo.test/api/b_e/vin/oferta_empleos_emprendimientohabi/',
+                    id,
+                    'Aprobar oferta',
+                    '¿Desea aprobar la oferta ' + nombre + '?',
+                    this.actualizar   // 👈 callback para refrescar la tabla al confirmar
+                );
+                //console.log(responsae);
+                if (responsae.mensaje === 'Habilitado con Éxito!!') {
+                    //console.log('funciona')
+                  this.urlofeempre += '/' + id;
+                    const response2 = await axios.get(this.urlofeempre);
+                    console.log(response2);
+                    const data = response2.data.data[0];
+
+                    const apellidos = data.ApellInfPer + ' ' + data.ApellMatInfPer + ' ' + data.NombInfPer;
+                    const responseCorreo = await axios.post("http://backendbolsaempleo.test/api/b_e/vin/enviar-aprobacion-oferta-emprendimiento", {
+
+                        email: data.email_contacto,
+                        firts_name: apellidos,
+                        nombreOferta: nombre,
+
+                    });
+                    if (responseCorreo.status === 200) {
+                        console.log('Correo enviado y emprendimiento aprobado con éxito', 'success');
+
+                        this.actualizar();
+
+                    } else {
+                        // Si hubo un error al enviar el correo, mostrar mensaje de error
+                        console.log('error al enviar el correo electrónico');
+                        this.actualizar();
+                    }
+                }
+            } catch (error) {
+                console.error("Error al habilitar la oferta:", error);
+                this.cargando = false;
+            }
+        },
 
     },
     mixins: [script2],
