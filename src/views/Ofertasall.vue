@@ -219,6 +219,22 @@
         </div>
     </div>
     <div class="container mt-5" v-if="mostrarOpciones3">
+        <div class="row gx-4 gy-3 d-flex justify-content-center mt-3" v-if="mostrarOpciones3">
+            <div class="mb-3 col-sm-2">
+                <label class="form-label fw-bold text-dark">Filtrar por Año:</label>
+                <select v-model="filtroAnio" @change="aplicarFiltros" class="form-select text-dark">
+                    <option value="">Todos</option>
+                    <option v-for="anio in aniosDisponibles" :key="anio" :value="anio">{{ anio }}</option>
+                </select>
+            </div>
+            <div class="mb-3 col-sm-2">
+                <label class="form-label fw-bold text-dark">Filtrar por Mes:</label>
+                <select v-model="filtroMes" @change="aplicarFiltros" class="form-select text-dark">
+                    <option value="">Todos</option>
+                    <option v-for="(mes, index) in meses" :key="index" :value="index + 1">{{ mes }}</option>
+                </select>
+            </div>
+        </div>
         <h4 class="text-center mb-3">Estadísticas de ofertas por empresas</h4>
         <canvas id="graficoOfertas" height="100"></canvas>
     </div>
@@ -254,6 +270,13 @@ export default {
             carrousel: true,
             grafico: null,
             buscando: false,
+             filtroMes: '',
+            filtroAnio: '',
+            aniosDisponibles: [],
+            meses: [
+                "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+                "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
+            ],
 
 
         }
@@ -302,16 +325,49 @@ export default {
                 this.ofertas = allData;
                 this.lastPage = Math.ceil(this.ofertas.length / 10);
                 this.updateFilteredData();
-                this.generarGrafico();
+                 if (this.filtroAnio==='' || this.filtroMes==='') {
+                    this.generarGrafico();
+                    this.aniosDisponibles = [...new Set(
+                        this.ofertas.map(o => new Date(o.created_at).getFullYear())
+                    )].sort((a, b) => b - a);
+                } else {
+                    this.aniosDisponibles = [...new Set(
+                        this.ofertas.map(o => new Date(o.created_at).getFullYear())
+                    )].sort((a, b) => b - a);
+                }
             } catch (error) {
                 console.error("Error al obtener datos:", error);
             } finally {
                 this.cargando = false;
             }
         },
+        aplicarFiltros() {
+            let filtradas = this.ofertas;
+
+            if (this.filtroAnio) {
+                filtradas = filtradas.filter(ofe =>
+                    new Date(ofe.created_at).getFullYear() == this.filtroAnio
+                );
+            }
+
+            if (this.filtroMes) {
+                filtradas = filtradas.filter(ofe =>
+                    new Date(ofe.created_at).getMonth() + 1 == this.filtroMes
+                );
+            }
+
+            // Tabla
+            this.filteredofertas = filtradas;
+
+            this.lastPage = Math.ceil(this.filteredofertas.length / 10);
+            this.currentPage = 1;
+            this.filteredofertas = this.filteredofertas.slice(0, 10);
+
+            this.generarGrafico(filtradas);
+        },
         descargarCSV() {
             const headers = ['ID', 'Empresa', 'Título', 'Categoría', 'Tipo de Contrato', 'Jefe', 'Fin de Oferta', 'Estado de Oferta', 'Publicada', 'Actualizada', 'Cant. Postulados', 'Estado'];
-            const rows = this.ofertas.map(post => [
+            const rows = this.filteredofertas.map(post => [
                 post.id,
                 //ruc de la empresa salga correctamente
                 post.Empresa,
@@ -341,12 +397,12 @@ export default {
             link.click();
             document.body.removeChild(link);
         },
-        generarGrafico() {
+        generarGrafico(ofertasData = this.ofertas) {
             const conteoOfertas = {};
             const conteoPostulados = {};
 
             // Contamos ofertas y postulados por empresa
-            this.ofertas.forEach(post => {
+            ofertasData.forEach(post => {
                 if (!conteoOfertas[post.Empresa]) {
                     conteoOfertas[post.Empresa] = 0;
                     conteoPostulados[post.Empresa] = 0;

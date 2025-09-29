@@ -339,6 +339,7 @@ export default {
       correoErrornue: false,
       correoErrornuetelf: false,
       correoErrornueRucf: false,
+      botonesBloqueados: false,
       
 
 

@@ -57,7 +57,8 @@
                             </td>
                             <td>
                                 <router-link :to="{ path: '/viewEmp/' + emp.id }" class="btn btn-info"
-                                    title="Ver emprendimiento" v-if="emp.estado_empren == 1 || emp.estado_empren == 2">
+                                    title="Ver emprendimiento"
+                                    v-if="emp.estado_empren == 1 || emp.estado_empren == 2 || emp.estado_empren == 0">
                                     <i class="fa-solid fa-eye"></i>
                                 </router-link>
                                 &nbsp;
@@ -106,6 +107,26 @@
         </div>
     </div>
     <!-- Cart Page End -->
+    <div class="container mt-5" v-if="mostrarOpciones3">
+        <div class="row gx-4 gy-3 d-flex justify-content-center mt-3" v-if="mostrarOpciones3">
+            <div class="mb-3 col-sm-2">
+                <label class="form-label fw-bold text-dark">Filtrar por Año:</label>
+                <select v-model="filtroAnio" @change="aplicarFiltros" class="form-select text-dark">
+                    <option value="">Todos</option>
+                    <option v-for="anio in aniosDisponibles" :key="anio" :value="anio">{{ anio }}</option>
+                </select>
+            </div>
+            <div class="mb-3 col-sm-2">
+                <label class="form-label fw-bold text-dark">Filtrar por Mes:</label>
+                <select v-model="filtroMes" @change="aplicarFiltros" class="form-select text-dark">
+                    <option value="">Todos</option>
+                    <option v-for="(mes, index) in meses" :key="index" :value="index + 1">{{ mes }}</option>
+                </select>
+            </div>
+        </div>
+        <h4 class="text-center mb-3">Estadísticas de emprendimientoemp por empresas</h4>
+        <canvas id="graficoemprendimientoemp" height="100"></canvas>
+    </div>
 </template>
 <style>
 @import url('@/assets/styles/styles.css');
@@ -130,6 +151,14 @@ export default {
             currentPage: 1,
             lastPage: 1,
             buscando: false,
+            grafico: null,
+            filtroMes: '',
+            filtroAnio: '',
+            aniosDisponibles: [],
+            meses: [
+                "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+                "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
+            ],
         }
     },
     mounted() {
@@ -148,19 +177,196 @@ export default {
 
                 this.emprendimientoemp = allData;
                 this.lastPage = Math.ceil(this.emprendimientoemp.length / 10);
+
                 this.updateFilteredData();
+                 if (this.filtroAnio==='' || this.filtroMes==='') {
+                    this.generarGrafico();
+                    this.aniosDisponibles = [...new Set(
+                        this.emprendimientoemp.map(o => new Date(o.created_at).getFullYear())
+                    )].sort((a, b) => b - a);
+                } else {
+                    this.aniosDisponibles = [...new Set(
+                        this.emprendimientoemp.map(o => new Date(o.created_at).getFullYear())
+                    )].sort((a, b) => b - a);
+                }
             } catch (error) {
                 if (error.response?.status === 404) {
-                    // ✅ Se controla el error y NO se imprime en consola como un error
-                    // ⚠️ Importante: No lanzamos el error ni usamos console.error
                     console.warn("El estudiante no posee emprendimientos.");
                 } else {
-                    // ⚠️ Solo mostramos otros errores reales
                     console.error("Error inesperado:", error.message);
                 }
             } finally {
                 this.cargando = false;
             }
+        },
+         aplicarFiltros() {
+            let filtradas = this.emprendimientoemp;
+
+            if (this.filtroAnio) {
+                filtradas = filtradas.filter(ofe =>
+                    new Date(ofe.created_at).getFullYear() == this.filtroAnio
+                );
+            }
+
+            if (this.filtroMes) {
+                filtradas = filtradas.filter(ofe =>
+                    new Date(ofe.created_at).getMonth() + 1 == this.filtroMes
+                );
+            }
+
+            // Tabla
+            this.filteredemprend = filtradas;
+
+            this.lastPage = Math.ceil(this.filteredemprend.length / 10);
+            this.currentPage = 1;
+            this.filteredemprend = this.filteredemprend.slice(0, 10);
+
+            this.generarGrafico(filtradas);
+        },
+        descargarCSV() {
+            const headers = ['ID', 'Ruc', 'Nombre', 'Dueño', 'Fecha de Publicación', 'Fecha de Actualizacion', 'Total Ofertas','Estado'];
+            const rows = this.filteredemprend.map(post => [
+                post.id,
+                //ruc de la empresa salga correctamente
+                post.ruc,
+                post.nombre_emprendimiento,
+                post.ApellInfPer + ' ' + post.ApellMatInfPer + ' ' + post.NombInfPer,
+                new Date(post.created_at).toLocaleString('es-EC', { timeZone: 'America/Guayaquil' }),
+                new Date(post.updated_at).toLocaleString('es-EC', { timeZone: 'America/Guayaquil' }),
+                post.total_ofertas,
+                (post.estado_empren == 1) ? 'Habilitado' : 'Deshabilitado',
+            ]);
+
+            let csvContent = 'data:text/csv;charset=utf-8,\uFEFF';
+            csvContent += headers.join(';') + '\n';
+            rows.forEach(row => {
+                csvContent += row.join(';') + '\n';
+            });
+
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement('a');
+            link.setAttribute('href', encodedUri);
+            link.setAttribute('download', 'Emprendiminetos_Registrados.csv');
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        },
+
+        generarGrafico(emprendimientoempData = this.emprendimientoemp) {
+            const conteoemprendimientoemp = {};
+            const conteoPostulados = {};
+            const conteoaprobados = {};
+            const conteonoaprobados = {};
+
+            // Contamos emprendimientoemp y postulados por empresa
+            emprendimientoempData.forEach(post => {
+                if (!conteoemprendimientoemp[post.ApellInfPer + ' ' + post.ApellMatInfPer + ' ' + post.NombInfPer]) {
+                    conteoemprendimientoemp[post.ApellInfPer + ' ' + post.ApellMatInfPer + ' ' + post.NombInfPer] = 0;
+                    conteoPostulados[post.ApellInfPer + ' ' + post.ApellMatInfPer + ' ' + post.NombInfPer] = 0;
+                    conteoaprobados[post.ApellInfPer + ' ' + post.ApellMatInfPer + ' ' + post.NombInfPer] = 0;
+                    conteonoaprobados[post.ApellInfPer + ' ' + post.ApellMatInfPer + ' ' + post.NombInfPer] = 0;
+                }
+                conteoemprendimientoemp[post.ApellInfPer + ' ' + post.ApellMatInfPer + ' ' + post.NombInfPer]++;
+                conteoPostulados[post.ApellInfPer + ' ' + post.ApellMatInfPer + ' ' + post.NombInfPer] += post.total_ofertas || 0;
+                conteoaprobados[post.ApellInfPer + ' ' + post.ApellMatInfPer + ' ' + post.NombInfPer] += post.total_ofertas || 0;
+                conteonoaprobados[post.ApellInfPer + ' ' + post.ApellMatInfPer + ' ' + post.NombInfPer];
+            });
+
+            const empresas = Object.keys(conteoemprendimientoemp);
+            const datosemprendimientoemp = Object.values(conteoemprendimientoemp);
+            const datosOfertas = Object.values(conteoPostulados);
+            const datosAprobados = Object.values(conteoaprobados);
+            const datosNoAprobados = Object.values(conteonoaprobados);
+
+            if (this.grafico) {
+                this.grafico.destroy();
+            }
+
+            const ctx = document.getElementById('graficoemprendimientoemp');
+
+            const coloremprendimientoemp = "hsl(120, 80%, 50%)";   // Verde
+            const colorPostulados = "hsl(220, 80%, 50%)"; // Azul
+
+            this.grafico = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: empresas,
+                    datasets: [
+                        {
+                            label: 'Emprendimientos',
+                            data: datosemprendimientoemp,
+                            backgroundColor: coloremprendimientoemp,
+                            borderColor: coloremprendimientoemp,
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'Ofertas',
+                            data: datosOfertas,
+                            backgroundColor: colorPostulados,
+                            borderColor: colorPostulados,
+                            borderWidth: 1
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                title: function (context) {
+                                    return `Dueño: ${context[0].label}`;
+                                },
+                                label: function (context) {
+                                    return `${context.dataset.label}: ${context.raw}`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            ticks: {
+                                callback: function (value, index) {
+                                    const empresa = this.getLabelForValue(value);
+                                    return [
+                                        `Dueño: ${empresa}`,
+                                        `#_Emprendimientos: ${datosemprendimientoemp[index]}`,
+                                        `#_Ofertas: ${datosOfertas[index]}`,
+                                        `#_Aprobados: ${datosAprobados[index]}`,
+                                        `#_NoAprobados: ${datosNoAprobados[index]}`
+                                    ];
+                                }
+                            }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            stepSize: 1
+                        }
+                    }
+                },
+                plugins: [{
+                    id: 'customLabels',
+                    afterDraw(chart) {
+                        const ctx = chart.ctx;
+                        chart.scales.x.ticks.forEach((tick, i) => {
+                            const x = chart.scales.x.getPixelForTick(i);
+                            const y = chart.scales.x.bottom + 10;
+
+                            ctx.save();
+                            ctx.textAlign = 'center';
+                            ctx.textBaseline = 'top';
+                            ctx.fillStyle = '#000';
+                            ctx.fillText(`Emprendimiento: ${empresas[i]}`, x, y);
+
+                            ctx.fillStyle = coloremprendimientoemp;
+                            ctx.fillText(`emprendimientoemp: ${datosemprendimientoemp[i]}`, x, y + 15);
+
+                            ctx.fillStyle = colorPostulados;
+                            ctx.fillText(`Postulados: ${datosOfertas[i]}`, x, y + 30);
+                            ctx.restore();
+                        });
+                    }
+                }]
+            });
         },
         updateFilteredData() {
             // Aplicar paginación local
@@ -226,12 +432,12 @@ export default {
                     if (responseCorreo.status === 200) {
                         console.log('Correo enviado y emprendimiento no aprobado', 'success');
 
-                       this.actualizar();
+                        this.actualizar();
 
                     } else {
                         // Si hubo un error al enviar el correo, mostrar mensaje de error
                         console.log('error al enviar el correo electrónico');
-                       this.actualizar();
+                        this.actualizar();
                     }
                 }
             } catch (error) {
@@ -264,7 +470,7 @@ export default {
                     if (responseCorreo.status === 200) {
                         console.log('Correo enviado y emprendimiento aprobado con éxito', 'success');
 
-                       this.actualizar();
+                        this.actualizar();
 
                     } else {
                         // Si hubo un error al enviar el correo, mostrar mensaje de error
@@ -279,36 +485,7 @@ export default {
             }
         },
 
-        descargarCSV() {
-            const headers = ['ID', 'Ruc', 'Empresa', 'Representante', 'Creada', 'Actualizada', 'Fin de Convenio', 'Estado de Convenio', 'Cant. Ofer', 'Estado'];
-            const rows = this.empresasprac.map(post => [
-                post.idempresa,
-                //ruc de la empresa salga correctamente
-                post.ruc,
-                post.empresacorta,
-                post.representante,
-                new Date(post.created_at).toLocaleString('es-EC', { timeZone: 'America/Guayaquil' }),
-                new Date(post.updated_at).toLocaleString('es-EC', { timeZone: 'America/Guayaquil' }),
-                new Date(post.fechafin).toLocaleString('es-EC', { timeZone: 'America/Guayaquil' }),
-                (new Date(post.fechafin) <= new Date()) ? 'Convenio Caducado' : 'Convenio Vigente',
-                post.total_ofertas,
-                (post.estado_empr == 1) ? 'Habilitado' : 'Deshabilitado',
-            ]);
-
-            let csvContent = 'data:text/csv;charset=utf-8,\uFEFF';
-            csvContent += headers.join(';') + '\n';
-            rows.forEach(row => {
-                csvContent += row.join(';') + '\n';
-            });
-
-            const encodedUri = encodeURI(csvContent);
-            const link = document.createElement('a');
-            link.setAttribute('href', encodedUri);
-            link.setAttribute('download', 'Empresas_Registradas.csv');
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        },
+        
 
     },
     mixins: [script2],

@@ -97,7 +97,7 @@ export default {
         guardar(event) {
             try {
                 event.preventDefault();
-
+                this.botonesBloqueados = true;
 
 
                 if (this.ruc == '') {
@@ -125,7 +125,7 @@ export default {
                     mostraralertas('El correo de Empresa debe ser de Gmail (@gmail.com)', 'error', 'email');
                 } else {
                     this.enviarCodigo();
-                    this.botonesBloqueados = true;
+                    
 
                 }
             } catch (error) {
@@ -136,7 +136,7 @@ export default {
         async actualizar(event) {
             try {
                 event.preventDefault();
-
+                this.botonesBloqueados = true;
                 if (this.ruc == '') {
                     mostraralertas('Ingrese ruc de la empresa', 'warning', 'ruc');
                 } else if (this.nombre_emprendimiento == '') {
