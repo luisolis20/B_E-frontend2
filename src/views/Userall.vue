@@ -113,6 +113,7 @@
 <script>
 import script2 from '@/assets/scripts/custom.js';
 import axios from 'axios';
+import { getMe } from '@/store/auth';
 import { useRoute } from 'vue-router';
 import { confimar, confimarhabi } from '@/assets/scripts/scriptfunciones/funciones';
 export default {
@@ -129,9 +130,16 @@ export default {
             buscando: false,
         }
     },
-    mounted() {
-        const ruta = useRoute();
-        this.idus = ruta.params.id;
+    async mounted() {
+
+        /*const ruta = useRoute();
+        this.idus = ruta.params.id;*/
+        const usuario = await getMe();
+        if (usuario.role == 'Estudiante') {
+           this.idus = usuario.CIInfPer;
+        } else {
+            this.idus= usuario.id;
+        }
         this.getUsers();
     },
 

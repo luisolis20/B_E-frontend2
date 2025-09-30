@@ -416,7 +416,7 @@ export default {
                 new Date(post.created_at).toLocaleString('es-EC', { timeZone: 'America/Guayaquil' }),
                 new Date(post.updated_at).toLocaleString('es-EC', { timeZone: 'America/Guayaquil' }),
                 post.total_postulados,
-                (post.estado_ofert_empr == 1) ? 'Habilitado' : 'Deshabilitado',
+                (post.estado_ofert_empr == 1) ? 'Aprobadas' : 'No Aprobadas',
             ]);
 
             let csvContent = 'data:text/csv;charset=utf-8,\uFEFF';
@@ -595,6 +595,7 @@ export default {
 
             // Actualizar total de páginas (si quieres que se actualice también el número de páginas)
             this.lastPage = Math.ceil(filtradas.length / 10);
+            
         },
         filtrarOfertas() {
             this.currentPage = 1; // Reinicia a la primera página

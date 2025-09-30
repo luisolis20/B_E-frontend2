@@ -77,7 +77,7 @@
                     </thead>
                     <tbody id="contenido">
                         <tr v-if="this.cargando">
-                            <td colspan="5">
+                            <td colspan="7">
                                 <h3>Cargando....</h3>
                             </td>
                         </tr>
@@ -97,7 +97,7 @@
                                     class="btn btn-success fw-bold">Aceptada</button>
 
                             </td>
-                            <td>{{ formatFecha(post.created_at) }}</td>
+                             <td>{{ formatFecha(post.fecha_postulacion) }}</td>
                             <td>
 
 
@@ -154,6 +154,7 @@
 import axios from 'axios';
 import { useRoute } from 'vue-router';
 import { confimar } from '@/assets/scripts/scriptfunciones/funciones';
+import script2 from '@/assets/scripts/custom.js';
 
 export default {
     data() {
@@ -247,18 +248,7 @@ export default {
                 this.actualizar();
             }
         },
-        formatFecha(fecha) {
-            if (!fecha) return '';
-            // Convierte a objeto Date (JS entiende bien "YYYY-MM-DD HH:mm:ss" si es ISO)
-            const normalizada = fecha.replace(' ', 'T');
-            return new Date(normalizada + '-05:00').toLocaleString('es-EC', {
-                day: '2-digit',
-                month: '2-digit',
-                year: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit'
-            });
-        },
+        
         onlyNumbers(event) {
             const charCode = event.which ? event.which : event.keyCode;
             if (charCode < 48 || charCode > 57) {
@@ -312,6 +302,7 @@ export default {
                 }
             });
         }
-    }
+    },
+    mixins: [script2],
 }
 </script>

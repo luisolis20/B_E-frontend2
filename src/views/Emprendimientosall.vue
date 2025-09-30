@@ -173,13 +173,14 @@ export default {
             try {
                 const response = await axios.get(`${this.url255}?all=true`);
                 const allData = response.data.data;
-                //console.log(allData);
+                //console.log(response);
+                // console.log(allData);
 
                 this.emprendimientoemp = allData;
                 this.lastPage = Math.ceil(this.emprendimientoemp.length / 10);
 
                 this.updateFilteredData();
-                 if (this.filtroAnio==='' || this.filtroMes==='') {
+                if (this.filtroAnio === '' || this.filtroMes === '') {
                     this.generarGrafico();
                     this.aniosDisponibles = [...new Set(
                         this.emprendimientoemp.map(o => new Date(o.created_at).getFullYear())
@@ -199,7 +200,7 @@ export default {
                 this.cargando = false;
             }
         },
-         aplicarFiltros() {
+        aplicarFiltros() {
             let filtradas = this.emprendimientoemp;
 
             if (this.filtroAnio) {
@@ -224,7 +225,7 @@ export default {
             this.generarGrafico(filtradas);
         },
         descargarCSV() {
-            const headers = ['ID', 'Ruc', 'Nombre', 'Dueño', 'Fecha de Publicación', 'Fecha de Actualizacion', 'Total Ofertas','Estado'];
+            const headers = ['ID', 'Ruc', 'Nombre', 'Dueño', 'Fecha de Publicación', 'Fecha de Actualizacion', 'Total Ofertas', 'Estado'];
             const rows = this.filteredemprend.map(post => [
                 post.id,
                 //ruc de la empresa salga correctamente
@@ -234,7 +235,7 @@ export default {
                 new Date(post.created_at).toLocaleString('es-EC', { timeZone: 'America/Guayaquil' }),
                 new Date(post.updated_at).toLocaleString('es-EC', { timeZone: 'America/Guayaquil' }),
                 post.total_ofertas,
-                (post.estado_empren == 1) ? 'Habilitado' : 'Deshabilitado',
+                (post.estado_empren == 1) ? 'Aprobados' : 'No Aprobados',
             ]);
 
             let csvContent = 'data:text/csv;charset=utf-8,\uFEFF';
@@ -257,19 +258,31 @@ export default {
             const conteoPostulados = {};
             const conteoaprobados = {};
             const conteonoaprobados = {};
+            // console.log(emprendimientoempData);
 
             // Contamos emprendimientoemp y postulados por empresa
             emprendimientoempData.forEach(post => {
-                if (!conteoemprendimientoemp[post.ApellInfPer + ' ' + post.ApellMatInfPer + ' ' + post.NombInfPer]) {
-                    conteoemprendimientoemp[post.ApellInfPer + ' ' + post.ApellMatInfPer + ' ' + post.NombInfPer] = 0;
-                    conteoPostulados[post.ApellInfPer + ' ' + post.ApellMatInfPer + ' ' + post.NombInfPer] = 0;
-                    conteoaprobados[post.ApellInfPer + ' ' + post.ApellMatInfPer + ' ' + post.NombInfPer] = 0;
-                    conteonoaprobados[post.ApellInfPer + ' ' + post.ApellMatInfPer + ' ' + post.NombInfPer] = 0;
+                const duenio = post.ApellInfPer + ' ' + post.ApellMatInfPer + ' ' + post.NombInfPer;
+
+                if (!conteoemprendimientoemp[duenio]) {
+                    conteoemprendimientoemp[duenio] = 0;
+                    conteoPostulados[duenio] = 0;
+                    conteoaprobados[duenio] = 0;
+                    conteonoaprobados[duenio] = 0;
                 }
-                conteoemprendimientoemp[post.ApellInfPer + ' ' + post.ApellMatInfPer + ' ' + post.NombInfPer]++;
-                conteoPostulados[post.ApellInfPer + ' ' + post.ApellMatInfPer + ' ' + post.NombInfPer] += post.total_ofertas || 0;
-                conteoaprobados[post.ApellInfPer + ' ' + post.ApellMatInfPer + ' ' + post.NombInfPer] += post.total_ofertas || 0;
-                conteonoaprobados[post.ApellInfPer + ' ' + post.ApellMatInfPer + ' ' + post.NombInfPer];
+
+                // Total de emprendimientos
+                conteoemprendimientoemp[duenio]++;
+
+                // Total de ofertas
+                conteoPostulados[duenio] += post.total_ofertas || 0;
+
+                // ✅ Separamos aprobados y no aprobados según estado
+                if (post.estado_empren === 1) {
+                    conteoaprobados[duenio]++;
+                } else {
+                    conteonoaprobados[duenio]++;
+                }
             });
 
             const empresas = Object.keys(conteoemprendimientoemp);
@@ -286,6 +299,8 @@ export default {
 
             const coloremprendimientoemp = "hsl(120, 80%, 50%)";   // Verde
             const colorPostulados = "hsl(220, 80%, 50%)"; // Azul
+            const colorAprobados = "hsl(150, 70%, 40%)"; // Verde oscuro
+            const colorNoAprobados = "hsl(0, 80%, 50%)"; // Rojo
 
             this.grafico = new Chart(ctx, {
                 type: 'bar',
@@ -304,6 +319,20 @@ export default {
                             data: datosOfertas,
                             backgroundColor: colorPostulados,
                             borderColor: colorPostulados,
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'Empren. Aprobados',
+                            data: datosAprobados,
+                            backgroundColor: colorAprobados,
+                            borderColor: colorAprobados,
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'Empren. No Aprobados',
+                            data: datosNoAprobados,
+                            backgroundColor: colorNoAprobados,
+                            borderColor: colorNoAprobados,
                             borderWidth: 1
                         }
                     ]
@@ -331,8 +360,8 @@ export default {
                                         `Dueño: ${empresa}`,
                                         `#_Emprendimientos: ${datosemprendimientoemp[index]}`,
                                         `#_Ofertas: ${datosOfertas[index]}`,
-                                        `#_Aprobados: ${datosAprobados[index]}`,
-                                        `#_NoAprobados: ${datosNoAprobados[index]}`
+                                        `#_Emprendimientos Aprobados: ${datosAprobados[index]}`,
+                                        `#_Emprendimientos No Aprobados: ${datosNoAprobados[index]}`
                                     ];
                                 }
                             }
@@ -355,13 +384,13 @@ export default {
                             ctx.textAlign = 'center';
                             ctx.textBaseline = 'top';
                             ctx.fillStyle = '#000';
-                            ctx.fillText(`Emprendimiento: ${empresas[i]}`, x, y);
+                            ctx.fillText(`Dueño: ${empresas[i]}`, x, y);
 
                             ctx.fillStyle = coloremprendimientoemp;
-                            ctx.fillText(`emprendimientoemp: ${datosemprendimientoemp[i]}`, x, y + 15);
+                            ctx.fillText(`Emprenidmientos: ${datosemprendimientoemp[i]}`, x, y + 15);
 
                             ctx.fillStyle = colorPostulados;
-                            ctx.fillText(`Postulados: ${datosOfertas[i]}`, x, y + 30);
+                            ctx.fillText(`Ofertas: ${datosOfertas[i]}`, x, y + 30);
                             ctx.restore();
                         });
                     }
@@ -485,7 +514,7 @@ export default {
             }
         },
 
-        
+
 
     },
     mixins: [script2],

@@ -74,45 +74,45 @@
                       <div class="p-4 rounded-bottom">
                         <div class="row">
                           <div class="col-md-12 col-lg-3">
-                              <div class="text-center">
+                            <div class="text-center">
 
-                                <img v-if="ofe.imagen" :src="'data:image/jpeg;base64,' + ofe.imagen"
-                                  width="100%" height="300" style="border-radius: 10px; object-fit: cover;" />
-                                <img v-else src="https://emprendedores.biz/wp-content/uploads/2023/08/QEE-2.png"
-                                  width="100%" height="300" style="border-radius: 10px; object-fit: cover;" />
-                              </div>
-
-
+                              <img v-if="ofe.imagen" :src="'data:image/jpeg;base64,' + ofe.imagen" width="100%"
+                                height="300" style="border-radius: 10px; object-fit: cover;" />
+                              <img v-else src="https://emprendedores.biz/wp-content/uploads/2023/08/QEE-2.png"
+                                width="100%" height="300" style="border-radius: 10px; object-fit: cover;" />
                             </div>
-                            <div class="col-md-12 col-lg-8">
-                              <h4>{{ ofe.titulo }}</h4>
-                              <h6>Fecha de publicación: {{ new Date(ofe.created_at).toLocaleDateString('es-ES') }}</h6>
-                              <div v-if="new Date(ofe.fechaFinOferta) > new Date() && tiemposRestantes[ofe.id]">
-                                <h6 class="text-success">
-                                  {{ calcularDiasRestantes(ofe.fechaFinOferta) }} - Tiempo restante:
-                                  <span :class="{
-                                    'text-success': !tiemposRestantes[ofe.id].includes('Caducada'),
-                                    'text-danger': tiemposRestantes[ofe.id].includes('Caducada')
-                                  }">
-                                    {{ tiemposRestantes[ofe.id] }}
-                                  </span>
-                                </h6>
-                              </div>
-                              <div v-else>
-                                <h6 class="text-danger">La oferta ya caducó</h6>
-                              </div>
-                              <h6>Categoría / Área: {{ ofe.categoria }}</h6>
-                              <p class="text-dark">Descripcion: {{ ofe.descripcion }}</p>
-                              <div class="d-flex justify-content-between flex-lg-wrap">
-                                <p class="text-dark fs-5 fw-bold mb-0">Nombre de la Empresa: {{ ofe.Empresa }}</p>
-                              </div>
-                              <div class="text-center">
+
+
+                          </div>
+                          <div class="col-md-12 col-lg-8">
+                            <h4>{{ ofe.titulo }}</h4>
+                            <h6>Fecha de publicación: {{ new Date(ofe.created_at).toLocaleDateString('es-ES') }}</h6>
+                            <div v-if="new Date(ofe.fechaFinOferta) > new Date() && tiemposRestantes[ofe.id]">
+                              <h6 class="text-success">
+                                {{ calcularDiasRestantes(ofe.fechaFinOferta) }} - Tiempo restante:
+                                <span :class="{
+                                  'text-success': !tiemposRestantes[ofe.id].includes('Caducada'),
+                                  'text-danger': tiemposRestantes[ofe.id].includes('Caducada')
+                                }">
+                                  {{ tiemposRestantes[ofe.id] }}
+                                </span>
+                              </h6>
+                            </div>
+                            <div v-else>
+                              <h6 class="text-danger">La oferta ya caducó</h6>
+                            </div>
+                            <h6>Categoría / Área: {{ ofe.categoria }}</h6>
+                            <p class="text-dark">Descripcion: {{ ofe.descripcion }}</p>
+                            <div class="d-flex justify-content-between flex-lg-wrap">
+                              <p class="text-dark fs-5 fw-bold mb-0">Nombre de la Empresa: {{ ofe.Empresa }}</p>
+                            </div>
+                            <div class="text-center">
                               <br><br><br>
-                                <router-link :to="{ path: '/postularse/' + idus + '/' + ofe.id }"
-                                  class="btn border border-secondary rounded-pill px-3 text-primary"><i
-                                    class="fa-solid fa-eye me-2 icom"></i> Ver Detalle Completo</router-link>
-                              </div>
+                              <router-link :to="{ path: '/postularse/' + idus + '/' + ofe.id }"
+                                class="btn border border-secondary rounded-pill px-3 text-primary"><i
+                                  class="fa-solid fa-eye me-2 icom"></i> Ver Detalle Completo</router-link>
                             </div>
+                          </div>
                         </div>
                       </div>
 
@@ -143,7 +143,7 @@
                 <h4 class="mb-0 display-4">Ofertas en sitios webs</h4>
                 <p class="text-dark">Aquí encontrarás ofertas en sitios webs, si deseas verlos puedes dar clic y te
                   lllevará al sitio donde se encuentra publicado</p><br>
-                  <h3>Aun no se pueden ver ofertas de sitios web</h3>
+                <h3>Aun no se pueden ver ofertas de sitios web</h3>
                 <!--<form class="container-fluid row g-1 mt-1">
                   <div class="row">
                     <div class="col-lg-12">
@@ -382,7 +382,7 @@
                 <b class="text-dark">Noticias de Vinculación con la Sociedad</b>
                 <div class="rounded overflow-hidden">
                   <img :src="publicacionPrincipal.full_picture" class="img-fluid rounded img-zoomin w-100" alt="">
-                  
+
                 </div>
 
                 &nbsp;&nbsp;&nbsp;&nbsp;
@@ -424,14 +424,14 @@
           </div>
         </div>
       </div>
-      <div class="row g-4" v-if="mostrarOpciones3||mostrarOpciones">
+      <div class="row g-4" v-if="mostrarOpciones3 || mostrarOpciones">
         <div class="col-lg-7 col-xl-8 mt-0" v-if="publicacionPrincipal">
           <div class="position-relative overflow-hidden rounded">
 
             <img :src="publicacionPrincipal.full_picture" class="img-fluid rounded img-zoomin w-100" alt="">
             <div class="d-flex justify-content-center px-4 position-absolute flex-wrap" style="bottom: 10px; left: 0;">
               <a href="#" class="text-white me-3 link-hover"><i class="fa fa-thumbs-up"></i> {{ estadisticas?.reacciones
-                }} Reacciones</a>
+              }} Reacciones</a>
               <a href="#" class="text-white me-3 link-hover"><i class="fa fa-eye"></i>{{ estadisticas?.vistas }} Vistas
               </a>
               <a href="#" class="text-white me-3 link-hover"><i class="fa fa-comment-dots"></i> {{
@@ -502,7 +502,7 @@
                   <div class="col-7">
                     <div class="features-content d-flex flex-column">
                       <a :href="post.permalink_url" target="_blank" class="h6 link-hover">{{ post.message.slice(0, 80)
-                        }}...</a>
+                      }}...</a>
 
                     </div>
                     <p class="text-muted small">
@@ -531,6 +531,7 @@ import customscript from '@/assets/scripts/custom.js';
 import axios from 'axios';
 import { useRoute } from 'vue-router';
 import dayjs from 'dayjs';
+import { getMe } from '@/store/auth';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import localizedFormat from 'dayjs/plugin/localizedFormat';
 import 'dayjs/locale/es';
@@ -565,9 +566,17 @@ export default {
     }
   },
   async mounted() {
-    const ruta = useRoute();
-    this.idus = ruta.params.id;
+    //const ruta = useRoute();
+    //this.idus = ruta.params.id;
+    const usuario = await getMe();
+    //console.log(usuario);
     await this.cargarPublicacionesFacebook();
+    if (usuario.role == 'Estudiante') {
+      this.idus2 = usuario.CIInfPer;
+    } else {
+      this.idus2 = usuario.id;
+    }
+
     this.getOFertas().then(() => {
       this.actualizarTiemposRestantes();
       setInterval(this.actualizarTiemposRestantes, 1000); // Actualiza cada segundo
@@ -680,7 +689,7 @@ export default {
           this.publicacionsecundaria = posts[1];
           this.publicaciontercera = posts[2];
           this.publicaciones = posts.slice(1, 30); // las siguientes pequeñas
-           this.publicaciones2 = posts.slice(3, 30); // las siguientes pequeñas
+          this.publicaciones2 = posts.slice(3, 30); // las siguientes pequeñas
           await this.cargarEstadisticas(posts[0].id);
         }
       } catch (error) {

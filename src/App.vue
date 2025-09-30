@@ -90,7 +90,7 @@
               <div class="nav-item dropdown" v-if="mostrarOpciones2">
                 <a class="nav-link dropdown-toggle" href="#" id="dropdownEmprendimientos" role="button"
                   data-bs-toggle="dropdown" aria-expanded="false"
-                  :class="{ 'active': $route.path.startsWith('/misemprendimientos/') || $route.path.startsWith('/emprendimientosofertview/') || $route.path.startsWith('/estadisticas-emprendimiento/') }">
+                  :class="{ 'active': $route.path.startsWith('/misemprendimientos/') || $route.path.startsWith('/emprendimientosofertview/') || $route.path.startsWith('/postuladosallemp/') }">
                   Emprendimientos
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end border-0 rounded-0 rounded-bottom m-0"
@@ -108,16 +108,16 @@
                     </router-link>
                   </li>
                   <li>
-                    <router-link class="dropdown-item" :to="{ path: '/postuladosallemp/' + idus }">
+                    <router-link class="dropdown-item" :to="{ path: '/postuladosallemp/' + idus }"
+                      :class="{ 'active': $route.path === '/postuladosallemp/' + idus }">
                       Postulados a mis Emprendimientos
                     </router-link>
                   </li>
                 </ul>
               </div>
-              <!-- 🔼 -->
+              <!-- 🔼 
               <router-link :to="{ path: '/mispostulacionesestado/' + idus }" class="nav-item nav-link"
-                v-if="mostrarOpciones2" :class="{ 'active': $route.path === '/mispostulacionesestado/' + idus }">Estado
-                de mis Postulaciones</router-link>
+                v-if="mostrarOpciones2" :class="{ 'active': $route.path === '/mispostulacionesestado/' + idus }">Mis postulaciones</router-link>-->
               <!-- 🔽 DROPDOWN para Mis Emprendimientos -->
               <div class="nav-item dropdown" v-if="mostrarOpciones2">
                 <a class="nav-link dropdown-toggle" href="#" id="dropdownOfertas" role="button"
@@ -143,12 +143,12 @@
                 </ul>
               </div>
               <!-- 🔼 -->
-             
-               <!-- 🔽 DROPDOWN para Mis Emprendimientos -->
-                 <div class="nav-item dropdown" v-if="mostrarOpciones3">
+
+              <!-- 🔽 DROPDOWN para Mis Emprendimientos -->
+              <div class="nav-item dropdown" v-if="mostrarOpciones3">
                 <a class="nav-link dropdown-toggle" href="#" id="dropdownOfertas" role="button"
                   data-bs-toggle="dropdown" aria-expanded="false"
-                  :class="{ 'active': $route.path.startsWith('/empresall/') || $route.path.startsWith('/emprendimientosall/')}">
+                  :class="{ 'active': $route.path.startsWith('/empresall/') || $route.path.startsWith('/emprendimientosall/') }">
                   Registros
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end border-0 rounded-0 rounded-bottom m-0"
@@ -169,12 +169,12 @@
                 </ul>
               </div>
 
-              
-                <!-- 🔽 DROPDOWN para Mis Ofertas -->
-                  <div class="nav-item dropdown" v-if="mostrarOpciones3">
+
+              <!-- 🔽 DROPDOWN para Mis Ofertas -->
+              <div class="nav-item dropdown" v-if="mostrarOpciones3">
                 <a class="nav-link dropdown-toggle" href="#" id="dropdownOfertas" role="button"
                   data-bs-toggle="dropdown" aria-expanded="false"
-                  :class="{ 'active': $route.path.startsWith('/ofertasall/') || $route.path.startsWith('/ofertasallemp/')}">
+                  :class="{ 'active': $route.path.startsWith('/ofertasall/') || $route.path.startsWith('/ofertasallemp/') }">
                   Ofertas
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end border-0 rounded-0 rounded-bottom m-0"
@@ -188,7 +188,7 @@
                   <li>
                     <router-link class="dropdown-item" :to="{ path: '/ofertasallemp/' + idus }"
                       :class="{ 'active': $route.path === '/ofertasallemp/' + idus }">
-                     Ofertras de Emprendimientos
+                      Ofertras de Emprendimientos
                     </router-link>
                   </li>
 
@@ -197,6 +197,7 @@
               <router-link :to="{ path: '/estadopostulacionall/' + idus }" class="nav-item nav-link"
                 v-if="mostrarOpciones3" :class="{ 'active': $route.path === '/estadopostulacionall/' + idus }">Estado de
                 Postulaciones</router-link>
+
               <router-link :to="{ path: '/about/' + idus }" class="nav-item nav-link" v-if="mostrarOpciones3"
                 :class="{ 'active': $route.path === '/about/' + idus }">Nuevo</router-link>
 
@@ -358,6 +359,7 @@ import axios from 'axios';
 import { useRoute } from 'vue-router';
 import store from '@/store';
 import dayjs from 'dayjs';
+import { getMe } from '@/store/auth';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import localizedFormat from 'dayjs/plugin/localizedFormat';
 import 'dayjs/locale/es';
@@ -380,41 +382,16 @@ export default {
 
     }
   },
-  watch: {
+ watch: {
 
     '$route'() {
-      if (customscript.computed.rolUsuario() == 'Estudiante') {
-
-        this.idus2 = this.$route.params.id;
-
-        if (this.idus2) {
-          this.url214 = 'http://backendbolsaempleo.test/api/b_e/vin/estadopostuser/' + customscript.computed.idUsuario();
-
-          this.getPostulacionesAcept();
-        }
-      }
+      this.obtener();
     }
   },
-  mounted() {
-    this.getPostulaciones();
-    this.vistos = JSON.parse(this.$store.state.postulacionesVistas || '[]');
-    this.vistos2 = JSON.parse(this.$store.state.postulacionesVistasacept || '[]');
-
-    if (customscript.computed.rolUsuario() == 'Estudiante') {
-
-      this.idus2 = this.$route.params.id;
-
-      if (this.idus2) {
-        this.url214 = 'http://backendbolsaempleo.test/api/b_e/vin/estadopostuser/' + customscript.computed.idUsuario();
+  async mounted() {
 
 
-        this.getPostulacionesAcept();
-      }
-    } else {
-      this.getPostulaciones();
-    }
-
-
+    this.obtener();
 
 
   },
@@ -425,6 +402,26 @@ export default {
       this.$store.commit('logout');
       //localStorage.clear();
       window.location.replace('/b_e');
+    },
+    async obtener() {
+
+      this.getPostulaciones();
+      this.vistos = JSON.parse(this.$store.state.postulacionesVistas || '[]');
+      this.vistos2 = JSON.parse(this.$store.state.postulacionesVistasacept || '[]');
+
+      if (customscript.computed.rolUsuario() == 'Estudiante') {
+        const usuario = await getMe();
+        this.idus2 = usuario.CIInfPer;
+
+        if (this.idus2) {
+          this.url214 = 'http://backendbolsaempleo.test/api/b_e/vin/estadopostuser/' + customscript.computed.idUsuario();
+
+
+          this.getPostulacionesAcept();
+        }
+      } else {
+        this.getPostulaciones();
+      }
     },
     async getPostulaciones() {
       this.cargando = true;

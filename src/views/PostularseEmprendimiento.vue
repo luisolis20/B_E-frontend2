@@ -248,6 +248,7 @@ import axios from 'axios';
 import store from '@/store';
 import { mostraralertas, enviarsolig, mostraralertas2, enviarsolig23, confimar, confimarhabi } from '@/assets/scripts/scriptfunciones/funciones';
 import dayjs from 'dayjs';
+import { getMe } from '@/store/auth';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 dayjs.extend(utc);
@@ -318,8 +319,9 @@ export default {
 
         }
     },
-    mounted() {
+    async mounted() {
         const ruta = useRoute();
+        const usuario = await getMe();
         this.ide = ruta.params.id;
         this.idus = ruta.params.secondId;
 
