@@ -139,6 +139,7 @@
 <script>
 
 import { useRoute } from 'vue-router';
+import { getMe } from '@/store/auth';
 import axios from 'axios';
 import store from '@/store';
 import {mostraralertas, enviarsolig, mostraralertas2,enviarsolig23} from '@/assets/scripts/scriptfunciones/funciones';
@@ -206,8 +207,9 @@ export default {
 
         }
     },
-    mounted(){
+    async mounted(){
         const ruta = useRoute();
+        const usuario = await getMe();
         this.ide = ruta.params.id;
         this.idus = ruta.params.secondId;
 

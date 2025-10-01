@@ -154,6 +154,7 @@ import axios from 'axios';
 import { useRoute } from 'vue-router';
 import { confimar, mostraralertas } from '@/assets/scripts/scriptfunciones/funciones';
 import script2 from '@/assets/scripts/custom.js';
+import { getMe } from '@/store/auth';
 export default {
     data() {
         return {
@@ -169,9 +170,11 @@ export default {
             showTooltipbuscar: false, hoveringTooltipbuscar: false,
         }
     },
-    mounted() {
+    async mounted() {
         const ruta = useRoute();
-        this.idus = ruta.params.id;
+        const usuario = await getMe();
+        //this.idus = ruta.params.id;
+        this.idus = usuario.id;
         this.url2 += '/' + this.idus;
         this.getEmpresas();
     },

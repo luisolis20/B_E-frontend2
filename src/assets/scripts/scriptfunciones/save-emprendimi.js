@@ -1,5 +1,6 @@
 import { mostraralertas, enviarsolig, enviarsoliedit } from '@/assets/scripts/scriptfunciones/funciones';
 import { useRoute } from 'vue-router';
+import { getMe } from '@/store/auth';
 import axios from 'axios';
 import store from '@/store';
 
@@ -38,8 +39,9 @@ export default {
 
         }
     },
-    mounted() {
+    async mounted() {
         const ruta = useRoute();
+        const usuario = await getMe();
         this.idus = ruta.params.id;
         this.idus2 = ruta.params.id;
         this.urlinformacionpersonal += '/' + store.state.idusu;
@@ -125,7 +127,7 @@ export default {
                     mostraralertas('El correo de Empresa debe ser de Gmail (@gmail.com)', 'error', 'email');
                 } else {
                     this.enviarCodigo();
-                    
+
 
                 }
             } catch (error) {
@@ -325,8 +327,8 @@ export default {
             const file = event.target.files[0];
             if (!file) return;
 
-            // Validar extensión y tipo MIME
-            const allowedTypes = ["image/jpeg", "image/jpg"];
+            // Validar que sea imagen
+            const allowedTypes = ["image/jpeg", "image/jpg", "image/png"];
             if (!allowedTypes.includes(file.type)) {
                 mostraralertas('Solo se permiten imágenes en formato JPG o JPEG.', 'warning', '');
                 this.$refs.fileFoto.value = ""; // Limpia input
@@ -340,22 +342,26 @@ export default {
             img.src = URL.createObjectURL(file);
 
             img.onload = () => {
-                if (img.width !== 320 || img.height !== 240) {
-                    mostraralertas('La imagen debe ser exactamente de 320x240 píxeles.', 'warning', '');
-                    this.$refs.fileFoto.value = ""; // Limpia input
-                    this.previewFoto = '';
-                    this.fotografia = '';
-                    this.Errorfoto = true;
-                    return;
-                }
+                // Crear un canvas de 320x240
+                const canvas = document.createElement("canvas");
+                const ctx = canvas.getContext("2d");
+                canvas.width = 320;
+                canvas.height = 240;
 
-                const reader = new FileReader();
+                
+                ctx.drawImage(img, 0, 0, 320, 240);
+
+                
+                const dataUrl = canvas.toDataURL("image/jpeg", 0.9);
+
+                this.previewFoto = dataUrl; 
+                this.fotografia = dataUrl.replace(/^data:image\/jpeg;base64,/, ""); 
                 this.Errorfoto = false;
-                reader.readAsDataURL(file);
-                reader.onload = () => {
-                    this.previewFoto = reader.result; // Imagen para mostrar
-                    this.fotografia = reader.result.replace(/^data:image\/(jpeg|jpg);base64,/, ""); // Base64 limpio
-                };
+            };
+
+            img.onerror = () => {
+                mostraralertas('Error al cargar la imagen.', 'error', '');
+                this.$refs.fileFoto.value = "";
             };
         },
         cerrarModal() {

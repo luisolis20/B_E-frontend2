@@ -294,6 +294,7 @@
 import store from '@/store';
 import {mostraralertas, enviarsolig,enviarsoliedit} from '@/assets/scripts/scriptfunciones/funciones';
 import { useRoute } from 'vue-router';
+import { getMe } from '@/store/auth';
 import axios from 'axios';
 export default {
    data(){
@@ -329,8 +330,9 @@ export default {
             hoveringTooltipdescripcion: false,
         }
     },
-    mounted(){
+    async mounted(){
         const ruta = useRoute();
+        const usuario = await getMe();
         this.ide = ruta.params.id;
         this.idus = ruta.params.secondId;
         this.ur3 +=  '/'+this.idus;

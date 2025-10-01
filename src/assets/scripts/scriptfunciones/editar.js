@@ -1,6 +1,7 @@
 
 import { mostraralertas, enviarsoliedit, mostraralertas2 } from '@/assets/scripts/scriptfunciones/funciones';
 import { useRoute } from 'vue-router';
+import { getMe } from '@/store/auth';
 import customscript from '@/assets/scripts/custom.js';
 import axios from 'axios';
 import store from '@/store';
@@ -261,8 +262,9 @@ export default {
             otros_datos_relevantes2: [],
         }
     },
-    mounted() {
+    async mounted() {
         const ruta = useRoute();
+        const usuario = await getMe();
         this.id = ruta.params.id;
         if (customscript.computed.rolUsuario() == 'Estudiante') {
 

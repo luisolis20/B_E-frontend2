@@ -80,6 +80,7 @@
     import axios from 'axios';
     import { useRoute } from 'vue-router';
     import { confimar } from '@/assets/scripts/scriptfunciones/funciones';
+    import { getMe } from '@/store/auth';
     export default{
         data(){
             return{
@@ -94,8 +95,9 @@
                 buscando: false,
             }
         },
-        mounted(){
+        async mounted(){
             const ruta = useRoute();
+            const usuario = await getMe();
             this.idus = ruta.params.id;
             this.url213 +=  '/'+this.idus;
             //console.log(this.url213);

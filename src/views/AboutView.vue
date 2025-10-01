@@ -104,6 +104,7 @@ import axios from 'axios';
 import { useRoute } from 'vue-router';
 import { confimar } from '@/assets/scripts/scriptfunciones/funciones';
 import script2 from '@/assets/scripts/custom.js';
+import { getMe } from '@/store/auth';
 import JSZip from "jszip";
 import { saveAs } from "file-saver";
 import { Chart, registerables } from 'chart.js';
@@ -124,8 +125,9 @@ export default {
       grafico: null,
     }
   },
-  mounted() {
+  async mounted() {
     const ruta = useRoute();
+     const usuario = await getMe();
     this.idus = ruta.params.id;
     this.getAdministrativosD();
 

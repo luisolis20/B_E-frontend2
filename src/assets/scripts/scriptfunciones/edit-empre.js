@@ -1,6 +1,7 @@
 
 import {mostraralertas,enviarsoliedit} from '@/assets/scripts/scriptfunciones/funciones';
 import { useRoute } from 'vue-router';
+import { getMe } from '@/store/auth';
 import axios from 'axios';
 import store from '@/store';
 
@@ -28,8 +29,9 @@ export default {
             
         }
     },
-    mounted(){
+    async mounted(){
         const ruta = useRoute();
+        const usuario = await getMe();
         this.ide = ruta.params.id;
         this.ur3 +=  '/'+this.ide;
         this.getEmpresa();

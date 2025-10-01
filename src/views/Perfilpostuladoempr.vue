@@ -101,6 +101,7 @@
 <script>
 import { mostraralertas, enviarsoliedit,enviarsolig,enviarsoli } from '@/assets/scripts/scriptfunciones/funciones';
 import { useRoute } from 'vue-router';
+import { getMe } from '@/store/auth';
 import axios from 'axios';
 import store from '@/store';
 import jsPDF from 'jspdf';
@@ -351,8 +352,9 @@ export default {
             
         }
     },
-    mounted() {
+    async mounted() {
         const ruta = useRoute();
+        const usuario = await getMe();
         this.id = ruta.params.id;
         //console.log(this.id);
         this.idus = ruta.params.secondId;

@@ -155,6 +155,7 @@
 import axios from 'axios';
 import { useRoute } from 'vue-router';
 import { confimar } from '@/assets/scripts/scriptfunciones/funciones';
+import { getMe } from '@/store/auth';
 import script2 from '@/assets/scripts/custom.js';
 
 export default {
@@ -176,9 +177,11 @@ export default {
             hoveringTooltipfiltro: false,
         }
     },
-    mounted() {
-        const ruta = useRoute();
+    async mounted() {
+       const ruta = useRoute();
         this.idus = ruta.params.id;
+        const usuario = await getMe();
+        //this.idus = usuario.CIInfPer;
         this.url213 += '/' + this.idus;
         //console.log(this.url213);
         this.getPostulaciones();

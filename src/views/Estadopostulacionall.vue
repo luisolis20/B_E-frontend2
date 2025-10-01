@@ -315,12 +315,12 @@
                     this.updateFilteredData();
                 }
             },
-            eliminar(id,nombre){
+            /*eliminar(id,nombre){
                 confimar('http://backendbolsaempleo.test/api/b_e/vin/postulacions/',id,'Eliminar registro','¿Realmente desea eliminar a '+nombre+'?');
                 this.cargando = false;
                 this.$router.push('/principal/'+this.idus);
 
-            }
+            }*/
         }
     }
 </script>

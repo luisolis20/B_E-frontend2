@@ -294,6 +294,7 @@
 <script>
 import store from '@/store';
 import {mostraralertas, enviarsolig} from '@/assets/scripts/scriptfunciones/funciones';
+import { getMe } from '@/store/auth';
 import { useRoute } from 'vue-router';
 export default {
    data(){
@@ -327,8 +328,9 @@ export default {
             hoveringTooltipdescripcion: false,
         }
     },
-    mounted(){
+    async mounted(){
         const ruta = useRoute();
+        const usuario = await getMe();
         this.idus = ruta.params.id;
         
         

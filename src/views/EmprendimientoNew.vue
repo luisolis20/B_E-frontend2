@@ -7,40 +7,127 @@
             <div class="row">
               <!-- FOTO con input debajo del iframe -->
               <div class="col-lg-4">
-                <div id="map">
-                  <img v-if="previewFoto" :src="previewFoto" id="fotoimg" width="100%" height="300"
-                    style="border-radius: 10px; object-fit: cover;" />
-                  <img v-else-if="fotografia" :src="'data:image/png;base64,' + fotografia" width="100%" height="300"
-                    style="border-radius: 10px; object-fit: cover;" />
-                  <img v-else src="https://emprendedores.biz/wp-content/uploads/2023/08/QEE-2.png" width="100%"
-                    height="300" style="border-radius: 10px; object-fit: cover;" />
+                <div>
+                  <div id="map">
+                    <label for="" class="text-dark">Añada un logo de su emprenidmiento</label><br><br>
+                    <img v-if="previewFoto" :src="previewFoto" id="fotoimg" width="100%" height="300"
+                      style="border-radius: 10px; object-fit: cover;" />
+                    <img v-else-if="fotografia" :src="'data:image/png;base64,' + fotografia" width="100%" height="300"
+                      style="border-radius: 10px; object-fit: cover;" />
+                    <img v-else src="https://emprendedores.biz/wp-content/uploads/2023/08/QEE-2.png" width="100%"
+                      height="300" style="border-radius: 10px; object-fit: cover;" />
 
-                </div>
-
-                <h6 class="text-center">Haz clic en el cuadro de abajo para añadir la foto de tu emprendimiento. La foto
-                  debe tener un tamaño máximo de 320x240 píxeles.</h6>
-                <div class="input-with-icon">
-                  <input ref="fileFoto" @change="cargarfoto" type="file" accept="image/jpeg, image/jpg"
-                    class="form-control text-dark mt-2">
-
-                  <!-- Botón de ayuda -->
-                  <span class="help-icon" @mouseenter="showTooltipimagen = true" @mouseleave="hideOnLeave('imagen')"
-                    @click.stop="toggleTooltip('imagen')" ref="tooltipIconimagen">❓</span>
-
-                  <!-- Tooltip -->
-                  <div v-if="showTooltipimagen" class="tooltip-box" ref="tooltipBoximagen"
-                    @mouseenter="hoveringTooltipimagen = true" @mouseleave="hideOnLeave('imagen')">
-                    Si su emprendimiento posee una imagen, de clic en este cuadro para cargar la foto de su
-                    emprendimiento, caso contrario deje en blanco.
-                    <div class="tooltip-arrow"></div>
                   </div>
+
+                  <h6 class="text-center">Haz clic en el cuadro de abajo para añadir el logo de tu emprendimiento. El
+                    logo
+                    debe tener un tamaño máximo de 320x240 píxeles.</h6>
+                  <div class="input-with-icon">
+                    <input ref="fileFoto" @change="cargarfoto" type="file" accept="image/jpeg, image/jpg"
+                      class="form-control text-dark mt-2">
+
+                    <!-- Botón de ayuda -->
+                    <span class="help-icon" @mouseenter="showTooltipimagen = true" @mouseleave="hideOnLeave('imagen')"
+                      @click.stop="toggleTooltip('imagen')" ref="tooltipIconimagen">❓</span>
+
+                    <!-- Tooltip -->
+                    <div v-if="showTooltipimagen" class="tooltip-box" ref="tooltipBoximagen"
+                      @mouseenter="hoveringTooltipimagen = true" @mouseleave="hideOnLeave('imagen')">
+                      Si su emprendimiento posee un logo, de clic en este cuadro para cargar la foto de su
+                      emprendimiento, caso contrario deje en blanco.
+                      <div class="tooltip-arrow"></div>
+                    </div>
+                  </div>
+                  <br>
+                  <p v-if="Errorfoto" class="text-danger text-center">Si tienes problemas en añadir la foto puedes dar
+                    <a href="https://www.iloveimg.com/es/redimensionar-imagen" target="_blank">clic aquí</a>. Te llevará
+                    a
+                    una página donde podrás
+                    ajustar tu foto al tamaño solicitado. Si no deseas añadir la foto puedes dejar en blanco y dar clic
+                    en
+                    guardar</p>
                 </div>
-                <br>
-                <p v-if="Errorfoto" class="text-danger text-center">Si tienes problemas en añadir la foto puedes dar <a
-                    href="https://www.iloveimg.com/es/redimensionar-imagen" target="_blank">clic aquí</a>. Te llevará a
-                  una página donde podrás
-                  ajustar tu foto al tamaño solicitado. Si no deseas añadir la foto puedes dejar en blanco y dar clic en
-                  guardar</p>
+                <div>
+                  <div id="map">
+                    <label for="" class="text-dark">Añada una foto de lo que trata tu emprendimiento</label><br><br></br>
+                    <img v-if="previewFoto" :src="previewFoto" id="fotoimg" width="100%" height="300"
+                      style="border-radius: 10px; object-fit: cover;" />
+                    <img v-else-if="fotografia" :src="'data:image/png;base64,' + fotografia" width="100%" height="300"
+                      style="border-radius: 10px; object-fit: cover;" />
+                    <img v-else src="https://emprendedores.biz/wp-content/uploads/2023/08/QEE-2.png" width="100%"
+                      height="300" style="border-radius: 10px; object-fit: cover;" />
+
+                  </div>
+
+                  <h6 class="text-center">Haz clic en el cuadro de abajo para añadir la foto de tu emprendimiento. La
+                    foto
+                    debe tener un tamaño máximo de 320x240 píxeles.</h6>
+                  <div class="input-with-icon">
+                    <input ref="fileFoto" @change="cargarfoto" type="file" accept="image/jpeg, image/jpg"
+                      class="form-control text-dark mt-2">
+
+                    <!-- Botón de ayuda -->
+                    <span class="help-icon" @mouseenter="showTooltipimagen = true" @mouseleave="hideOnLeave('imagen')"
+                      @click.stop="toggleTooltip('imagen')" ref="tooltipIconimagen">❓</span>
+
+                    <!-- Tooltip -->
+                    <div v-if="showTooltipimagen" class="tooltip-box" ref="tooltipBoximagen"
+                      @mouseenter="hoveringTooltipimagen = true" @mouseleave="hideOnLeave('imagen')">
+                      Si su emprendimiento posee una imagen, de clic en este cuadro para cargar la foto de su
+                      emprendimiento, caso contrario deje en blanco.
+                      <div class="tooltip-arrow"></div>
+                    </div>
+                  </div>
+                  <br>
+                  <p v-if="Errorfoto" class="text-danger text-center">Si tienes problemas en añadir la foto puedes dar
+                    <a href="https://www.iloveimg.com/es/redimensionar-imagen" target="_blank">clic aquí</a>. Te llevará
+                    a
+                    una página donde podrás
+                    ajustar tu foto al tamaño solicitado. Si no deseas añadir la foto puedes dejar en blanco y dar clic
+                    en
+                    guardar</p>
+                </div>
+                <div>
+                  <div id="map">
+                    <label for="" class="text-dark">Añada una foto de lo que trata tu emprendimiento</label><br><br></br>
+                    <img v-if="previewFoto" :src="previewFoto" id="fotoimg" width="100%" height="300"
+                      style="border-radius: 10px; object-fit: cover;" />
+                    <img v-else-if="fotografia" :src="'data:image/png;base64,' + fotografia" width="100%" height="300"
+                      style="border-radius: 10px; object-fit: cover;" />
+                    <img v-else src="https://emprendedores.biz/wp-content/uploads/2023/08/QEE-2.png" width="100%"
+                      height="300" style="border-radius: 10px; object-fit: cover;" />
+
+                  </div>
+
+                  <h6 class="text-center">Haz clic en el cuadro de abajo para añadir la foto de tu emprendimiento. La
+                    foto
+                    debe tener un tamaño máximo de 320x240 píxeles.</h6>
+                  <div class="input-with-icon">
+                    <input ref="fileFoto" @change="cargarfoto" type="file" accept="image/jpeg, image/jpg"
+                      class="form-control text-dark mt-2">
+
+                    <!-- Botón de ayuda -->
+                    <span class="help-icon" @mouseenter="showTooltipimagen = true" @mouseleave="hideOnLeave('imagen')"
+                      @click.stop="toggleTooltip('imagen')" ref="tooltipIconimagen">❓</span>
+
+                    <!-- Tooltip -->
+                    <div v-if="showTooltipimagen" class="tooltip-box" ref="tooltipBoximagen"
+                      @mouseenter="hoveringTooltipimagen = true" @mouseleave="hideOnLeave('imagen')">
+                      Si su emprendimiento posee una imagen, de clic en este cuadro para cargar la foto de su
+                      emprendimiento, caso contrario deje en blanco.
+                      <div class="tooltip-arrow"></div>
+                    </div>
+                  </div>
+                  <br>
+                  <p v-if="Errorfoto" class="text-danger text-center">Si tienes problemas en añadir la foto puedes dar
+                    <a href="https://www.iloveimg.com/es/redimensionar-imagen" target="_blank">clic aquí</a>. Te llevará
+                    a
+                    una página donde podrás
+                    ajustar tu foto al tamaño solicitado. Si no deseas añadir la foto puedes dejar en blanco y dar clic
+                    en
+                    guardar</p>
+                </div>
+
               </div>
 
               <div class="col-lg-8">
@@ -52,8 +139,9 @@
                           </strong> Emprendimiento</h4>
                       </div>
                       &nbsp;&nbsp;
-                      <h6 class="text-justify">Lea detenidamente los campos para que no tenga inconvenientes en el
-                        llenado, si tiene dudas de como llenar, cada campo tiene este icono ❓ para que le de
+                      <h6 class="text-center">Lea detenidamente los campos para que no tenga inconvenientes en el
+                        llenado, si tiene dudas de como llenar, en la parte izquierda debe añadir 3 fotos: La primera debe ser un logo de su emprendimiento,
+                        la segunda y la tercera deben ser fotos de lo que trata su emprendimiento. Si tiene dudas de como llenar, cada campo tiene este icono ❓ para que le de
                         información de como llenarlo</h6>
                       &nbsp;&nbsp;&nbsp;&nbsp;
                     </div>
@@ -245,7 +333,8 @@
 
                     <div class="col-lg-12" v-if="!correoErrornue && !correoErrornuetelf && !correoErrornueRucf">
                       <fieldset>
-                        <button type="submit" :disabled="botonesBloqueados" v-on:click="guardar" id="form-submit" class="orange-button">Guardar
+                        <button type="submit" :disabled="botonesBloqueados" v-on:click="guardar" id="form-submit"
+                          class="orange-button">Guardar
                           Datos</button>
                       </fieldset>
                     </div>
@@ -340,7 +429,7 @@ export default {
       correoErrornuetelf: false,
       correoErrornueRucf: false,
       botonesBloqueados: false,
-      
+
 
 
     };

@@ -2,6 +2,7 @@
 import { mostraralertas, enviarsoli, enviarsoliedit,enviarsolig } from '@/assets/scripts/scriptfunciones/funciones'
 import axios from 'axios';
 import { useRoute } from 'vue-router';
+import { getMe } from '@/store/auth';
 import store from '@/store';
 export default {
   data() {
@@ -23,8 +24,9 @@ export default {
       correoValidado: false,
     }
   },
-  mounted() {
+  async mounted() {
     const ruta = useRoute(); 
+    const usuario = await getMe();
     const id = ruta.params.id;
     if(store.state.idusu != id){
 

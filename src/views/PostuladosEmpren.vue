@@ -105,6 +105,7 @@
 <script>
 import axios from 'axios';
 import { useRoute } from 'vue-router';
+import { getMe } from '@/store/auth';
 import { confimar } from '@/assets/scripts/scriptfunciones/funciones';
 export default {
     data() {
@@ -120,8 +121,9 @@ export default {
             buscando: false,
         }
     },
-    mounted() {
+    async mounted() {
         const ruta = useRoute();
+        const usuario = await getMe();
         this.idus = ruta.params.id;
         this.url213 += '/' + this.idus;
         //console.log(this.url213);

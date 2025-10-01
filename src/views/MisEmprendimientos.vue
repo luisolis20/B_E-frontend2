@@ -148,6 +148,7 @@ import axios from 'axios';
 import { useRoute } from 'vue-router';
 import { confimar,confimarhabi } from '@/assets/scripts/scriptfunciones/funciones';
 import script2 from '@/assets/scripts/custom.js';
+import { getMe } from '@/store/auth';
 export default {
     data() {
         return {
@@ -163,8 +164,9 @@ export default {
             showTooltipbuscar: false, hoveringTooltipbuscar: false,
         }
     },
-    mounted() {
+    async mounted() {
         const ruta = useRoute();
+        const usuario = await getMe();
         this.idus = ruta.params.id;
         this.url2 += '/' + this.idus;
         this.getEmprendimiento();

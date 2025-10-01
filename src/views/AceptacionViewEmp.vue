@@ -221,6 +221,7 @@ import axios from 'axios';
 import store from '@/store';
 import { mostraralertas, enviarsolig, mostraralertas2 } from '@/assets/scripts/scriptfunciones/funciones';
 import customscript from '@/assets/scripts/custom.js';
+import { getMe } from '@/store/auth';
 
 export default {
     data() {
@@ -249,8 +250,9 @@ export default {
             cargando: false,
         }
     },
-    mounted() {
+   async mounted() {
         const ruta = useRoute();
+         const usuario = await getMe();
         this.ide = ruta.params.id;
         this.idus = ruta.params.secondId;
 

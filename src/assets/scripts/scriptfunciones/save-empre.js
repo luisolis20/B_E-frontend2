@@ -1,5 +1,6 @@
 import { mostraralertas, enviarsolig, enviarsoliedit } from '@/assets/scripts/scriptfunciones/funciones';
 import { useRoute } from 'vue-router';
+import { getMe } from '@/store/auth';
 import store from '@/store';
 import axios from 'axios';
 export default {
@@ -34,8 +35,9 @@ export default {
             Errorfoto: false,
         }
     },
-    mounted() {
+    async mounted() {
         const ruta = useRoute();
+        const usuario = await getMe();
         this.idus = ruta.params.id;
         // this.url += '/' + this.idus;
         if (store.state.idusu != this.idus) {

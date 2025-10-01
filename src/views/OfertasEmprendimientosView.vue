@@ -143,6 +143,7 @@
     import axios from 'axios';
     import { useRoute } from 'vue-router';
     import { confimar } from '@/assets/scripts/scriptfunciones/funciones';
+    import { getMe } from '@/store/auth';
     import script2 from '@/assets/scripts/custom.js';
     export default{
         data(){
@@ -164,8 +165,9 @@
             }
         },
         
-        mounted(){
+        async mounted(){
             const ruta = useRoute();
+            const usuario = await getMe();
             this.idus = ruta.params.id;
             this.url21 +=  '/'+this.idus;
             //console.log(this.url21);

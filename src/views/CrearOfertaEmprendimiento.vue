@@ -242,6 +242,7 @@ import { useRoute } from 'vue-router';
 import axios from 'axios';
 import store from '@/store';
 import script2 from '@/assets/scripts/custom.js';
+import { getMe } from '@/store/auth';
 import { mostraralertas, enviarsolig, mostraralertas2, enviarsolig23, confimar, confimarhabi } from '@/assets/scripts/scriptfunciones/funciones';
 
 export default {
@@ -270,8 +271,9 @@ export default {
             urlofeempre: 'http://backendbolsaempleo.test/api/b_e/vin/view-oferta_empleos_emprendimiento',
         }
     },
-    mounted() {
+    async mounted() {
         const ruta = useRoute();
+        const usuario = await getMe();
         this.ide = ruta.params.id;
         this.urk3 += '/' + this.ide;
         this.getEmprendiemi();

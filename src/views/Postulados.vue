@@ -124,6 +124,7 @@ import axios from 'axios';
 import { useRoute } from 'vue-router';
 import { confimar } from '@/assets/scripts/scriptfunciones/funciones';
 import script2 from '@/assets/scripts/custom.js';
+import { getMe } from '@/store/auth';
 import { Chart, registerables } from 'chart.js';
 Chart.register(...registerables);
 export default {
@@ -145,8 +146,9 @@ export default {
             filtroEstado: 'todas',
         }
     },
-    mounted() {
+    async mounted() {
         const ruta = useRoute();
+        const usuario = await getMe();
         this.idus = ruta.params.id;
         this.url213 += '/' + this.idus;
         //console.log(this.url213);

@@ -157,6 +157,7 @@ import { useRoute } from 'vue-router';
 import axios from 'axios';
 import store from '@/store';
 import script2 from '@/assets/scripts/custom.js';
+import { getMe } from '@/store/auth';
 
 export default {
    data(){
@@ -181,8 +182,9 @@ export default {
             cargando: false,
         }
     },
-    mounted(){
+    async mounted(){
         const ruta = useRoute();
+        const usuario = await getMe();
         this.ide = ruta.params.id;
         this.urk3 +=  '/'+this.ide;
         this.getEmpresa();
