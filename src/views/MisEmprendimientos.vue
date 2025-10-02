@@ -2,8 +2,9 @@
     <div class="container-fluid py-3">
         <div class="container-fluid py-3">
             <h1 class="display-5 mb-4" style="text-align: center;"> Mis Emprendimientos </h1>
-            <p class="text-dark text-center">En este apartado tendrás todos tus emprendimiento creados. Para que tus emprendimientos están vigentes deben ser aprobados por
-            la Dirección de Vincualción con la Sociedad de la UTLVTE</p>
+            <p class="text-dark text-center">En este apartado tendrás todos tus emprendimiento creados. Para que tus
+                emprendimientos están vigentes deben ser aprobados por
+                la Dirección de Vincualción con la Sociedad de la UTLVTE</p>
             <small
                 class="d-inline-block fw-bold text-dark text-uppercase bg-light border border-primary rounded-pill px-4 py-1 mb-3">
                 Estos son tus Emprendimientos Creados</small>
@@ -57,7 +58,7 @@
                             <td v-text="emp.id"></td>
                             <td v-text="emp.ruc"></td>
                             <td v-text="emp.nombre_emprendimiento"></td>
-                            <td v-if="emp.CIInfPer===this.idus">Yo</td>
+                            <td v-if="emp.CIInfPer === this.idus">Yo</td>
 
                             <td v-else v-text="emp.ApellInfPer + ' ' + emp.ApellMatInfPer + ' ' + emp.NombInfPer"></td>
                             <td>{{ formatFecha(emp.created_at) }}</td>
@@ -66,21 +67,26 @@
                             <td>
                                 <button v-if="emp.estado_empren == 1" class="btn btn-success fw-bold">
                                     Aprobado</button>
-                                <button v-if="emp.estado_empren == 0" class="btn btn-danger fw-bold"> No Aprobado</button>
-                                <label v-if="emp.estado_empren == 2"class=" text-info fw-bold"> En revisión </label>
+                                <button v-if="emp.estado_empren == 0" class="btn btn-danger fw-bold"> No
+                                    Aprobado</button>
+                                <label v-if="emp.estado_empren == 2" class=" text-info fw-bold"> En revisión </label>
                             </td>
                             <td>
-                                <router-link :to="{ path: '/viewEmp/' + emp.id }" class="btn btn-info" title="Ver emprendimiento" v-if="emp.estado_empren == 1 || emp.estado_empren == 0 || emp.estado_empren == 2">
+                                <router-link :to="{ path: '/viewEmp/' + emp.id }" class="btn btn-info"
+                                    title="Ver emprendimiento"
+                                    v-if="emp.estado_empren == 1 || emp.estado_empren == 0 || emp.estado_empren == 2">
                                     <i class="fa-solid fa-eye"></i>
                                 </router-link>
                                 &nbsp;
-                                <router-link :to="{ path: '/editEmp/' + emp.id }" class="btn btn-warning" title="Editar emprendimiento" v-if="emp.estado_empren == 1 || emp.estado_empren == 0">
+                                <router-link :to="{ path: '/editEmp/' + emp.id }" class="btn btn-warning"
+                                    title="Editar emprendimiento"
+                                    v-if="emp.estado_empren == 1 || emp.estado_empren == 0">
                                     <i class="fa-solid fa-edit"></i>
                                 </router-link>
                                 &nbsp;
-                                
-                               
-                               
+
+
+
 
 
                             </td>
@@ -125,9 +131,10 @@
                         Para Añadirlos</router-link>
                 </div>
                 <br><br>
-                 <div class="d-flex justify-content-center">
-                  <router-link :to="{ path: '/emprendimientosofertview/' + idus }" class="btn btn-primary text-white"><i
-                      class="fa-solid fa-eye me-2 text-white"></i> Ver Mis ofertas</router-link>
+                <div class="d-flex justify-content-center">
+                    <router-link :to="{ path: '/emprendimientosofertview/' + idus }"
+                        class="btn btn-primary text-white"><i class="fa-solid fa-eye me-2 text-white"></i> Ver Mis
+                        ofertas</router-link>
                 </div>
             </div>
 
@@ -138,7 +145,7 @@
 
     </div>
     <!-- Cart Page End -->
-   
+
 </template>
 <style>
 @import url('@/assets/styles/styles.css');
@@ -146,7 +153,7 @@
 <script>
 import axios from 'axios';
 import { useRoute } from 'vue-router';
-import { confimar,confimarhabi } from '@/assets/scripts/scriptfunciones/funciones';
+import { confimar, confimarhabi } from '@/assets/scripts/scriptfunciones/funciones';
 import script2 from '@/assets/scripts/custom.js';
 import { getMe } from '@/store/auth';
 export default {
@@ -160,6 +167,7 @@ export default {
             cargando: false,
             currentPage: 1,
             lastPage: 1,
+            interval: null,
             buscando: false,
             showTooltipbuscar: false, hoveringTooltipbuscar: false,
         }
@@ -169,16 +177,23 @@ export default {
         const usuario = await getMe();
         this.idus = ruta.params.id;
         this.url2 += '/' + this.idus;
+
         this.getEmprendimiento();
+        this.interval = setInterval(() => {
+            this.getEmprendimiento();
+        }, 10000);
+    },
+    beforeUnmount() {
+        clearInterval(this.interval);
     },
     methods: {
         async getEmprendimiento() {
-            this.cargando = true;
+            //this.cargando = true;
             try {
                 const response = await axios.get(`${this.url2}?all=true`);
                 const allData = response.data.data;
                 //console.log(allData);
-                
+
                 this.emprendimientoemp = allData;
                 this.lastPage = Math.ceil(this.emprendimientoemp.length / 10);
                 this.updateFilteredData();
@@ -264,7 +279,7 @@ export default {
             }
         },
 
-       
+
         toggleTooltip(field) {
             if (field === "buscar") this.showTooltipbuscar = !this.showTooltipbuscar;
         },

@@ -10,9 +10,9 @@
                 <div>
                   <div id="map">
                     <label for="" class="text-dark">Añada un logo de su emprenidmiento</label><br><br>
-                    <img v-if="previewFoto" :src="previewFoto" id="fotoimg" width="100%" height="300"
+                    <img v-if="previewFotologo" :src="previewFotologo" id="fotoimg" width="100%" height="300"
                       style="border-radius: 10px; object-fit: cover;" />
-                    <img v-else-if="fotografia" :src="'data:image/png;base64,' + fotografia" width="100%" height="300"
+                    <img v-else-if="logo" :src="'data:image/png;base64,' + logo" width="100%" height="300"
                       style="border-radius: 10px; object-fit: cover;" />
                     <img v-else src="https://emprendedores.biz/wp-content/uploads/2023/08/QEE-2.png" width="100%"
                       height="300" style="border-radius: 10px; object-fit: cover;" />
@@ -23,16 +23,16 @@
                     logo
                     debe tener un tamaño máximo de 320x240 píxeles.</h6>
                   <div class="input-with-icon">
-                    <input ref="fileFoto" @change="cargarfoto" type="file" accept="image/jpeg, image/jpg"
+                    <input ref="fileFotolog" @change="cargarfoto3" type="file" accept="image/jpeg, image/jpg"
                       class="form-control text-dark mt-2">
 
                     <!-- Botón de ayuda -->
-                    <span class="help-icon" @mouseenter="showTooltipimagen = true" @mouseleave="hideOnLeave('imagen')"
-                      @click.stop="toggleTooltip('imagen')" ref="tooltipIconimagen">❓</span>
+                    <span class="help-icon" @mouseenter="showTooltipimagenlogo = true" @mouseleave="hideOnLeave('imagenlogo')"
+                      @click.stop="toggleTooltip('imagenlogo')" ref="tooltipIconimagenlogo">❓</span>
 
                     <!-- Tooltip -->
-                    <div v-if="showTooltipimagen" class="tooltip-box" ref="tooltipBoximagen"
-                      @mouseenter="hoveringTooltipimagen = true" @mouseleave="hideOnLeave('imagen')">
+                    <div v-if="showTooltipimagenlogo" class="tooltip-box" ref="tooltipBoximagenlogo"
+                      @mouseenter="hoveringTooltipimagenlogo = true" @mouseleave="hideOnLeave('imagenlogo')">
                       Si su emprendimiento posee un logo, de clic en este cuadro para cargar la foto de su
                       emprendimiento, caso contrario deje en blanco.
                       <div class="tooltip-arrow"></div>
@@ -49,7 +49,7 @@
                 </div>
                 <div>
                   <div id="map">
-                    <label for="" class="text-dark">Añada una foto de lo que trata tu emprendimiento</label><br><br></br>
+                    <label for="" class="text-dark">Añada fotos de lo que trata tu emprendimiento</label><br><br></br>
                     <img v-if="previewFoto" :src="previewFoto" id="fotoimg" width="100%" height="300"
                       style="border-radius: 10px; object-fit: cover;" />
                     <img v-else-if="fotografia" :src="'data:image/png;base64,' + fotografia" width="100%" height="300"
@@ -89,10 +89,9 @@
                 </div>
                 <div>
                   <div id="map">
-                    <label for="" class="text-dark">Añada una foto de lo que trata tu emprendimiento</label><br><br></br>
-                    <img v-if="previewFoto" :src="previewFoto" id="fotoimg" width="100%" height="300"
+                    <img v-if="previewFoto2" :src="previewFoto2" id="fotoimg" width="100%" height="300"
                       style="border-radius: 10px; object-fit: cover;" />
-                    <img v-else-if="fotografia" :src="'data:image/png;base64,' + fotografia" width="100%" height="300"
+                    <img v-else-if="fotografia2" :src="'data:image/png;base64,' + fotografia2" width="100%" height="300"
                       style="border-radius: 10px; object-fit: cover;" />
                     <img v-else src="https://emprendedores.biz/wp-content/uploads/2023/08/QEE-2.png" width="100%"
                       height="300" style="border-radius: 10px; object-fit: cover;" />
@@ -103,16 +102,16 @@
                     foto
                     debe tener un tamaño máximo de 320x240 píxeles.</h6>
                   <div class="input-with-icon">
-                    <input ref="fileFoto" @change="cargarfoto" type="file" accept="image/jpeg, image/jpg"
+                    <input ref="fileFoto" @change="cargarfoto2" type="file" accept="image/jpeg, image/jpg"
                       class="form-control text-dark mt-2">
 
                     <!-- Botón de ayuda -->
-                    <span class="help-icon" @mouseenter="showTooltipimagen = true" @mouseleave="hideOnLeave('imagen')"
-                      @click.stop="toggleTooltip('imagen')" ref="tooltipIconimagen">❓</span>
+                    <span class="help-icon" @mouseenter="showTooltipimagen2 = true" @mouseleave="hideOnLeave('imagen2')"
+                      @click.stop="toggleTooltip('imagen2')" ref="tooltipIconimagen2">❓</span>
 
                     <!-- Tooltip -->
-                    <div v-if="showTooltipimagen" class="tooltip-box" ref="tooltipBoximagen"
-                      @mouseenter="hoveringTooltipimagen = true" @mouseleave="hideOnLeave('imagen')">
+                    <div v-if="showTooltipimagen2" class="tooltip-box" ref="tooltipBoximagen2"
+                      @mouseenter="hoveringTooltipimagen2 = true" @mouseleave="hideOnLeave('imagen2')">
                       Si su emprendimiento posee una imagen, de clic en este cuadro para cargar la foto de su
                       emprendimiento, caso contrario deje en blanco.
                       <div class="tooltip-arrow"></div>
@@ -425,6 +424,10 @@ export default {
       showTooltipdescripcion: false, hoveringTooltipdescripcion: false,
       // Estado del tooltip direccion
       showTooltipdireccion: false, hoveringTooltipdireccion: false,
+      // Estado del tooltip logo
+      showTooltipimagenlogo: false, hoveringTooltipimagenlogo: false,
+      // Estado del tooltip foto
+      showTooltipimagen2: false, hoveringTooltipimagen2: false,
       correoErrornue: false,
       correoErrornuetelf: false,
       correoErrornueRucf: false,
@@ -438,6 +441,8 @@ export default {
     toggleTooltip(field) {
       if (field === "ruc") this.showTooltipRuc = !this.showTooltipRuc;
       if (field === "imagen") this.showTooltipimagen = !this.showTooltipimagen;
+      if (field === "imagenlogo") this.showTooltipimagenlogo = !this.showTooltipimagenlogo;
+      if (field === "imagen2") this.showTooltipimagen2 = !this.showTooltipimagen2;
       if (field === "nombre") this.showTooltipNombre = !this.showTooltipNombre;
       if (field === "horario") this.showTooltiphorario = !this.showTooltiphorario;
       if (field === "tiempo") this.showTooltiptiempo = !this.showTooltiptiempo;
@@ -452,6 +457,8 @@ export default {
       setTimeout(() => {
         if (field === "ruc" && !this.hoveringTooltipRuc) this.showTooltipRuc = false;
         if (field === "imagen" && !this.hoveringTooltipimagen) this.showTooltipimagen = false;
+        if (field === "imagenlogo" && !this.hoveringTooltipimagenlogo) this.showTooltipimagenlogo = false;
+        if (field === "imagen2" && !this.hoveringTooltipimagen2) this.showTooltipimagen2 = false;
         if (field === "nombre" && !this.hoveringTooltipNombre) this.showTooltipNombre = false;
         if (field === "horario" && !this.hoveringTooltiphorario) this.showTooltiphorario = false;
         if (field === "tiempo" && !this.hoveringTooltiptiempo) this.showTooltiptiempo = false;
@@ -467,6 +474,8 @@ export default {
       const refs = [
         ["tooltipIconRuc", "tooltipBoxRuc", "showTooltipRuc"],
         ["tooltipIconimagen", "tooltipBoximagen", "showTooltipimagen"],
+        ["tooltipIconimagen2", "tooltipBoximagen2", "showTooltipimagen2"],
+        ["tooltipIconimagenlogo", "tooltipBoximagenlogo", "showTooltipimagenlogo"],
         ["tooltipIconNombre", "tooltipBoxNombre", "showTooltipNombre"],
         ["tooltipIconhorario", "tooltipBoxhorario", "showTooltiphorario"],
         ["tooltipIcontiempo", "tooltipBoxtiempo", "showTooltiptiempo"],

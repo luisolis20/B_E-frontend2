@@ -1,5 +1,9 @@
 import $ from 'jquery';
 import store from '@/store';
+
+window.$ = $;
+window.jQuery = $;
+
 export default {
   data() {
     return {
@@ -9,13 +13,51 @@ export default {
     };
   },
   mounted() {
+    if ($.fn.owlCarousel) {
+      $(".vegetable-carousel").owlCarousel({
+        autoplay: true,
+        smartSpeed: 1500,
+        center: false,
+        dots: true,
+        loop: true,
+        margin: 25,
+        nav: true,
+        navText: [
+          '<i class="bi bi-arrow-left"></i>',
+          '<i class="bi bi-arrow-right"></i>'
+        ],
+        responsiveClass: true,
+        responsive: {
+          0: {
+            items: 1
+          },
+          576: {
+            items: 1
+          },
+          768: {
+            items: 2
+          },
+          992: {
+            items: 3
+          },
+          1200: {
+            items: 4
+          }
+        }
+      });
 
+
+    } else {
+      console.warn(
+        "owlCarousel no está definido. Asegúrate de incluirlo correctamente."
+      );
+    }
   },
   computed: {
     cerrarsesion2() {
       console.clear();
       localStorage.clear();
-      window.location.replace('/');
+      window.location.replace('/b_e');
     },
     showNavbar() {
       // Lógica para determinar si mostrar o no el navbar

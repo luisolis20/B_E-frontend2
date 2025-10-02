@@ -159,17 +159,24 @@ export default {
                 "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
                 "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
             ],
+            interval: null,
         }
     },
     mounted() {
         const ruta = useRoute();
         this.idus = ruta.params.id;
         this.getEmprendimiento();
+        this.interval = setInterval(() => {
+            this.getEmprendimiento();
+        }, 10000);
+    },
+    beforeUnmount() {
+        clearInterval(this.interval);
     },
 
     methods: {
         async getEmprendimiento() {
-            this.cargando = true;
+            //this.cargando = true;
             try {
                 const response = await axios.get(`${this.url255}?all=true`);
                 const allData = response.data.data;
@@ -292,6 +299,11 @@ export default {
             const datosNoAprobados = Object.values(conteonoaprobados);
 
             if (this.grafico) {
+                this.grafico.data.labels = empresas;
+                this.grafico.data.datasets[0].data = datosemprendimientoemp;
+                this.grafico.data.datasets[1].data = datosOfertas;
+                this.grafico.data.datasets[2].data = datosAprobados;
+                this.grafico.data.datasets[3].data = datosNoAprobados;
                 this.grafico.destroy();
             }
 

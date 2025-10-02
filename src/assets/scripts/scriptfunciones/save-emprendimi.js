@@ -16,6 +16,11 @@ export default {
             descripcion: '',
             fotografia: '',
             previewFoto: '',
+            previewFotologo: '',
+            logo: '',
+            fotografia2: '',
+            previewFoto2: '',
+
             tiempo_emprendimiento: '',
             horarios_atencion: '',
             direccion: '',
@@ -67,7 +72,11 @@ export default {
                     this.descripcion = response.data.data[0].descripcion;
                     this.fotografia = response.data.data[0].fotografia;
                     this.previewFoto = 'data:image/jpeg;base64,' + response.data.data[0].fotografia;
-                    //console.log(this.fotografia);
+                    this.logo = response.data.data[0].logo;
+                    this.previewFotologo = 'data:image/jpeg;base64,' + response.data.data[0].logo;
+                    this.fotografia2 = response.data.data[0].fotografia2;
+                    this.previewFoto2 = 'data:image/jpeg;base64,' + response.data.data[0].fotografia2;
+
                     this.tiempo_emprendimiento = response.data.data[0].tiempo_emprendimiento;
                     this.horarios_atencion = response.data.data[0].horarios_atencion;
                     this.direccion = response.data.data[0].direccion;
@@ -108,7 +117,17 @@ export default {
                     mostraralertas('Ingrese nombre del emprendimiento', 'warning', 'nombre');
                 } else if (this.descripcion == '') {
                     mostraralertas('Ingrese descripcion del emprendimiento', 'warning', 'descripcion');
-                } else if (this.tiempo_emprendimiento == '') {
+                }
+                else if (this.logo == '') {
+                    mostraralertas('Ingrese logo del emprendimiento', 'warning', '');
+                } else if (this.fotografia == '') {
+                    mostraralertas('Ingrese fotografia del emprendimiento', 'warning', '');
+                }
+                else if (this.fotografia2 == '') {
+                    mostraralertas('Ingrese fotografia del emprendimiento', 'warning', '');
+                }
+
+                else if (this.tiempo_emprendimiento == '') {
                     mostraralertas('Ingrese tiempo del emprendimiento', 'warning', 'tiempo');
                 } else if (this.horarios_atencion == '') {
                     mostraralertas('Seleccione horario de atencion del emprendimiento', 'warning', 'horario');
@@ -145,7 +164,13 @@ export default {
                     mostraralertas('Ingrese nombre del emprendimiento', 'warning', 'nombre');
                 } else if (this.descripcion == '') {
                     mostraralertas('Ingrese descripcion del emprendimiento', 'warning', 'descripcion');
+
+                }  else if (this.logo == '') {
+                    mostraralertas('Ingrese logo del emprendimiento', 'warning', '');
                 } else if (this.fotografia == '') {
+                    mostraralertas('Ingrese fotografia del emprendimiento', 'warning', '');
+                }
+                else if (this.fotografia2 == '') {
                     mostraralertas('Ingrese fotografia del emprendimiento', 'warning', '');
                 } else if (this.tiempo_emprendimiento == '') {
                     mostraralertas('Ingrese tiempo del emprendimiento', 'warning', 'tiempo');
@@ -225,6 +250,8 @@ export default {
                 nombre_emprendimiento: this.nombre_emprendimiento,
                 descripcion: this.descripcion,
                 fotografia: this.fotografia,
+                logo: this.logo,
+                fotografia2: this.fotografia2,
                 tiempo_emprendimiento: this.tiempo_emprendimiento,
                 horarios_atencion: this.horarios_atencion,
                 direccion: this.direccion,
@@ -244,6 +271,8 @@ export default {
                 nombre_emprendimiento: this.nombre_emprendimiento,
                 descripcion: this.descripcion,
                 fotografia: this.fotografia,
+                logo: this.logo,
+                fotografia2: this.fotografia2,
                 tiempo_emprendimiento: this.tiempo_emprendimiento,
                 horarios_atencion: this.horarios_atencion,
                 direccion: this.direccion,
@@ -348,14 +377,98 @@ export default {
                 canvas.width = 320;
                 canvas.height = 240;
 
-                
+
                 ctx.drawImage(img, 0, 0, 320, 240);
 
-                
+
                 const dataUrl = canvas.toDataURL("image/jpeg", 0.9);
 
-                this.previewFoto = dataUrl; 
-                this.fotografia = dataUrl.replace(/^data:image\/jpeg;base64,/, ""); 
+                this.previewFoto = dataUrl;
+                this.fotografia = dataUrl.replace(/^data:image\/jpeg;base64,/, "");
+                this.Errorfoto = false;
+            };
+
+            img.onerror = () => {
+                mostraralertas('Error al cargar la imagen.', 'error', '');
+                this.$refs.fileFoto.value = "";
+            };
+        },
+        cargarfoto2(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            // Validar que sea imagen
+            const allowedTypes = ["image/jpeg", "image/jpg", "image/png"];
+            if (!allowedTypes.includes(file.type)) {
+                mostraralertas('Solo se permiten imágenes en formato JPG o JPEG.', 'warning', '');
+                this.$refs.fileFoto.value = "";
+
+
+                this.fotografia2 = '';
+                this.previewFoto2 = '';
+                this.Errorfoto = true;
+                return;
+            }
+
+            const img = new Image();
+            img.src = URL.createObjectURL(file);
+
+            img.onload = () => {
+                // Crear un canvas de 320x240
+                const canvas = document.createElement("canvas");
+                const ctx = canvas.getContext("2d");
+                canvas.width = 320;
+                canvas.height = 240;
+
+
+                ctx.drawImage(img, 0, 0, 320, 240);
+
+
+                const dataUrl = canvas.toDataURL("image/jpeg", 0.9);
+
+                this.previewFoto2 = dataUrl;
+                this.fotografia2 = dataUrl.replace(/^data:image\/jpeg;base64,/, "");
+                this.Errorfoto = false;
+            };
+
+            img.onerror = () => {
+                mostraralertas('Error al cargar la imagen.', 'error', '');
+                this.$refs.fileFoto.value = "";
+            };
+        },
+        cargarfoto3(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            // Validar que sea imagen
+            const allowedTypes = ["image/jpeg", "image/jpg", "image/png"];
+            if (!allowedTypes.includes(file.type)) {
+                mostraralertas('Solo se permiten imágenes en formato JPG o JPEG.', 'warning', '');
+                this.$refs.fileFoto.value = ""; // Limpia input
+                this.previewFotologo = '';
+                this.logo = '';
+                this.Errorfoto = true;
+                return;
+            }
+
+            const img = new Image();
+            img.src = URL.createObjectURL(file);
+
+            img.onload = () => {
+                // Crear un canvas de 320x240
+                const canvas = document.createElement("canvas");
+                const ctx = canvas.getContext("2d");
+                canvas.width = 320;
+                canvas.height = 240;
+
+
+                ctx.drawImage(img, 0, 0, 320, 240);
+
+
+                const dataUrl = canvas.toDataURL("image/jpeg", 0.9);
+
+                this.previewFotologo = dataUrl;
+                this.logo = dataUrl.replace(/^data:image\/jpeg;base64,/, "");
                 this.Errorfoto = false;
             };
 

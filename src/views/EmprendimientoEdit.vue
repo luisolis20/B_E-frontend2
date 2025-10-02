@@ -6,38 +6,127 @@
           <div class="contact-us-content">
             <div class="row">
               <!-- FOTO con input debajo del iframe -->
-              <div class="col-lg-4">
-                <div id="map">
-                  <img v-if="previewFoto" :src="previewFoto" id="fotoimg" width="100%" height="300"
-                    style="border-radius: 10px; object-fit: cover;" />
-                  <img v-else-if="fotografia" :src="'data:image/png;base64,' + fotografia" width="100%" height="300"
-                    style="border-radius: 10px; object-fit: cover;" />
-                  <img v-else src="https://emprendedores.biz/wp-content/uploads/2023/08/QEE-2.png" width="100%"
-                    height="300" style="border-radius: 10px; object-fit: cover;" />
+             <div class="col-lg-4">
+                <div>
+                  <div id="map">
+                    <label for="" class="text-dark">Añada un logo de su emprenidmiento</label><br><br>
+                    <img v-if="previewFotologo" :src="previewFotologo" id="fotoimg" width="100%" height="300"
+                      style="border-radius: 10px; object-fit: cover;" />
+                    <img v-else-if="logo" :src="'data:image/png;base64,' + logo" width="100%" height="300"
+                      style="border-radius: 10px; object-fit: cover;" />
+                    <img v-else src="https://emprendedores.biz/wp-content/uploads/2023/08/QEE-2.png" width="100%"
+                      height="300" style="border-radius: 10px; object-fit: cover;" />
 
-                </div>
-
-                <h6 class="text-center">Haz clic en el cuadro de abajo para cambiar la foto de tu emprendimiento. La foto
-                  debe tener un tamaño máximo de 320x240 píxeles y debe ser en formato JPG o JPEG.</h6>
-                <div class="input-with-icon">
-                  <input ref="fileFoto" @change="cargarfoto" type="file"
-                    accept="image/jpeg, image/jpg" class="form-control text-dark mt-2">
-
-                  <!-- Botón de ayuda -->
-                  <span class="help-icon" @mouseenter="showTooltipimagen = true" @mouseleave="hideOnLeave('imagen')"
-                    @click.stop="toggleTooltip('imagen')" ref="tooltipIconimagen">❓</span>
-
-                  <!-- Tooltip -->
-                  <div v-if="showTooltipimagen" class="tooltip-box" ref="tooltipBoximagen"
-                    @mouseenter="hoveringTooltipimagen = true" @mouseleave="hideOnLeave('imagen')">
-                    Si su emprendimiento posee una imagen, de clic en este cuadro para cargar la foto de su
-                    emprendimiento, caso contrario deje en blanco.
-                    <div class="tooltip-arrow"></div>
                   </div>
+
+                  <h6 class="text-center">Haz clic en el cuadro de abajo para añadir el logo de tu emprendimiento. El
+                    logo
+                    debe tener un tamaño máximo de 320x240 píxeles.</h6>
+                  <div class="input-with-icon">
+                    <input ref="fileFotolog" @change="cargarfoto3" type="file" accept="image/jpeg, image/jpg"
+                      class="form-control text-dark mt-2">
+
+                    <!-- Botón de ayuda -->
+                    <span class="help-icon" @mouseenter="showTooltipimagenlogo = true" @mouseleave="hideOnLeave('imagenlogo')"
+                      @click.stop="toggleTooltip('imagenlogo')" ref="tooltipIconimagenlogo">❓</span>
+
+                    <!-- Tooltip -->
+                    <div v-if="showTooltipimagenlogo" class="tooltip-box" ref="tooltipBoximagenlogo"
+                      @mouseenter="hoveringTooltipimagenlogo = true" @mouseleave="hideOnLeave('imagenlogo')">
+                      Si su emprendimiento posee un logo, de clic en este cuadro para cargar la foto de su
+                      emprendimiento, caso contrario deje en blanco.
+                      <div class="tooltip-arrow"></div>
+                    </div>
+                  </div>
+                  <br>
+                  <p v-if="Errorfoto" class="text-danger text-center">Si tienes problemas en añadir la foto puedes dar
+                    <a href="https://www.iloveimg.com/es/redimensionar-imagen" target="_blank">clic aquí</a>. Te llevará
+                    a
+                    una página donde podrás
+                    ajustar tu foto al tamaño solicitado. Si no deseas añadir la foto puedes dejar en blanco y dar clic
+                    en
+                    guardar</p>
                 </div>
-                <br>
-                 <p v-if="Errorfoto" class="text-danger text-center">Si tienes problemas en añadir la foto puedes dar <a href="https://www.iloveimg.com/es/redimensionar-imagen" target="_blank">clic aquí</a>. Te llevará a una página donde podrás 
-                 ajustar tu foto al tamaño solicitado. Si no deseas añadir la foto puedes dejar en blanco y dar clic en guardar</p>
+                <div>
+                  <div id="map">
+                    <label for="" class="text-dark">Añada fotos de lo que trata tu emprendimiento</label><br><br></br>
+                    <img v-if="previewFoto" :src="previewFoto" id="fotoimg" width="100%" height="300"
+                      style="border-radius: 10px; object-fit: cover;" />
+                    <img v-else-if="fotografia" :src="'data:image/png;base64,' + fotografia" width="100%" height="300"
+                      style="border-radius: 10px; object-fit: cover;" />
+                    <img v-else src="https://emprendedores.biz/wp-content/uploads/2023/08/QEE-2.png" width="100%"
+                      height="300" style="border-radius: 10px; object-fit: cover;" />
+
+                  </div>
+
+                  <h6 class="text-center">Haz clic en el cuadro de abajo para añadir la foto de tu emprendimiento. La
+                    foto
+                    debe tener un tamaño máximo de 320x240 píxeles.</h6>
+                  <div class="input-with-icon">
+                    <input ref="fileFoto" @change="cargarfoto" type="file" accept="image/jpeg, image/jpg"
+                      class="form-control text-dark mt-2">
+
+                    <!-- Botón de ayuda -->
+                    <span class="help-icon" @mouseenter="showTooltipimagen = true" @mouseleave="hideOnLeave('imagen')"
+                      @click.stop="toggleTooltip('imagen')" ref="tooltipIconimagen">❓</span>
+
+                    <!-- Tooltip -->
+                    <div v-if="showTooltipimagen" class="tooltip-box" ref="tooltipBoximagen"
+                      @mouseenter="hoveringTooltipimagen = true" @mouseleave="hideOnLeave('imagen')">
+                      Si su emprendimiento posee una imagen, de clic en este cuadro para cargar la foto de su
+                      emprendimiento, caso contrario deje en blanco.
+                      <div class="tooltip-arrow"></div>
+                    </div>
+                  </div>
+                  <br>
+                  <p v-if="Errorfoto" class="text-danger text-center">Si tienes problemas en añadir la foto puedes dar
+                    <a href="https://www.iloveimg.com/es/redimensionar-imagen" target="_blank">clic aquí</a>. Te llevará
+                    a
+                    una página donde podrás
+                    ajustar tu foto al tamaño solicitado. Si no deseas añadir la foto puedes dejar en blanco y dar clic
+                    en
+                    guardar</p>
+                </div>
+                <div>
+                  <div id="map">
+                    <img v-if="previewFoto2" :src="previewFoto2" id="fotoimg" width="100%" height="300"
+                      style="border-radius: 10px; object-fit: cover;" />
+                    <img v-else-if="fotografia2" :src="'data:image/png;base64,' + fotografia2" width="100%" height="300"
+                      style="border-radius: 10px; object-fit: cover;" />
+                    <img v-else src="https://emprendedores.biz/wp-content/uploads/2023/08/QEE-2.png" width="100%"
+                      height="300" style="border-radius: 10px; object-fit: cover;" />
+
+                  </div>
+
+                  <h6 class="text-center">Haz clic en el cuadro de abajo para añadir la foto de tu emprendimiento. La
+                    foto
+                    debe tener un tamaño máximo de 320x240 píxeles.</h6>
+                  <div class="input-with-icon">
+                    <input ref="fileFoto" @change="cargarfoto2" type="file" accept="image/jpeg, image/jpg"
+                      class="form-control text-dark mt-2">
+
+                    <!-- Botón de ayuda -->
+                    <span class="help-icon" @mouseenter="showTooltipimagen2 = true" @mouseleave="hideOnLeave('imagen2')"
+                      @click.stop="toggleTooltip('imagen2')" ref="tooltipIconimagen2">❓</span>
+
+                    <!-- Tooltip -->
+                    <div v-if="showTooltipimagen2" class="tooltip-box" ref="tooltipBoximagen2"
+                      @mouseenter="hoveringTooltipimagen2 = true" @mouseleave="hideOnLeave('imagen2')">
+                      Si su emprendimiento posee una imagen, de clic en este cuadro para cargar la foto de su
+                      emprendimiento, caso contrario deje en blanco.
+                      <div class="tooltip-arrow"></div>
+                    </div>
+                  </div>
+                  <br>
+                  <p v-if="Errorfoto" class="text-danger text-center">Si tienes problemas en añadir la foto puedes dar
+                    <a href="https://www.iloveimg.com/es/redimensionar-imagen" target="_blank">clic aquí</a>. Te llevará
+                    a
+                    una página donde podrás
+                    ajustar tu foto al tamaño solicitado. Si no deseas añadir la foto puedes dejar en blanco y dar clic
+                    en
+                    guardar</p>
+                </div>
+
               </div>
 
               <div class="col-lg-8">
@@ -49,8 +138,9 @@
                           </strong> Emprendimiento</h4>
                       </div>
                       &nbsp;&nbsp;
-                      <h6 class="text-justify">Lea detenidamente los campos para que no tenga inconvenientes en el
-                        llenado, si tiene dudas de como llenar, cada campo tiene este icono ❓ para que le de
+                      <h6 class="text-center">Lea detenidamente los campos para que no tenga inconvenientes en el
+                        llenado, si tiene dudas de como llenar, en la parte izquierda debe añadir 3 fotos: La primera debe ser un logo de su emprendimiento,
+                        la segunda y la tercera deben ser fotos de lo que trata su emprendimiento. Si tiene dudas de como llenar, cada campo tiene este icono ❓ para que le de
                         información de como llenarlo</h6>
                       &nbsp;&nbsp;&nbsp;&nbsp;
                     </div>
@@ -333,12 +423,16 @@ export default {
       showTooltipdescripcion: false, hoveringTooltipdescripcion: false,
       // Estado del tooltip direccion
       showTooltipdireccion: false, hoveringTooltipdireccion: false,
-      // Estado del tooltip estado_empren
-      showTooltipestado_empren: false, hoveringTooltipestado_empren: false,
+      // Estado del tooltip logo
+      showTooltipimagenlogo: false, hoveringTooltipimagenlogo: false,
+      // Estado del tooltip foto
+      showTooltipimagen2: false, hoveringTooltipimagen2: false,
       correoErrornue: false,
       correoErrornuetelf: false,
       correoErrornueRucf: false,
-      
+      botonesBloqueados: false,
+
+
 
     };
   },
@@ -346,6 +440,8 @@ export default {
     toggleTooltip(field) {
       if (field === "ruc") this.showTooltipRuc = !this.showTooltipRuc;
       if (field === "imagen") this.showTooltipimagen = !this.showTooltipimagen;
+      if (field === "imagenlogo") this.showTooltipimagenlogo = !this.showTooltipimagenlogo;
+      if (field === "imagen2") this.showTooltipimagen2 = !this.showTooltipimagen2;
       if (field === "nombre") this.showTooltipNombre = !this.showTooltipNombre;
       if (field === "horario") this.showTooltiphorario = !this.showTooltiphorario;
       if (field === "tiempo") this.showTooltiptiempo = !this.showTooltiptiempo;
@@ -355,12 +451,13 @@ export default {
       if (field === "redes") this.showTooltipredes = !this.showTooltipredes;
       if (field === "descripcion") this.showTooltipdescripcion = !this.showTooltipdescripcion;
       if (field === "direccion") this.showTooltipdireccion = !this.showTooltipdireccion;
-      if (field === "estado") this.showTooltipestado_empren = !this.showTooltipestado_empren;
     },
     hideOnLeave(field) {
       setTimeout(() => {
         if (field === "ruc" && !this.hoveringTooltipRuc) this.showTooltipRuc = false;
         if (field === "imagen" && !this.hoveringTooltipimagen) this.showTooltipimagen = false;
+        if (field === "imagenlogo" && !this.hoveringTooltipimagenlogo) this.showTooltipimagenlogo = false;
+        if (field === "imagen2" && !this.hoveringTooltipimagen2) this.showTooltipimagen2 = false;
         if (field === "nombre" && !this.hoveringTooltipNombre) this.showTooltipNombre = false;
         if (field === "horario" && !this.hoveringTooltiphorario) this.showTooltiphorario = false;
         if (field === "tiempo" && !this.hoveringTooltiptiempo) this.showTooltiptiempo = false;
@@ -370,13 +467,14 @@ export default {
         if (field === "redes" && !this.hoveringTooltipredes) this.showTooltipredes = false;
         if (field === "descripcion" && !this.hoveringTooltipdescripcion) this.showTooltipdescripcion = false;
         if (field === "direccion" && !this.hoveringTooltipdireccion) this.showTooltipdireccion = false;
-        if (field === "estado" && !this.hoveringTooltipestado_empren) this.showTooltipestado_empren = false;
       }, 200);
     },
     handleClickOutside(event) {
       const refs = [
         ["tooltipIconRuc", "tooltipBoxRuc", "showTooltipRuc"],
         ["tooltipIconimagen", "tooltipBoximagen", "showTooltipimagen"],
+        ["tooltipIconimagen2", "tooltipBoximagen2", "showTooltipimagen2"],
+        ["tooltipIconimagenlogo", "tooltipBoximagenlogo", "showTooltipimagenlogo"],
         ["tooltipIconNombre", "tooltipBoxNombre", "showTooltipNombre"],
         ["tooltipIconhorario", "tooltipBoxhorario", "showTooltiphorario"],
         ["tooltipIcontiempo", "tooltipBoxtiempo", "showTooltiptiempo"],
@@ -386,7 +484,6 @@ export default {
         ["tooltipIconredes", "tooltipBoxredes", "showTooltipredes"],
         ["tooltipIcondescripcion", "tooltipBoxdescripcion", "showTooltipdescripcion"],
         ["tooltipIcondireccion", "tooltipBoxdireccion", "showTooltipdireccion"],
-        ["tooltipIconestado_empren", "tooltipBoxestado_empren", "showTooltipestado_empren"],
       ];
       refs.forEach(([iconRef, boxRef, state]) => {
         const icon = this.$refs[iconRef];
@@ -398,23 +495,23 @@ export default {
     },
     validateNumber() {
       this.ruc = this.ruc.replace(/\D/g, '').slice(0, 13);
-      if(this.ruc.length !== 13){
+      if (this.ruc.length !== 13) {
         this.correoErrornueRucf = true;
       } else {
         this.correoErrornueRucf = false;
       }
-      
-      
+
+
     },
     validateNumberT() {
       this.telefono_contacto = this.telefono_contacto.replace(/\D/g, '').slice(0, 10);
-      if(this.telefono_contacto.length !== 10){
+      if (this.telefono_contacto.length !== 10) {
         this.correoErrornuetelf = true;
       } else {
         this.correoErrornuetelf = false;
       }
-      
-      
+
+
     },
     validateEmail() {
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;

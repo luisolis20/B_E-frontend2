@@ -21,6 +21,14 @@
                             Datos de la Oferta
                         </div>
                         <form>
+                            <div class="testimonial-inner-img">
+                                    <img v-if="previewFotologo" :src="previewFotologo" class="img-fluid rounded-circle"
+                                        alt="Image">
+                                    <img v-else-if="logo" :src="'data:image/png;base64,' + logo"
+                                        class="img-fluid rounded-circle" alt="Image">
+                                    <img v-else src="https://emprendedores.biz/wp-content/uploads/2023/08/QEE-2.png"
+                                        class="img-fluid rounded-circle" alt="Image">
+                                </div>
                             <div class="row gx-4 gy-3">
                                 <div class="col-lg-6 wow fadeIn" data-wow-delay="0.1s">
                                     <div class="form-group">
@@ -99,6 +107,28 @@
                                             class="form-control border-1 text-dark" id="exampletextarea"
                                             disabled></textarea>
                                     </div>
+                                </div>
+                                <div class="col-6 wow fadeIn" data-wow-delay="0.1s">
+                                    <div class="form-group">
+                                        <img v-if="previewFoto" :src="previewFoto" id="fotoimg" width="100%"
+                                            height="300" class="img-fluid" />
+                                        <img v-else-if="fotografia" :src="'data:image/png;base64,' + fotografia"
+                                            width="100%" height="300"   class="img-fluid" />
+                                        <img v-else src="https://emprendedores.biz/wp-content/uploads/2023/08/QEE-2.png"
+                                            width="100%" height="300"   class="img-fluid" />
+                                    </div>
+                                    <br><br>
+                                </div>
+                                <div class="col-6 wow fadeIn" data-wow-delay="0.1s">
+                                    <div class="form-group">
+                                        <img v-if="previewFoto2" :src="previewFoto2" id="fotoimg" width="100%"
+                                            height="300"  class="img-fluid" />
+                                        <img v-else-if="fotografia2" :src="'data:image/png;base64,' + fotografia2"
+                                            width="100%"  class="img-fluid"/>
+                                        <img v-else src="https://emprendedores.biz/wp-content/uploads/2023/08/QEE-2.png"
+                                            width="100%"  class="img-fluid" />
+                                    </div>
+                                    <br><br>
                                 </div>
                                 <div class="col-12 wow fadeIn" data-wow-delay="0.1s" v-if="mostrarOpciones2">
                                     <div class="text-center border border-secondary p-4 my-4 position-relative">
@@ -272,6 +302,12 @@ export default {
             Apellidos: '',
             ApellidosM: '',
             Nombres: '',
+            logo: '',
+            fotografia2: '',
+            previewFoto2: '',
+            fotografia: '',
+            previewFoto: '',
+            previewFotologo: '',
             estado_oferta: 0,
             botonesBloqueados: false,
             updated_at: '',
@@ -455,6 +491,12 @@ export default {
                     this.ApellidosM = res.data.data[0].ApellMatInfPer;
                     this.Nombres = res.data.data[0].NombInfPer;
                     this.estado_oferta = res.data.data[0].estado_ofert_empr;
+                    this.logo = res.data.data[0].logo;
+                    this.fotografia2 = res.data.data[0].fotografia2;
+                    this.fotografia = res.data.data[0].fotografia;
+                    this.previewFotologo = 'data:image/png;base64,' + this.logo;
+                    this.previewFoto2 = 'data:image/png;base64,' + this.fotografia2;
+                    this.previewFoto = 'data:image/png;base64,' + this.fotografia;
                     this.updated_at = res.data.data[0].updated_at;
 
                 }

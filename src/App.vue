@@ -98,7 +98,7 @@
                   <li>
                     <router-link class="dropdown-item" :to="{ path: '/misemprendimientos/' + idus }"
                       :class="{ 'active': $route.path === '/misemprendimientos/' + idus }">
-                      Ver Emprendimientos
+                      Ver Mis Emprendimientos
                     </router-link>
                   </li>
                   <li>

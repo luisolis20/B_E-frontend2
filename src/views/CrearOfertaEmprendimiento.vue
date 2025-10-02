@@ -20,7 +20,19 @@
                             Estos son los datos de tu Emprendimiento
 
                         </div>
+
+
+
                         <form>
+
+                            <div class="testimonial-inner-img">
+                                <img v-if="previewFotologo" :src="previewFotologo" class="img-fluid rounded-circle"
+                                    alt="Image">
+                                <img v-else-if="logo" :src="'data:image/png;base64,' + logo"
+                                    class="img-fluid rounded-circle" alt="Image">
+                                <img v-else src="https://emprendedores.biz/wp-content/uploads/2023/08/QEE-2.png"
+                                    class="img-fluid rounded-circle" alt="Image">
+                            </div>
                             <div class="row gx-4 gy-3">
                                 <div class="col-lg-6 wow fadeIn" data-wow-delay="0.1s">
                                     <div class="form-group">
@@ -93,6 +105,14 @@
 
                                 <div class="col-12 wow fadeIn" data-wow-delay="0.1s">
                                     <div class="form-group">
+                                        <label for="exampletextarea" class="form-label text-dark">Descripción</label>
+                                        <textarea name="text" v-model="descripcion"
+                                            class="form-control border-0 text-dark" id="exampletextarea" cols="30"
+                                            rows="5" disabled></textarea>
+                                    </div>
+                                </div>
+                                <div class="col-12 wow fadeIn" data-wow-delay="0.1s">
+                                    <div class="form-group">
                                         <label for="exampletextarea" class="form-label text-dark">Dirección</label>
                                         <textarea name="text" v-model="direccion"
                                             class="form-control border-0 text-dark" id="exampletextarea" cols="30"
@@ -101,14 +121,37 @@
                                 </div>
                                 <div class="col-12 wow fadeIn" data-wow-delay="0.1s">
                                     <div class="form-group">
-                                        <label for="exampletextarea" class="form-label text-dark">Descripción</label>
-                                        <textarea name="text" v-model="descripcion"
-                                            class="form-control border-0 text-dark" id="exampletextarea" cols="30"
-                                            rows="5" disabled></textarea>
+                                        <label for="exampletextarea" class="form-label text-dark">Fotos</label>
+                                       
                                     </div>
                                 </div>
+                                <div class="col-6 wow fadeIn" data-wow-delay="0.1s">
+                                    <div class="form-group">
+                                        <img v-if="previewFoto" :src="previewFoto" id="fotoimg" width="100%"
+                                            height="300" class="img-fluid" />
+                                        <img v-else-if="fotografia" :src="'data:image/png;base64,' + fotografia"
+                                            width="100%" height="300"   class="img-fluid" />
+                                        <img v-else src="https://emprendedores.biz/wp-content/uploads/2023/08/QEE-2.png"
+                                            width="100%" height="300"   class="img-fluid" />
+                                    </div>
+                                    <br><br>
+                                </div>
+                                <div class="col-6 wow fadeIn" data-wow-delay="0.1s">
+                                    <div class="form-group">
+                                        <img v-if="previewFoto2" :src="previewFoto2" id="fotoimg" width="100%"
+                                            height="300"  class="img-fluid" />
+                                        <img v-else-if="fotografia2" :src="'data:image/png;base64,' + fotografia2"
+                                            width="100%"  class="img-fluid"/>
+                                        <img v-else src="https://emprendedores.biz/wp-content/uploads/2023/08/QEE-2.png"
+                                            width="100%"  class="img-fluid" />
+                                    </div>
+                                    <br><br>
+                                </div>
+                                <br><br>
 
-                                <div class="col-12 wow fadeIn" data-wow-delay="0.1s" v-if="est == 1 && mostrarOpciones2">
+
+                                <div class="col-12 wow fadeIn" data-wow-delay="0.1s"
+                                    v-if="est == 1 && mostrarOpciones2">
                                     <div class="text-center border border-secondary p-4 my-4 position-relative">
                                         <div class="fw-bold text-primary bg-white d-flex align-items-center justify-content-center position-absolute border-secondary p-2"
                                             style="width: 50%; border-style: double; top: 0; left: 50%; transform: translate(-50%, -50%);">
@@ -124,7 +167,8 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-12 wow fadeIn" data-wow-delay="0.1s" v-if="est == 0 && mostrarOpciones2">
+                                <div class="col-12 wow fadeIn" data-wow-delay="0.1s"
+                                    v-if="est == 0 && mostrarOpciones2">
                                     <div class="text-center border border-secondary p-4 my-4 position-relative">
                                         <div class="fw-bold text-primary bg-white d-flex align-items-center justify-content-center position-absolute border-secondary p-2"
                                             style="width: 50%; border-style: double; top: 0; left: 50%; transform: translate(-50%, -50%);">
@@ -133,7 +177,8 @@
 
                                     </div>
                                 </div>
-                                <div class="col-12 wow fadeIn" data-wow-delay="0.1s" v-if="est == 2 && mostrarOpciones2">
+                                <div class="col-12 wow fadeIn" data-wow-delay="0.1s"
+                                    v-if="est == 2 && mostrarOpciones2">
                                     <div class="text-center border border-secondary p-4 my-4 position-relative">
                                         <div class="fw-bold text-primary bg-white d-flex align-items-center justify-content-center position-absolute border-secondary p-2"
                                             style="width: 50%; border-style: double; top: 0; left: 50%; transform: translate(-50%, -50%);">
@@ -262,6 +307,12 @@ export default {
             sitio_web: '',
             redes_sociales: '',
             estado_empren: '',
+            logo: '',
+            fotografia2: '',
+            previewFoto2: '',
+            fotografia: '',
+            previewFoto: '',
+            previewFotologo: '',
             updated_at: '',
             idemprendimiento: 0,
             urlinformacionpersonal: "http://vinculacionconlasociedad.utelvt.edu.ec/cvubackendv2/api/cvn/v1/informacionpersonal",
@@ -301,6 +352,12 @@ export default {
                     this.redes_sociales = response.data.data[0].redes_sociales;
                     this.est = response.data.data[0].estado_empren;
                     this.updated_at = response.data.data[0].updated_at;
+                    this.logo = response.data.data[0].logo;
+                    this.fotografia2 = response.data.data[0].fotografia2;
+                    this.fotografia = response.data.data[0].fotografia;
+                    this.previewFotologo = 'data:image/png;base64,' + this.logo;
+                    this.previewFoto2 = 'data:image/png;base64,' + this.fotografia2;
+                    this.previewFoto = 'data:image/png;base64,' + this.fotografia;
                     if (this.est == 1) {
                         this.estado_empren = "Disponible"
                     } else if (this.est == 2) {

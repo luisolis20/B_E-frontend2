@@ -63,7 +63,7 @@
 
                     <div class="form-check form-check-inline py-2">
                         <input class="form-check-input text-dark" type="radio" name="inlineRadioOptions"
-                            id="inlineRadio1" value="option2" checked @click="tabla = false; carrousel = true;">
+                            id="inlineRadio1" value="option2" checked @click="carrousel = true; tabla = false;">
                         <label class="form-check-label text-dark" for="inlineRadio1">Carrousel</label>
                     </div>
                     <div class="form-check form-check-inline py-2">
@@ -156,70 +156,110 @@
                 </table>
             </div>
             <br><br>
-            <div class="owl-carousel vegetable-carousel justify-content-center" v-if="carrousel && mostrarOpciones2">
-                &nbsp;&nbsp;&nbsp;&nbsp;
-                <div v-for="ofe in filteredofertas" :key="ofe.id"
-                    class="border border-primary rounded position-relative vesitable-item mx-2 my-3">
+            <div class="container-fluid vesitable py-5" v-if="carrousel && mostrarOpciones2">
+                <div class="owl-carousel vegetable-carousel justify-content-center">
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    <div v-for="ofe in filteredofertas" :key="ofe.id"
+                        class="border border-primary rounded position-relative vesitable-item mx-2 my-3">
 
-                    <div>
-                        <div v-if="new Date(ofe.fechaFinOferta) <= new Date()"
-                            class="text-white bg-danger px-3 py-1 rounded position-absolute"
-                            style="top: 10px; right: 10px;">Ofertas Caducada</div>
-                        <div v-else class="text-white bg-primary px-3 py-1 rounded position-absolute"
-                            style="top: 10px; right: 10px;">Ofertas Recientes</div>
+                        <div>
+                            <div v-if="new Date(ofe.fechaFinOferta) <= new Date()"
+                                class="text-white bg-danger px-3 py-1 rounded position-absolute"
+                                style="top: 10px; right: 10px;">Ofertas Caducada</div>
+                            <div v-else class="text-white bg-primary px-3 py-1 rounded position-absolute"
+                                style="top: 10px; right: 10px;">Ofertas Recientes</div>
 
-                    </div>
-                    <div class="p-4 rounded-bottom">
-                        <div class="row">
-                            <div class="col-md-12 col-lg-3">
-                                <div class="text-center">
-
-                                    <img v-if="ofe.fotografia" :src="'data:image/jpeg;base64,' + ofe.fotografia"
-                                        width="100%" height="300" style="border-radius: 10px; object-fit: cover;" />
-                                    <img v-else src="https://emprendedores.biz/wp-content/uploads/2023/08/QEE-2.png"
-                                        width="100%" height="300" style="border-radius: 10px; object-fit: cover;" />
+                        </div>
+                        <div class="p-4 rounded-bottom">
+                            <div class="row">
+                                <div class="col-md-12 col-lg-3">
+                                    <div class="text-center d-flex justify-content-center">
+                                        <div class="rounded-circle overflow-hidden"
+                                            style="width: 200px; height: 200px;">
+                                            <img v-if="ofe.logo" :src="'data:image/jpeg;base64,' + ofe.logo"
+                                                class="w-100 h-100 object-fit-cover" />
+                                            <img v-else
+                                                src="https://emprendedores.biz/wp-content/uploads/2023/08/QEE-2.png"
+                                                class="w-100 h-100 object-fit-cover" />
+                                        </div>
+                                    </div>
                                 </div>
 
-
-                            </div>
-                            <div class="col-md-12 col-lg-8">
-                                <h4>{{ ofe.titulo }}</h4>
-                                <h6>Fecha de publicación: {{ new Date(ofe.created_at).toLocaleDateString('es-ES') }}
-                                </h6>
-                                <div v-if="new Date(ofe.fechaFinOferta) > new Date() && tiemposRestantes[ofe.id]">
-                                    <h6 class="text-success">
-                                        {{ calcularDiasRestantes(ofe.fechaFinOferta) }} - Tiempo restante:
-                                        <span :class="{
-                                            'text-success': !tiemposRestantes[ofe.id].includes('Caducada'),
-                                            'text-danger': tiemposRestantes[ofe.id].includes('Caducada')
-                                        }">
-                                            {{ tiemposRestantes[ofe.id] }}
-                                        </span>
+                                <div class="col-md-12 col-lg-8">
+                                    <h4>{{ ofe.titulo }}</h4>
+                                    <h6>Fecha de publicación: {{ new Date(ofe.created_at).toLocaleDateString('es-ES') }}
                                     </h6>
-                                </div>
-                                <div v-else>
-                                    <h6 class="text-danger">La oferta ya caducó</h6>
-                                </div>
-                                <h6>Categoría / Área: {{ ofe.categoria }}</h6>
-                                <p class="text-dark">Descripcion: {{ ofe.descripcion }}</p>
-                                <div class="d-flex justify-content-between flex-lg-wrap">
-                                    <p class="text-dark fs-5 fw-bold mb-0">Nombre del Emprendimiento: {{ ofe.Empresa }}
-                                    </p>
-                                </div>
-                                <div class="text-center">
-                                    <br><br><br>
-                                    <router-link :to="{ path: '/postularseempr/' + idus + '/' + ofe.id }"
-                                        class="btn border border-secondary rounded-pill px-3 text-primary"><i
-                                            class="fa-solid fa-eye me-2 icom"></i> Ver Detalle
-                                        Completo</router-link>
+                                    <div v-if="new Date(ofe.fechaFinOferta) > new Date() && tiemposRestantes[ofe.id]">
+                                        <h6 class="text-success">
+                                            {{ calcularDiasRestantes(ofe.fechaFinOferta) }} - Tiempo restante:
+                                            <span :class="{
+                                                'text-success': !tiemposRestantes[ofe.id].includes('Caducada'),
+                                                'text-danger': tiemposRestantes[ofe.id].includes('Caducada')
+                                            }">
+                                                {{ tiemposRestantes[ofe.id] }}
+                                            </span>
+                                        </h6>
+                                    </div>
+                                    <div v-else>
+                                        <h6 class="text-danger">La oferta ya caducó</h6>
+                                    </div>
+                                    <h6>Categoría / Área: {{ ofe.categoria }}</h6>
+                                    <p class="text-dark">Descripcion: {{ ofe.descripcion }}</p>
+                                    <div class="d-flex justify-content-between flex-lg-wrap">
+                                        <p class="text-dark fs-5 fw-bold mb-0">Nombre del Emprendimiento: {{ ofe.Empresa
+                                            }}
+                                        </p>
+                                    </div>
+                                    <div class="text-center">
+                                        <br><br><br>
+                                        <router-link :to="{ path: '/postularseempr/' + idus + '/' + ofe.id }"
+                                            class="btn border border-secondary rounded-pill px-3 text-primary"><i
+                                                class="fa-solid fa-eye me-2 icom"></i> Ver Detalle
+                                            Completo</router-link>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
 
+                    </div>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
                 </div>
-                &nbsp;&nbsp;&nbsp;&nbsp;
             </div>
+            <div class="container-fluid vesitable py-5">
+                <div class="container py-5">
+                    <div class="owl-carousel vegetable-carousel justify-content-center">
+                        <div class="border border-primary rounded position-relative vesitable-item"
+                            v-for="ofe in filteredofertas" :key="ofe.id">
+
+                            <div class="vesitable-img">
+                                <img v-if="ofe.logo" :src="'data:image/jpeg;base64,' + ofe.logo"
+                                    class="img-fluid w-100 rounded-top" />
+                                <img v-else src="https://emprendedores.biz/wp-content/uploads/2023/08/QEE-2.png"
+                                    class="img-fluid w-100 rounded-top" />
+                            </div>
+
+                            <div class="text-white bg-primary px-3 py-1 rounded position-absolute"
+                                style="top: 10px; right: 10px;">
+                                {{ ofe.categoria }}
+                            </div>
+
+                            <div class="p-4 rounded-bottom">
+                                <h4>{{ ofe.titulo }}</h4>
+                                <p>{{ ofe.descripcion }}</p>
+                                <div class="d-flex justify-content-between flex-lg-wrap">
+                                    <p class="text-dark fs-5 fw-bold mb-0">{{ ofe.Empresa }}</p>
+                                    <router-link :to="{ path: '/postularseempr/' + idus + '/' + ofe.id }"
+                                        class="btn border border-secondary rounded-pill px-3 text-primary">
+                                        <i class="fa fa-eye me-2"></i> Ver detalle
+                                    </router-link>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div v-if="filteredofertas.length === 0" class="text-center">
                 <h3>No hay ofertas disponibles</h3>
             </div>
@@ -270,13 +310,17 @@
 </style>
 <script>
 import script2 from '@/assets/scripts/custom.js';
+import { nextTick } from "vue";
 import axios from 'axios';
+import "owl.carousel/dist/assets/owl.carousel.css";
+import "owl.carousel";
 import { useRoute } from 'vue-router';
 import { getMe } from '@/store/auth';
 import { confimar, confimarhabi } from '@/assets/scripts/scriptfunciones/funciones';
 import { Chart, registerables } from 'chart.js';
 Chart.register(...registerables);
 export default {
+    props: ["filteredofertas", "idus"],
     data() {
         return {
             idus: 0,
@@ -310,8 +354,9 @@ export default {
         const ruta = useRoute();
         const usuario = await getMe();
         this.idus = ruta.params.id;
+        this.initCarousel();
         if (this.mostrarOpciones2) {
-
+            this.carrousel = true;
             this.getOFertas().then(() => {
                 this.actualizarTiemposRestantes();
                 setInterval(this.actualizarTiemposRestantes, 1000); // Actualiza cada segundo
@@ -320,9 +365,44 @@ export default {
             this.getOFertas2();
         }
     },
+    watch: {
+        filteredofertas() {
+            this.$nextTick(() => {
+                this.initCarousel();
+            });
+        }
+    },
 
 
     methods: {
+        initCarousel() {
+            // Destruye si ya estaba inicializado
+            if ($(".vegetable-carousel").hasClass("owl-loaded")) {
+                $(".vegetable-carousel").trigger("destroy.owl.carousel");
+                $(".vegetable-carousel").removeClass("owl-loaded");
+                $(".vegetable-carousel").find(".owl-stage-outer").children().unwrap();
+            }
+
+            // Inicializa otra vez
+            $(".vegetable-carousel").owlCarousel({
+                autoplay: true,
+                smartSpeed: 1000,
+                margin: 25,
+                dots: false,
+                loop: true,
+                nav: true,
+                navText: [
+                    '<i class="bi bi-arrow-left"></i>',
+                    '<i class="bi bi-arrow-right"></i>'
+                ],
+                responsive: {
+                    0: { items: 1 },
+                    768: { items: 2 },
+                    992: { items: 3 },
+                    1200: { items: 4 }
+                }
+            });
+        },
         async getOFertas() {
             this.cargando = true;
             try {
@@ -350,7 +430,7 @@ export default {
                 this.lastPage = Math.ceil(this.ofertas.length / 10);
                 this.updateFilteredData();
                 //this.generarGrafico();
-                if (this.filtroAnio==='' || this.filtroMes==='') {
+                if (this.filtroAnio === '' || this.filtroMes === '') {
                     this.generarGrafico();
                     this.aniosDisponibles = [...new Set(
                         this.ofertas.map(o => new Date(o.created_at).getFullYear())
@@ -597,7 +677,7 @@ export default {
 
             // Actualizar total de páginas (si quieres que se actualice también el número de páginas)
             this.lastPage = Math.ceil(filtradas.length / 10);
-            
+
         },
         filtrarOfertas() {
             this.currentPage = 1; // Reinicia a la primera página

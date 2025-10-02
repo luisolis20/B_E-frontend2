@@ -172,6 +172,7 @@
             this.url21 +=  '/'+this.idus;
             //console.log(this.url21);
             this.getOFertas();
+            
         },
         
         methods:{

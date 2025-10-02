@@ -375,31 +375,31 @@
 }
 
 .vesitable .vesitable-item {
-  height: 100%;
-  transition: 0.5s;
+    height: 100%;
+    transition: 0.5s;
 }
 
 .vesitable .vesitable-item:hover {
-  box-shadow: 0 0 55px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 0 55px rgba(0, 0, 0, 0.4);
 }
 
 .vesitable .vesitable-item .vesitable-img {
-  overflow: hidden;
-  transition: 0.5s;
-  border-radius: 10px 10px 0 0;
+    overflow: hidden;
+    transition: 0.5s;
+    border-radius: 10px 10px 0 0;
 }
 
 .vesitable .vesitable-item .vesitable-img img {
-  transition: 0.5s;
+    transition: 0.5s;
 }
 
 .vesitable .vesitable-item .vesitable-img img:hover {
-  transform: scale(1.2);
+    transform: scale(1.2);
 }
 
 .vesitable .owl-stage {
-  margin: 50px 0;
-  position: relative;
+    margin: 50px 0;
+    position: relative;
 }
 
 .vesitable .owl-nav .owl-prev {
@@ -582,3 +582,29 @@ option:checked {
 .nav-item.dropdown .dropdown-menu:hover {
   display: block;
 }
+.about-img {
+    position: relative;
+    overflow: hidden;
+    align-items: center;
+    justify-content: center;
+    height: 200px;
+    width: 200px;
+}
+
+.about-img .about-img-inner {
+    position: absolute;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+
+}
+.testimonial-inner-img {
+    position: relative;
+    overflow: hidden;
+    align-items: center;
+    justify-content: center;
+    height: 200px;
+    width: 200px;
+    display: flex;
+}
+

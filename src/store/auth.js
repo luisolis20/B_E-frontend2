@@ -35,7 +35,7 @@ export const getMe = async () => {
     return response.data;
   } catch (error) {
     localStorage.clear();
-    window.location.href = '/';
+    window.location.replace('/b_e');
     console.error('Error al obtener perfil data:', error);
     throw error;
   }
