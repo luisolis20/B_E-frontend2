@@ -34,7 +34,7 @@ export default {
             Errorfoto: false,
             guardaremprendimiento: true,
             ur3: 'http://backendbolsaempleo.test/api/b_e/vin/consultarediremp',
-            urlinformacionpersonal: "http://vinculacionconlasociedad.utelvt.edu.ec/cvubackendv2/api/cvn/v1/informacionpersonal",
+            urlinformacionpersonal: "http://cvubackendv2.test/api/cvn/v1/informacionpersonal",
             // Verificación de correo
             mostrarModal: false,
             codigov: "",

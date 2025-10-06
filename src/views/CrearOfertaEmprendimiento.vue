@@ -315,7 +315,7 @@ export default {
             previewFotologo: '',
             updated_at: '',
             idemprendimiento: 0,
-            urlinformacionpersonal: "http://vinculacionconlasociedad.utelvt.edu.ec/cvubackendv2/api/cvn/v1/informacionpersonal",
+            urlinformacionpersonal: "http://cvubackendv2.test/api/cvn/v1/informacionpersonal",
             urk3: 'http://backendbolsaempleo.test/api/b_e/vin/consultarediremp',
             cargando: false,
             botonesBloqueados: false,

@@ -143,7 +143,7 @@ export default {
         return {
             idus: 0,
             url255: 'http://backendbolsaempleo.test/api/b_e/vin/emprendimientos_E',
-            urlinformacionpersonal: "http://vinculacionconlasociedad.utelvt.edu.ec/cvubackendv2/api/cvn/v1/informacionpersonal",
+            urlinformacionpersonal: "http://cvubackendv2.test/api/cvn/v1/informacionpersonal",
             emprendimientoemp: [],
             filteredemprend: [],
             searchQuery: '',
