@@ -179,16 +179,16 @@ export default {
         this.url2 += '/' + this.idus;
 
         this.getEmprendimiento();
-        this.interval = setInterval(() => {
+       /*this.interval = setInterval(() => {
             this.getEmprendimiento();
-        }, 10000);
+        }, 10000);*/
     },
-    beforeUnmount() {
+    /*beforeUnmount() {
         clearInterval(this.interval);
-    },
+    },*/
     methods: {
         async getEmprendimiento() {
-            //this.cargando = true;
+            this.cargando = true;
             try {
                 const response = await axios.get(`${this.url2}?all=true`);
                 const allData = response.data.data;

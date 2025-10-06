@@ -112,10 +112,10 @@
             </div>
 
         </div>
-        <div class="container mt-5">
+         <!-- <div class="container mt-5">
             <h4 class="text-center mb-3">Estadísticas de Postulaciones por Oferta</h4>
             <canvas id="graficoPostulaciones" height="100"></canvas>
-        </div>
+        </div>-->
         <br><br>
         <div class="alert alert-info d-flex justify-content-around fw-bold text-dark">
             <div>Total de Postulaciones: {{ totalPost }}</div>
@@ -186,13 +186,13 @@ export default {
                 this.contarOfertas();
                 this.lastPage = Math.ceil(this.postulacionespr.length / 10);
                 this.updateFilteredData();
-                this.generarGrafico();
+                //this.generarGrafico();
             } catch (error) {
                 console.error("Error al obtener postulaciones:", error);
                 this.postulacionespr = []; // Asegura que no queden datos anteriores
                 this.lastPage = 1;
                 this.updateFilteredData();
-                this.generarGrafico();
+                //this.generarGrafico();
             } finally {
                 this.cargando = false;
             }

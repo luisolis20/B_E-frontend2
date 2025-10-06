@@ -62,6 +62,10 @@
                   class="btn btn-info">
                   <i class="fa-solid fa-eye"></i>
                 </router-link>
+                &nbsp;
+                <button @click="descargarFoto(post)" class="btn btn-success">
+                  <i class="fa-solid fa-download"></i>
+                </button>
 
               </td>
             </tr>
@@ -127,7 +131,7 @@ export default {
   },
   async mounted() {
     const ruta = useRoute();
-     const usuario = await getMe();
+    const usuario = await getMe();
     this.idus = ruta.params.id;
     this.getAdministrativosD();
 
@@ -172,16 +176,45 @@ export default {
       this.cargando = true;
       this.getAdministrativosD()
     },
-    filterResults() {
+    async filterResults() {
       const query = this.searchQuery.trim();
-      if (query) {
-        this.buscando = true;
-        this.filteredpostulaciones = this.postulacionespr.filter(inves =>
-          inves.CIInfPer.includes(query)
-        );
-      } else {
+      if (!query) {
         this.buscando = false;
-        this.actualizar();
+        this.getAdministrativosD(); // recarga normal con paginación
+        return;
+      }
+
+      this.buscando = true;
+      this.cargando = true;
+      try {
+        let currentPage = 1;
+        let lastPage = 1;
+        let resultados = [];
+
+        do {
+          const response = await axios.get(`${this.url213}?page=${currentPage}`);
+          const registros = response.data.data || [];
+          lastPage = response.data.last_page;
+
+          // Filtro por cédula (o cualquier otro campo)
+          const coincidencias = registros.filter(inves =>
+            inves.CIInfPer.includes(query) ||
+            (inves.NombInfPer && inves.NombInfPer.toLowerCase().includes(query.toLowerCase())) ||
+            (inves.ApellInfPer && inves.ApellInfPer.toLowerCase().includes(query.toLowerCase())) ||
+            (inves.ApellMatInfPer && inves.ApellMatInfPer.toLowerCase().includes(query.toLowerCase()))
+          );
+
+          resultados = resultados.concat(coincidencias);
+          currentPage++;
+        } while (currentPage <= lastPage);
+
+        this.filteredpostulaciones = resultados;
+
+      } catch (error) {
+        console.error("Error al buscar:", error);
+        this.filteredpostulaciones = [];
+      } finally {
+        this.cargando = false;
       }
     },
     onlyNumbers(event) {
@@ -198,6 +231,37 @@ export default {
     previousPage() {
       if (this.currentPage > 1) {
         this.getAdministrativosD(this.currentPage - 1);
+      }
+    },
+    async descargarFoto(post) {
+      try {
+        if (!post.fotografia || !post.fotografia.data) {
+          alert("Este usuario no tiene fotografía disponible.");
+          return;
+        }
+
+        // Extensión según el mime
+        let extension = "jpg";
+        if (post.fotografia.mime === "image/png") extension = "png";
+        else if (["image/jpeg", "image/jpg"].includes(post.fotografia.mime)) extension = "jpeg";
+
+        // Nombre del archivo
+        const nombre = (post.NombInfPer || "sinNombre").replace(/\s+/g, " ");
+        const apellido = (post.ApellInfPer || "sinApellido").replace(/\s+/g, " ");
+        const apellido2 = (post.ApellMatInfPer || "sinApellido").replace(/\s+/g, " ");
+        const cedula = post.CIInfPer || "sinCedula";
+        const fileName = `${nombre} ${apellido} ${apellido2}_${cedula}.${extension}`;
+
+        // Convertir Base64 → binario
+        const byteCharacters = atob(post.fotografia.data);
+        const byteArray = new Uint8Array([...byteCharacters].map(c => c.charCodeAt(0)));
+
+        // Descargar
+        const blob = new Blob([byteArray], { type: post.fotografia.mime });
+        saveAs(blob, fileName);
+
+      } catch (error) {
+        console.error("Error al descargar la foto:", error);
       }
     },
     async descargarDatos() {
@@ -230,10 +294,11 @@ export default {
             else if (["image/jpeg", "image/jpg"].includes(post.fotografia.mime)) extension = "jpeg";
 
             //  Nombre archivo 
-            const nombre = (post.NombInfPer || "sinNombre").replace(/\s+/g, "");
-            const apellido = (post.ApellInfPer || "sinApellido").replace(/\s+/g, "");
+            const nombre = (post.NombInfPer || "sinNombre").replace(/\s+/g, " ");
+            const apellido = (post.ApellInfPer || "sinApellido").replace(/\s+/g, " ");
+            const apellido2 = (post.ApellMatInfPer || "sinApellido").replace(/\s+/g, " ");
             const cedula = post.CIInfPer || "sinCedula";
-            const fileName = `${nombre} ${apellido}_${cedula}.${extension}`;
+            const fileName = `${nombre} ${apellido} ${apellido2}_${cedula}.${extension}`;
 
             //  Base64 → binario
             const byteCharacters = atob(post.fotografia.data);

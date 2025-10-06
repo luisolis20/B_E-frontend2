@@ -68,7 +68,7 @@
                             id="inlineRadio1" value="option2" checked @click="tabla = false; carrousel = true;">
                         <label class="form-check-label text-dark" for="inlineRadio1">Carrousel</label>
                     </div>
-                    <div class="form-check form-check-inline py-2">
+                    <div class="form-check form-check-inline py-2" v-if="mostrarOpciones3">
                         <input class="form-check-input text-dark" type="radio" name="inlineRadioOptions"
                             id="inlineRadio1" value="option1" @click="tabla = true; carrousel = false;">
                         <label class="form-check-label text-dark" for="inlineRadio1">Tabla</label>
@@ -167,29 +167,43 @@
 
                     </div>
                     <div class="p-4 rounded-bottom">
-                        <h4>{{ ofe.titulo }}</h4>
-                        <h6>Fecha de publicación: {{ new Date(ofe.created_at).toLocaleDateString('es-ES') }}</h6>
-                        <div v-if="new Date(ofe.fechaFinOferta) > new Date() && tiemposRestantes[ofe.id]">
-                            <h6 class="text-success">
-                                {{ calcularDiasRestantes(ofe.fechaFinOferta) }} - Tiempo restante:
-                                <span :class="{
-                                    'text-success': !tiemposRestantes[ofe.id].includes('Caducada'),
-                                    'text-danger': tiemposRestantes[ofe.id].includes('Caducada')
-                                }">
-                                    {{ tiemposRestantes[ofe.id] }}
-                                </span>
-                            </h6>
-                        </div>
-                        <div v-else>
-                            <h6 class="text-danger">La oferta ya caducó</h6>
-                        </div>
-                        <h6>Categoría / Área: {{ ofe.categoria }}</h6>
-                        <p class="text-dark">Descripcion: {{ ofe.descripcion }}</p>
-                        <div class="d-flex justify-content-between flex-lg-wrap">
-                            <p class="text-dark fs-5 fw-bold mb-0">Nombre de la Empresa: {{ ofe.Empresa }}</p>
-                            <router-link :to="{ path: '/postularse/' + idus + '/' + ofe.id }"
-                                class="btn border border-secondary rounded-pill px-3 text-primary"><i
-                                    class="fa-solid fa-eye me-2 icom"></i> Ver Detalle</router-link>
+                        <div class="row">
+                            <div class="col-md-12 col-lg-3">
+                                <div class="text-center d-flex justify-content-center">
+                                    <div class="rounded-circle overflow-hidden" style="width: 200px; height: 200px;">
+                                        <img v-if="ofe.imagen" :src="'data:image/jpeg;base64,' + ofe.imagen"
+                                            class="w-100 h-100 object-fit-cover" />
+                                        <img v-else src="https://emprendedores.biz/wp-content/uploads/2023/08/QEE-2.png"
+                                            class="w-100 h-100 object-fit-cover" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12 col-lg-8">
+                                <h4>{{ ofe.titulo }}</h4>
+                                <h6>Fecha de publicación: {{ new Date(ofe.created_at).toLocaleDateString('es-ES') }}</h6>
+                                <div v-if="new Date(ofe.fechaFinOferta) > new Date() && tiemposRestantes[ofe.id]">
+                                    <h6 class="text-success">
+                                        {{ calcularDiasRestantes(ofe.fechaFinOferta) }} - Tiempo restante:
+                                        <span :class="{
+                                            'text-success': !tiemposRestantes[ofe.id].includes('Caducada'),
+                                            'text-danger': tiemposRestantes[ofe.id].includes('Caducada')
+                                        }">
+                                            {{ tiemposRestantes[ofe.id] }}
+                                        </span>
+                                    </h6>
+                                </div>
+                                <div v-else>
+                                    <h6 class="text-danger">La oferta ya caducó</h6>
+                                </div>
+                                <h6>Categoría / Área: {{ ofe.categoria }}</h6>
+                                <p class="text-dark">Descripcion: {{ ofe.descripcion }}</p>
+                                <div class="d-flex justify-content-between flex-lg-wrap">
+                                    <p class="text-dark fs-5 fw-bold mb-0">Nombre de la Empresa: {{ ofe.Empresa }}</p>
+                                    <router-link :to="{ path: '/postularse/' + idus + '/' + ofe.id }"
+                                        class="btn border border-secondary rounded-pill px-3 text-primary"><i
+                                            class="fa-solid fa-eye me-2 icom"></i> Ver Detalle</router-link>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -271,7 +285,7 @@ export default {
             carrousel: true,
             grafico: null,
             buscando: false,
-             filtroMes: '',
+            filtroMes: '',
             filtroAnio: '',
             aniosDisponibles: [],
             meses: [
@@ -284,7 +298,7 @@ export default {
     },
     async mounted() {
         const ruta = useRoute();
-         const usuario = await getMe();
+        const usuario = await getMe();
         this.idus = ruta.params.id;
 
         if (this.mostrarOpciones2) {
@@ -327,7 +341,7 @@ export default {
                 this.ofertas = allData;
                 this.lastPage = Math.ceil(this.ofertas.length / 10);
                 this.updateFilteredData();
-                 if (this.filtroAnio==='' || this.filtroMes==='') {
+                if (this.filtroAnio === '' || this.filtroMes === '') {
                     this.generarGrafico();
                     this.aniosDisponibles = [...new Set(
                         this.ofertas.map(o => new Date(o.created_at).getFullYear())

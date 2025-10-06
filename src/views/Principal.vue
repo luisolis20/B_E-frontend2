@@ -316,7 +316,7 @@
                           <div class="col-md-12 col-lg-3">
                             <div class="text-center">
 
-                              <img v-if="ofe2.fotografia" :src="'data:image/jpeg;base64,' + ofe2.fotografia"
+                              <img v-if="ofe2.logo" :src="'data:image/jpeg;base64,' + ofe2.logo"
                                 width="100%" height="300" style="border-radius: 10px; object-fit: cover;" />
                               <img v-else src="https://emprendedores.biz/wp-content/uploads/2023/08/QEE-2.png"
                                 width="100%" height="300" style="border-radius: 10px; object-fit: cover;" />

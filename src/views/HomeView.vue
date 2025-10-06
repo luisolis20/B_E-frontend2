@@ -165,7 +165,7 @@ export default {
           this.correoss = '';
           this.mensaje = '';
           window.setTimeout(function(){
-                window.location.href='/'
+                window.location.href='/b_e'
               },10000)
         })
         
