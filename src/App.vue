@@ -6,11 +6,11 @@
       <div class="d-flex justify-content-between">
         <div class="top-info ps-2">
           <small class="me-3"><i class="fas fa-building me-2 text-white"></i> <a href="#" class="text-white">{{ role
-              }}</a></small>
+          }}</a></small>
           <small class="me-3"><i class="fas fa-envelope me-2 text-white"></i><a href="#" class="text-white">{{ emaile
-              }}</a></small>
+          }}</a></small>
           <small class="me-3"><i class="fas fa-user me-2 text-white"></i><a href="#" class="text-white">{{ idus
-              }}</a></small>
+          }}</a></small>
           <small class="me-3"><i class="fas fa-map-marker-alt me-2 text-secondary"></i> <a href="#Comentario"
               class="text-white">Universidad Técnica "Luis Vargas Torres" de Esmeraldas, Nuevos Horizontes, Esmeraldas,
               Ecuador</a></small>
@@ -201,8 +201,33 @@
               <router-link :to="{ path: '/about/' + idus }" class="nav-item nav-link" v-if="mostrarOpciones3"
                 :class="{ 'active': $route.path === '/about/' + idus }">Nuevo</router-link>
 
-              <router-link :to="{ path: '/userall/' + idus }" class="nav-item nav-link" v-if="mostrarOpciones3"
-                :class="{ 'active': $route.path === '/userall/' + idus }">Usuarios Registrados</router-link>
+              <!--<router-link :to="{ path: '/userall/' + idus }" class="nav-item nav-link" v-if="mostrarOpciones3"
+                :class="{ 'active': $route.path === '/userall/' + idus }">Usuarios Registrados</router-link>-->
+
+              <!-- 🔽 DROPDOWN para Mis Ofertas -->
+              <div class="nav-item dropdown" v-if="mostrarOpciones3">
+                <a class="nav-link dropdown-toggle" href="#" id="dropdownOfertas" role="button"
+                  data-bs-toggle="dropdown" aria-expanded="false"
+                  :class="{ 'active': $route.path.startsWith('/userall/') || $route.path.startsWith('/encuestas_all/') }">
+                  Admin
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end border-0 rounded-0 rounded-bottom m-0"
+                  aria-labelledby="dropdownOfertas">
+                  <li>
+                    <router-link class="dropdown-item" :to="{ path: '/userall/' + idus }"
+                      :class="{ 'active': $route.path === '/userall/' + idus }">
+                      Usuarios Registrados
+                    </router-link>
+                  </li>
+                  <li>
+                    <router-link class="dropdown-item" :to="{ path: '/encuestas_all/' + idus }"
+                      :class="{ 'active': $route.path === '/encuestas_all/' + idus }">
+                      Encuesta Seguimiento a Graduados
+                    </router-link>
+                  </li>
+
+                </ul>
+              </div>
 
               <a href="#" v-on:click="cerrarsesion" class="nav-item nav-link">Cerrar
                 Sesión</a>
@@ -382,7 +407,7 @@ export default {
 
     }
   },
- watch: {
+  watch: {
 
     '$route'() {
       this.obtener();

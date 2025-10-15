@@ -118,7 +118,7 @@ export default {
   data() {
     return {
       idus: 0,
-      url213: 'http://backendbolsaempleo.test/api/b_e/vin/informacionpersonalD',
+      url213: '',
       postulacionespr: [],
       filteredpostulaciones: [],
       searchQuery: '',

@@ -166,7 +166,7 @@ export default {
             Fechafinofer:'',
             jefe:'',
             urk32:'http://backendbolsaempleo.test/api/b_e/vin/consultaofert',
-            apiBaseUrl: "http://cvubackendv2.test/api/cvn/v1",
+            apiBaseUrl: "http://vinculacionconlasociedad.utelvt.edu.ec/cvubackendv2/api/cvn/v1",
             urls: {
                
                 formacion: '', // URL de formación académica
@@ -194,16 +194,16 @@ export default {
             filteredreferencias2: [],
             filteredpublicacion2: [],
             otros_datos_relevantes2: [],
-            urlinformacionpersonal: "http://cvubackendv2.test/api/cvn/v1/informacionpersonal",
-            urlformacion_academica: "http://cvubackendv2.test/api/cvn/v1/formacion_academica",
-            urlexperiencia_profesionale: "http://cvubackendv2.test/api/cvn/v1/experiencia_profesionale",
-            urlinvestigacion_publicacione: "http://cvubackendv2.test/api/cvn/v1/investigacion_publicacione",
-            urlidioma: "http://cvubackendv2.test/api/cvn/v1/idioma",
-            urlhabilidades_informatica: "http://cvubackendv2.test/api/cvn/v1/habilidades_informatica",
-            urlcursoscapacitacion: "http://cvubackendv2.test/api/cvn/v1/cursoscapacitacion",
-            urlotros_datos_relevante: "http://cvubackendv2.test/api/cvn/v1/otros_datos_relevante",
-            urlinformacion_contacto: "http://cvubackendv2.test/api/cvn/v1/informacion_contacto",
-            urldeclaracion_personal: "http://cvubackendv2.test/api/cvn/v1/declaracion_personal",
+            urlinformacionpersonal: "http://vinculacionconlasociedad.utelvt.edu.ec/cvubackendv2/api/cvn/v1/informacionpersonal",
+            urlformacion_academica: "http://vinculacionconlasociedad.utelvt.edu.ec/cvubackendv2/api/cvn/v1/formacion_academica",
+            urlexperiencia_profesionale: "http://vinculacionconlasociedad.utelvt.edu.ec/cvubackendv2/api/cvn/v1/experiencia_profesionale",
+            urlinvestigacion_publicacione: "http://vinculacionconlasociedad.utelvt.edu.ec/cvubackendv2/api/cvn/v1/investigacion_publicacione",
+            urlidioma: "http://vinculacionconlasociedad.utelvt.edu.ec/cvubackendv2/api/cvn/v1/idioma",
+            urlhabilidades_informatica: "http://vinculacionconlasociedad.utelvt.edu.ec/cvubackendv2/api/cvn/v1/habilidades_informatica",
+            urlcursoscapacitacion: "http://vinculacionconlasociedad.utelvt.edu.ec/cvubackendv2/api/cvn/v1/cursoscapacitacion",
+            urlotros_datos_relevante: "http://vinculacionconlasociedad.utelvt.edu.ec/cvubackendv2/api/cvn/v1/otros_datos_relevante",
+            urlinformacion_contacto: "http://vinculacionconlasociedad.utelvt.edu.ec/cvubackendv2/api/cvn/v1/informacion_contacto",
+            urldeclaracion_personal: "http://vinculacionconlasociedad.utelvt.edu.ec/cvubackendv2/api/cvn/v1/declaracion_personal",
 
         }
     },

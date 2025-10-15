@@ -54,9 +54,9 @@ export default {
       // 🔹 Validar correo según rol
       else if (this.rol === "Administrador" && !this.email.endsWith("@utelvt.edu.ec")) {
         mostraralertas('El correo de Administrador debe ser institucional (@utelvt.edu.ec)', 'error', 'email');
-      } else if (this.rol === "Empresa" && !this.email.endsWith("@gmail.com")) {
+      } /*else if (this.rol === "Empresa" && !this.email.endsWith("@gmail.com")) {
         mostraralertas('El correo de Empresa debe ser de Gmail (@gmail.com)', 'error', 'email');
-      }
+      }*/
       else {
         // Si es Administrador, verificar correo
         if (this.rol === "Administrador") {

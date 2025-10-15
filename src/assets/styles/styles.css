@@ -63,6 +63,9 @@
 .news-2 h3 {
   position: relative;
 }
+.news-23 h3 {
+  position: relative;
+}
 
 .news-2 h3::after {
   content: "";
@@ -74,6 +77,19 @@
   transform: translateY(-50%);
   height: 1px;
   right: 0;
+  opacity: 4.2
+}
+.news-23 h3::after {
+  content: "";
+  line-height: 6.3rem;
+  text-align: center;
+  background: #CE1616;
+  position: absolute;
+  width: 68%;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 1px;
+  left: 0;
   opacity: 4.2
 }
 
@@ -606,5 +622,95 @@ option:checked {
     height: 200px;
     width: 200px;
     display: flex;
+}
+/********** Nav Tabs **********/
+.nav1 {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  padding-left: 0;
+  margin-bottom: 0;
+  list-style: none;
+}
+.nav-link1 {
+  display: block;
+  padding: 0.5rem 1rem;
+  color: #3011BC;
+  -webkit-transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
+  -o-transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav-link1 {
+    -webkit-transition: none;
+    -o-transition: none;
+    transition: none;
+  }
+}
+
+.nav-link1:hover, .nav-link1:focus {
+  color: #260e96;
+  text-decoration: none;
+}
+
+.nav-link1.disabled {
+  color: #869DB2;
+  pointer-events: none;
+  cursor: default;
+}
+.nav-tabs1 {
+  border-bottom: 1px solid #C5E0FA;
+}
+
+.nav-tabs1 .nav-link1 {
+  margin-bottom: -1px;
+  background: none;
+  border: 1px solid transparent;
+  border-top-left-radius: 0.25rem;
+  border-top-right-radius: 0.25rem;
+}
+
+.nav-tabs1 .nav-link1:hover, .nav-tabs .nav-link:focus {
+  border-color: #D9EDFF #D9EDFF #C5E0FA;
+  isolation: isolate;
+}
+
+.nav-tabs1 .nav-link1.disabled {
+  color: #869DB2;
+  background-color: transparent;
+  border-color: transparent;
+}
+
+.nav-tabs1 .nav-link1.active,
+.nav-tabs1 .nav-item.show .nav-link1 {
+  color: #CE1616;
+  background-color: #FFFEFE;
+  border-color: transparent;
+}
+
+.nav-tabs1 .dropdown-menu {
+  margin-top: -1px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+.voyage-tabs {
+  border-bottom: 0;
+}
+
+.voyage-tabs .nav-link1 {
+  border: 2px solid transparent;
+  color: #607080;
+}
+
+.voyage-tabs .nav-link1:hover, .voyage-tabs .nav-link1:focus {
+  border-color: transparent;
+}
+
+.voyage-tabs .nav-link1.active,
+.voyage-tabs .nav-item.show .nav-link1 {
+  border-bottom-color: #CE1616;
 }
 

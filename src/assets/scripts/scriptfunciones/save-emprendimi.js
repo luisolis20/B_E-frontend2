@@ -34,7 +34,7 @@ export default {
             Errorfoto: false,
             guardaremprendimiento: true,
             ur3: 'http://backendbolsaempleo.test/api/b_e/vin/consultarediremp',
-            urlinformacionpersonal: "http://cvubackendv2.test/api/cvn/v1/informacionpersonal",
+            urlinformacionpersonal: "http://vinculacionconlasociedad.utelvt.edu.ec/cvubackendv2/api/cvn/v1/informacionpersonal",
             // Verificación de correo
             mostrarModal: false,
             codigov: "",
@@ -85,7 +85,7 @@ export default {
                     this.sitio_web = response.data.data[0].sitio_web;
                     this.redes_sociales = response.data.data[0].redes_sociales;
                     this.est = response.data.data[0].estado_empren;
-                    //console.log(this.est);
+                    console.log(this.fotografia2);
                     /*if (this.est == 1) {
                         this.estado_empren = "Disponible"
                     } else if (this.est == 2) {

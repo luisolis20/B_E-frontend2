@@ -153,6 +153,23 @@ export function enviarsolig(metodo, parametros, url, mensaje) {
         mostraralertas('Servidor no Disponible', 'error');
     });
 }
+export function enviarsoligp(metodo, parametros, url, mensaje) {
+    axios({
+        method: metodo,
+        url: url,
+        data: parametros
+    }).then(function (res) {
+        var estado = res.status;
+        if (estado == 200) {
+            mostraralertas(mensaje, 'success');
+
+        } else {
+            mostraralertas('No se pudo recuperar la respuesta', 'error');
+        }
+    }).catch(function (error) {
+        mostraralertas('Servidor no Disponible', 'error');
+    });
+}
 export function enviarsolig23(metodo, parametros, url, mensaje) {
     return axios({
         method: metodo,

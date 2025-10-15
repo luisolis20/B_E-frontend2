@@ -316,8 +316,8 @@
                           <div class="col-md-12 col-lg-3">
                             <div class="text-center">
 
-                              <img v-if="ofe2.logo" :src="'data:image/jpeg;base64,' + ofe2.logo"
-                                width="100%" height="300" style="border-radius: 10px; object-fit: cover;" />
+                              <img v-if="ofe2.logo" :src="'data:image/jpeg;base64,' + ofe2.logo" width="100%"
+                                height="300" style="border-radius: 10px; object-fit: cover;" />
                               <img v-else src="https://emprendedores.biz/wp-content/uploads/2023/08/QEE-2.png"
                                 width="100%" height="300" style="border-radius: 10px; object-fit: cover;" />
                             </div>
@@ -519,7 +519,98 @@
       </div>
     </div>
   </div>
+  <!-- Modal de Responder Preguntas -->
+  <div class="modal fade show d-block" tabindex="-1" aria-labelledby="modalVerificacionLabel" aria-hidden="true"
+    v-if="mostrarModalEncuesta">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">
+            Encuesta Seguimiento a Graduados
+          </h5>
+        </div>
 
+        <div class="modal-body">
+          <div v-if="mostrarIntroduccion">
+            <p class="mb-4 text-center text-dark">
+              La siguiente encuesta se realiza para evaluar la situación actual de los graduados de la UTLVTE,
+              con el fin de mejorar los procesos académicos y de vinculación con la sociedad.
+              Agradecemos su participación y honestidad al responder las preguntas.
+            </p>
+            <div class="text-center">
+              <button class="btn btn-primary py-3 px-5 text-white" @click="empezarEncuesta">
+                Empezar Encuesta
+              </button>
+            </div>
+          </div>
+
+          <div v-else>
+            <!-- Barra de progreso -->
+            <div class="progress mb-3">
+              <div class="progress-bar" role="progressbar" :style="{ width: progreso + '%' }" :aria-valuenow="progreso"
+                aria-valuemin="0" aria-valuemax="100">
+                {{ progreso }}%
+              </div>
+            </div>
+
+            <!-- Tabs dinámicos -->
+            <ul class="nav nav-tabs mb-3" role="tablist">
+              <li class="nav-item" v-for="(pregunta, index) in preguntas" :key="pregunta.ID">
+                <button class="nav-link" :class="{ active: index === preguntaActual }" @click="irAPregunta(index)"
+                  :disabled="index > preguntaActual">
+                  {{ index + 1 }}
+                </button>
+              </li>
+            </ul>
+
+            <!-- Contenido de preguntas -->
+            <div class="tab-content">
+              <div class="tab-pane fade show active" role="tabpanel">
+                <h5 class="text-dark">Pregunta {{ preguntaActual + 1 }}</h5>
+                <p class="text-danger">{{ preguntaActualObj.pregunta }}</p>
+
+                <!-- Si la pregunta tiene opciones válidas -->
+                <div
+                  v-if="preguntaActualObj.respuestas && preguntaActualObj.respuestas.length && preguntaActualObj.respuestas[0].id_respuesta !== 0">
+                  <div v-for="(opcion, i) in preguntaActualObj.respuestas" :key="opcion.id_respuesta"
+                    class="form-check">
+                    <input class="form-check-input" type="radio" :name="'pregunta-' + preguntaActualObj.id"
+                      :value="opcion.id_respuesta" v-model="respuestas[preguntaActualObj.id]" />
+                    <label class="form-check-label text-dark">{{ opcion.texto }}</label>
+                  </div>
+                </div>
+
+                <!-- Si la pregunta NO tiene opciones (abierta) -->
+                <div v-else>
+                  <textarea class="form-control" rows="3" placeholder="Escribe tu respuesta aquí..."
+                    v-model="respuestas[preguntaActualObj.id]"></textarea>
+                  <!-- Valor por defecto de tipo respuesta 0 -->
+                  <input type="hidden" :value="0" />
+                </div>
+
+
+
+                <div class="mt-4 text-center">
+                  <button v-if="preguntaActual < preguntas.length - 1" class="btn btn-primary py-2 px-4 text-white"
+                    @click="siguientePregunta" :disabled="!respuestas[preguntaActualObj.id]">
+                    Siguiente
+                  </button>
+                  <button v-else class="btn btn-success py-2 px-4" @click="finalizarEncuesta"
+                    :disabled="!respuestas[preguntaActualObj.id]">
+                    Finalizar
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer" v-if="false">
+          <!-- Se ocultan botones de cerrar -->
+        </div>
+      </div>
+    </div>
+  </div>
 
 </template>
 <style>
@@ -546,6 +637,8 @@ export default {
       idus: 0,
       url255: 'http://backendbolsaempleo.test/api/b_e/vin/consultanopostofert',
       url2552: 'http://backendbolsaempleo.test/api/b_e/vin/consultanopostempre',
+      urltippreg: 'http://backendbolsaempleo.test/api/b_e/vin/ver_pregunta_en',
+      urlencuesta: 'http://backendbolsaempleo.test/api/b_e/vin/verificar_usuario_encuesta',
       ofertas: [],
       ofertas_emprendi: [],
       categoriaSeleccionada: '',
@@ -561,6 +654,15 @@ export default {
       publicacionsecundaria: null,
       publicaciontercera: null,
       estadisticas: null,
+      empezar_encuesta: true,
+      mostrarModalEncuesta: false,
+      mostrarIntroduccion: false,
+      preguntas: [],
+      respuestas: {},
+      preguntaActual: 0,
+      progreso: 0,
+      tipform: 9,
+      usuarioCedula: "",
       pageId: '708979342294904',
       accessToken: 'EAAUbvwr8S4UBPQOlAZAZA3VYZCuHhnnaN7PZAzvbcKVxcI7cxOZBePwNuQxVxyCbG57CFMZC2LBZAidBzZAOUvy3yFG6lhEdP6yX2sBrxFZCIYxLZAzXaiLqZCcMfIBk2zumZA4PmFPkkbvd7z7a1nljxrbw80ZBWgMnBQZBsjNmIhX7hCWw275GRCAmmhJrIF55EOoanVxZA76',
     }
@@ -571,8 +673,12 @@ export default {
     const usuario = await getMe();
     //console.log(usuario);
     await this.cargarPublicacionesFacebook();
+
     if (usuario.role == 'Estudiante') {
       this.idus2 = usuario.CIInfPer;
+      this.usuarioCedula = usuario.CIInfPer
+      this.urltippreg += '/' + this.tipform;
+      this.verificarEncuesta();
     } else {
       this.idus2 = usuario.id;
     }
@@ -637,8 +743,68 @@ export default {
       // Unirlas: primero vigentes, luego caducadas
       return [...vigentes, ...caducadas];
     },
+    preguntaActualObj() {
+      return this.preguntas[this.preguntaActual] || {};
+    },
   },
   methods: {
+    async verificarEncuesta() {
+      try {
+        const res = await axios.get(`${this.urlencuesta}/${this.usuarioCedula}`);
+        if (res.data.mensaje === "Debe volver a llenar la encuesta." || res.status === 404) {
+          this.mostrarModalEncuesta = true;
+          this.mostrarIntroduccion = true;
+        } else if (res.data.data && !res.data.mensaje) {
+          // Ya llenó y aún no han pasado los 6 meses
+          this.mostrarModalEncuesta = false;
+        }
+      } catch (error) {
+        if (error.response && error.response.status === 404) {
+          // Nunca ha llenado
+          this.mostrarModalEncuesta = true;
+          this.mostrarIntroduccion = true;
+        } else {
+          console.error("Error al verificar encuesta:", error);
+        }
+      }
+    },
+
+    async empezarEncuesta() {
+      try {
+        const res = await axios.get(this.urltippreg);
+        this.preguntas = res.data.data;
+        this.mostrarIntroduccion = false;
+        this.actualizarProgreso();
+      } catch (e) {
+        console.error("Error al cargar preguntas:", e);
+      }
+    },
+
+    siguientePregunta() {
+      if (this.preguntaActual < this.preguntas.length - 1) {
+        this.preguntaActual++;
+        this.actualizarProgreso();
+      }
+    },
+
+    irAPregunta(index) {
+      if (index <= this.preguntaActual) {
+        this.preguntaActual = index;
+        this.actualizarProgreso();
+      }
+    },
+
+    actualizarProgreso() {
+      this.progreso = Math.round(
+        ((this.preguntaActual + 1) / this.preguntas.length) * 100
+      );
+    },
+
+    finalizarEncuesta() {
+      console.log("Respuestas del usuario:", this.respuestas);
+      alert("¡Gracias por completar la encuesta!");
+      this.mostrarModalEncuesta = false;
+    },
     async getOFertas() {
       this.cargando = true;
       return axios.get(`${this.url255}?all=true`, {

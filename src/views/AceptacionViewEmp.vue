@@ -244,7 +244,7 @@ export default {
             NombInfPer: '',
             rechazo_detalle: '',
             Saludo: '',
-            urlinformacionpersonal: "http://cvubackendv2.test/api/cvn/v1/informacionpersonal",
+            urlinformacionpersonal: "http://vinculacionconlasociedad.utelvt.edu.ec/cvubackendv2/api/cvn/v1/informacionpersonal",
             
 
             cargando: false,
