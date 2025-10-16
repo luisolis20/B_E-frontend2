@@ -524,9 +524,9 @@
     v-if="mostrarModalEncuesta">
     <div class="modal-dialog modal-lg modal-dialog-centered">
       <div class="modal-content">
-        <div class="modal-header">
+        <div class="modal-header text-center">
           <h5 class="modal-title">
-            Encuesta Seguimiento a Graduados
+            {{ preguntaActualObj.nombre_formulario }}
           </h5>
         </div>
 
@@ -538,7 +538,7 @@
               Agradecemos su participación y honestidad al responder las preguntas.
             </p>
             <div class="text-center">
-              <button class="btn btn-primary py-3 px-5 text-white" @click="empezarEncuesta">
+              <button class="btn btn-primary py-3 px-5 text-white" @click="empezarEncuesta()">
                 Empezar Encuesta
               </button>
             </div>
@@ -569,22 +569,38 @@
                 <h5 class="text-dark">Pregunta {{ preguntaActual + 1 }}</h5>
                 <p class="text-danger">{{ preguntaActualObj.pregunta }}</p>
 
-                <!-- Si la pregunta tiene opciones válidas -->
+                <!-- Si la pregunta tiene opciones -->
                 <div
                   v-if="preguntaActualObj.respuestas && preguntaActualObj.respuestas.length && preguntaActualObj.respuestas[0].id_respuesta !== 0">
-                  <div v-for="(opcion, i) in preguntaActualObj.respuestas" :key="opcion.id_respuesta"
-                    class="form-check">
-                    <input class="form-check-input" type="radio" :name="'pregunta-' + preguntaActualObj.id"
-                      :value="opcion.id_respuesta" v-model="respuestas[preguntaActualObj.id]" />
-                    <label class="form-check-label text-dark">{{ opcion.texto }}</label>
+                  <div v-if="preguntaActualObj.tipo === 'SELECCIÓN ÚNICA'">
+                    <!-- Selección única (radio) -->
+                    <div v-for="(opcion, i) in preguntaActualObj.respuestas" :key="opcion.id_respuesta"
+                      class="form-check">
+                      <input class="form-check-input" type="radio" :name="'pregunta-' + preguntaActualObj.id"
+                        :value="opcion.id_respuesta" v-model="respuestas[preguntaActualObj.id]" />
+                      <label class="form-check-label text-dark">
+                        {{ opcion.texto }}
+                      </label>
+                    </div>
+                  </div>
+
+                  <div v-else-if="preguntaActualObj.tipo === 'SELECCIÓN MÚLTIPLE'">
+                    <!-- Selección múltiple (checkbox) -->
+                    <div v-for="(opcion, i) in preguntaActualObj.respuestas" :key="opcion.id_respuesta"
+                      class="form-check">
+                      <input class="form-check-input" type="checkbox" :value="opcion.id_respuesta"
+                        v-model="respuestas[preguntaActualObj.id]" />
+                      <label class="form-check-label text-dark">
+                        {{ opcion.texto }}
+                      </label>
+                    </div>
                   </div>
                 </div>
 
-                <!-- Si la pregunta NO tiene opciones (abierta) -->
+                <!-- Si la pregunta es abierta (sin opciones) -->
                 <div v-else>
-                  <textarea class="form-control" rows="3" placeholder="Escribe tu respuesta aquí..."
+                  <textarea class="form-control text-dark" rows="3" placeholder="Escribe tu respuesta aquí..."
                     v-model="respuestas[preguntaActualObj.id]"></textarea>
-                  <!-- Valor por defecto de tipo respuesta 0 -->
                   <input type="hidden" :value="0" />
                 </div>
 
@@ -592,10 +608,11 @@
 
                 <div class="mt-4 text-center">
                   <button v-if="preguntaActual < preguntas.length - 1" class="btn btn-primary py-2 px-4 text-white"
-                    @click="siguientePregunta" :disabled="!respuestas[preguntaActualObj.id]">
+                    @click="siguientePregunta(preguntaActualObj.id, id_encuesta)">
                     Siguiente
                   </button>
-                  <button v-else class="btn btn-success py-2 px-4" @click="finalizarEncuesta"
+                  <button v-else class="btn btn-success py-2 px-4"
+                    @click="finalizarEncuesta(preguntaActualObj.id, id_encuesta)"
                     :disabled="!respuestas[preguntaActualObj.id]">
                     Finalizar
                   </button>
@@ -619,6 +636,7 @@
 
 <script>
 import customscript from '@/assets/scripts/custom.js';
+import { mostraralertas, enviarsoligp2, enviarsoligp3 } from '@/assets/scripts/scriptfunciones/funciones';
 import axios from 'axios';
 import { useRoute } from 'vue-router';
 import dayjs from 'dayjs';
@@ -635,10 +653,13 @@ export default {
   data() {
     return {
       idus: 0,
+      id_encuesta: 0,
       url255: 'http://backendbolsaempleo.test/api/b_e/vin/consultanopostofert',
       url2552: 'http://backendbolsaempleo.test/api/b_e/vin/consultanopostempre',
       urltippreg: 'http://backendbolsaempleo.test/api/b_e/vin/ver_pregunta_en',
       urlencuesta: 'http://backendbolsaempleo.test/api/b_e/vin/verificar_usuario_encuesta',
+      urlencuesta2: 'http://backendbolsaempleo.test/api/b_e/vin/seguiencuesta',
+      urldetalle: 'http://backendbolsaempleo.test/api/b_e/vin/seguidetalleencuesta',
       ofertas: [],
       ofertas_emprendi: [],
       categoriaSeleccionada: '',
@@ -658,7 +679,7 @@ export default {
       mostrarModalEncuesta: false,
       mostrarIntroduccion: false,
       preguntas: [],
-      respuestas: {},
+      respuestas: [],
       preguntaActual: 0,
       progreso: 0,
       tipform: 9,
@@ -773,17 +794,95 @@ export default {
       try {
         const res = await axios.get(this.urltippreg);
         this.preguntas = res.data.data;
+        this.preguntas.forEach(p => {
+          if (p.tipo === "SELECCIÓN MÚLTIPLE") {
+            this.respuestas[p.id] = []; // array vacío
+          } else {
+            this.respuestas[p.id] = ""; // texto vacío
+          }
+        });
         this.mostrarIntroduccion = false;
+        const fechaEcuador = dayjs().tz('America/Guayaquil').format('YYYY-MM-DD HH:mm:ss');
+        var parametros = {
+          cedula_estudiante: this.idus,
+          fecha: fechaEcuador,
+          idformulario: this.preguntaActualObj.IDFORMULARIO,
+          idcarr: '',
+          tipo: '',
+          encuestador: '',
+        }
+        const resCrear = await enviarsoligp3('POST', parametros, this.urlencuesta2);
+        //console.log(resCrear);
+        this.id_encuesta = resCrear.data.data.ID;
         this.actualizarProgreso();
       } catch (e) {
         console.error("Error al cargar preguntas:", e);
       }
     },
 
-    siguientePregunta() {
-      if (this.preguntaActual < this.preguntas.length - 1) {
-        this.preguntaActual++;
-        this.actualizarProgreso();
+    async siguientePregunta(idpregunta, id_enc) {
+      try {
+
+        console.log(id_enc);
+        console.log(idpregunta);
+        const pregunta = this.preguntaActualObj;
+        const respuesta = this.respuestas[pregunta.id];
+
+        console.log(pregunta.tipo);
+        console.log(pregunta.respuestas[0].id_respuesta);
+        console.log(respuesta);
+
+
+        // Si no hay respuesta, no continuar
+        if (!respuesta || (Array.isArray(respuesta) && respuesta.length === 0)) {
+          alert("Por favor, responde la pregunta antes de continuar.");
+          return;
+        }
+
+        // Caso 1: Pregunta abierta
+        if (pregunta.tipo === "ABIERTA") {
+          const parametros = {
+            idseguiencuesta: id_enc,
+            idpregunta: idpregunta,
+            idtiporespuesta: 0,
+            textorespuesta: respuesta,
+          };
+          enviarsoligp2("POST", parametros, this.urldetalle);
+        }
+
+        else if (pregunta.tipo === "SELECCIÓN ÚNICA") {
+          const parametros = {
+            idseguiencuesta: id_enc,
+            idpregunta: idpregunta,
+            idtiporespuesta: respuesta,
+            textorespuesta: "",
+          };
+          enviarsoligp2("POST", parametros, this.urldetalle);
+        }
+
+        // Caso 3: Selección múltiple
+        else if (pregunta.tipo === "SELECCIÓN MÚLTIPLE") {
+          for (const opcionSeleccionada of respuesta) {
+            const parametros = {
+              idseguiencuesta: id_enc,
+              idpregunta: idpregunta,
+              idtiporespuesta: opcionSeleccionada,
+              textorespuesta: "",
+            };
+            enviarsoligp2("POST", parametros, this.urldetalle);
+          }
+        }
+
+        // Pasar a la siguiente pregunta
+        if (this.preguntaActual < this.preguntas.length - 1) {
+          this.preguntaActual++;
+          this.actualizarProgreso();
+        } else {
+          this.finalizarEncuesta();
+        }
+      } catch (error) {
+        console.error("Error al enviar respuesta:", error);
+        alert("Error al guardar la respuesta. Inténtalo nuevamente.");
       }
     },
 
@@ -800,10 +899,64 @@ export default {
       );
     },
 
-    finalizarEncuesta() {
-      console.log("Respuestas del usuario:", this.respuestas);
-      alert("¡Gracias por completar la encuesta!");
-      this.mostrarModalEncuesta = false;
+    finalizarEncuesta(idpregunta, id_enc) {
+      try {
+
+        const pregunta = this.preguntaActualObj;
+        const respuesta = this.respuestas[pregunta.id];
+
+
+
+        // Si no hay respuesta, no continuar
+        if (!respuesta || (Array.isArray(respuesta) && respuesta.length === 0)) {
+          alert("Por favor, responde la pregunta antes de continuar.");
+          return;
+        }
+
+        // Caso 1: Pregunta abierta
+        if (pregunta.tipo === "ABIERTA") {
+          const parametros = {
+            idseguiencuesta: id_enc,
+            idpregunta: idpregunta,
+            idtiporespuesta: 0,
+            textorespuesta: respuesta,
+          };
+          enviarsoligp2("POST", parametros, this.urldetalle);
+        }
+
+        else if (pregunta.tipo === "SELECCIÓN ÚNICA") {
+          const parametros = {
+            idseguiencuesta: id_enc,
+            idpregunta: idpregunta,
+            idtiporespuesta: respuesta,
+            textorespuesta: "",
+          };
+          enviarsoligp2("POST", parametros, this.urldetalle);
+        }
+
+        // Caso 3: Selección múltiple
+        else if (pregunta.tipo === "SELECCIÓN MÚLTIPLE") {
+          for (const opcionSeleccionada of respuesta) {
+            const parametros = {
+              idseguiencuesta: id_enc,
+              idpregunta: idpregunta,
+              idtiporespuesta: opcionSeleccionada,
+              textorespuesta: "",
+            };
+            enviarsoligp2("POST", parametros, this.urldetalle);
+          }
+        }
+
+        // Pasar a la siguiente pregunta
+        console.log("Respuestas del usuario:", this.respuestas);
+        alert("¡Gracias por completar la encuesta!");
+        this.mostrarModalEncuesta = false;
+
+      } catch (error) {
+        console.error("Error al enviar respuesta:", error);
+        alert("Error al guardar la respuesta. Inténtalo nuevamente.");
+      }
+
     },
     async getOFertas() {
       this.cargando = true;

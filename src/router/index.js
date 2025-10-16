@@ -42,6 +42,7 @@ import AboutView from '../views/AboutView.vue'
 import EncuestasSeguimientoView from '../views/EncuestasSeguimientoView.vue'
 import CrearFormularioView from '../views/CrearFormularioView.vue'
 import AddPreguntasView from '../views/AddPreguntasView.vue'
+import EditarFormularioView from '../views/EditarFormularioView.vue'
 
 const routes = [
   {
@@ -194,6 +195,11 @@ const routes = [
     path: '/rechazoview/:id/:secondId',
     name: 'rechazoview',
     component: RechazoView
+  },
+  {
+    path: '/edit_forms/:id/',
+    name: 'edit_forms',
+    component: EditarFormularioView
   },
   {
     path: '/mispostulaciones/:id',

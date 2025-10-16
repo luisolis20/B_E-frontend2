@@ -78,9 +78,9 @@
                                                 <option value="" disabled selected>
                                                     Tipo de Pregunta
                                                 </option>
-                                                <option value="Abierta">Abierta</option>
-                                                <option value="Selección múltiple">Selección múltiple</option>
-                                                <option value="Selección única">Selección única</option>
+                                                <option value="ABIERTA">ABIERTA</option>
+                                                <option value="SELECCIÓN MÚLTIPLE">SELECCIÓN MÚLTIPLE</option>
+                                                <option value="SELECCIÓN ÚNICA">SELECCIÓN ÚNICA</option>
                                             </select>
 
                                             <!-- Icono tipo -->
@@ -402,6 +402,7 @@ export default {
             this.preguntaId = emp.ID;
             this.PREGUNTA = emp.PREGUNTA;
             this.TIPORESPUESTA = '';
+            //console.log(emp.tipo);
             this.tipo = emp.tipo || '';
             this.opcionesadd = false;
             this.opcionesrespemp = [];

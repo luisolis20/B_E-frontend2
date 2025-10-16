@@ -170,6 +170,38 @@ export function enviarsoligp(metodo, parametros, url, mensaje) {
         mostraralertas('Servidor no Disponible', 'error');
     });
 }
+export function enviarsoligp2(metodo, parametros, url) {
+    axios({
+        method: metodo,
+        url: url,
+        data: parametros
+    }).then(function (res) {
+        var estado = res.status;
+        if (estado == 200) {
+            console.log('respuesta enviada');
+            //mostraralertas(mensaje, 'success');
+
+        } else {
+            console.log('error de evnío');
+            //mostraralertas('No se pudo recuperar la respuesta', 'error');
+        }
+    }).catch(function (error) {
+        mostraralertas('Servidor no Disponible', 'error');
+    });
+}
+export async function enviarsoligp3(metodo, parametros, url) {
+  try {
+    const res = await axios({
+      method: metodo,
+      url,
+      data: parametros,
+    });
+    return res;
+  } catch (error) {
+    console.error("Error en enviarsoligp2:", error.response?.data || error.message);
+    throw error;
+  }
+}
 export function enviarsolig23(metodo, parametros, url, mensaje) {
     return axios({
         method: metodo,

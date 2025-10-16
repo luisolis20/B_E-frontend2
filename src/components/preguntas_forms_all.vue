@@ -14,8 +14,8 @@
                     <form class="d-none d-md-flex ms-4">
                         <div class="input-with-icon col-sm-6">
                             <input class="form-control py-3 border-1 text-dark lg" type="search"
-                                placeholder="Buscar usuario..." v-model="searchQuery"
-                                @input="filterResults" @keypress="onlyNumbers">
+                                placeholder="Buscar usuario..." v-model="searchQuery" @input="filterResults"
+                                @keypress="onlyNumbers">
                             <!-- Botón de ayuda -->
                             <span class="help-icon" @mouseenter="showTooltipbuscar = true"
                                 @mouseleave="hideOnLeave('buscar')" @click.stop="toggleTooltip('buscar')"
@@ -31,17 +31,22 @@
                     </form>
                 </div>
             </div>&nbsp;&nbsp;&nbsp;&nbsp;
+            <br><br>
+            <div class="text-center">
+                <h3 class="text-dark">Preguntas Creadas</h3>
+
+            </div>
+            <br><br>
             <div class="table-container">
                 <table class="table table-hover">
                     <thead>
                         <tr>
                             <th scope="col">Id</th>
+                            <th scope="col">Pregunta</th>
                             <th scope="col">Nombre Formulario</th>
                             <th scope="col">Usuario Creador</th>
                             <th scope="col">Fecha Creada</th>
-                            <th scope="col">Cant. Preguntas</th>
-                            <th scope="col">Cant. Respuestas</th>
-                            <th scope="col">Estado</th>
+                            <th scope="col">Cant. Opciones</th>
                             <th scope="col"></th>
                         </tr>
                     </thead>
@@ -51,35 +56,24 @@
                                 <h3>Cargando....</h3>
                             </td>
                         </tr>
-                        <tr v-else v-for="emp,  in this.filteredformulario" :key="emp.ID">
+                        <tr v-else v-for="emp,  in this.filteredpreguntas" :key="emp.ID">
 
                             <td v-text="emp.ID"></td>
+                            <td v-text="emp.PREGUNTA"></td>
                             <td v-text="emp.NOMBRE"></td>
                             <td v-text="emp.UP"></td>
                             <td v-text="emp.FINS"></td>
-                            <td class="text-center">({{ emp.total_preguntas }})</td>
-                            <td class="text-center">({{ emp.total_encuestas }})</td>
+                            <td class="text-center">({{ emp.total_tipos_respuesta }})</td>
+
                             <td>
-                                <button v-if="emp.ACTIVO == 1" class="btn btn-success fw-bold">
-                                    Habilitado</button>
-                                <button v-if="emp.ACTIVO == 0" class="btn btn-danger fw-bold"> 
-                                    Deshabilitado</button>
-                            </td>
-                            <td>
-                                <router-link :to="{ path: '/created_questions/' + emp.ID }" class="btn btn-info" v-if="emp.ACTIVO == 1"
-                                    title="Crear Preguntas">
+                                <button class="btn btn-info" title="Añadir Opciones de Respuesta"
+                                    @click="Addoptions(emp)">
                                     <i class="fas fa-pen-alt"></i>
-                                </router-link>
+                                </button>
                                 &nbsp;
-                                <router-link :to="{ path: '/edit_forms/' + emp.ID}" class="btn btn-warning"
-                                    title="Editar formulario">
+                                <button class="btn btn-warning" title="Editar pregunta" @click="editarPregunta(emp)">
                                     <i class="fa-solid fa-edit"></i>
-                                </router-link>
-                                &nbsp;
-                                <router-link :to="{ path: '/view_resp/' + emp.ID}" class="btn btn-success"
-                                    title="Editar formulario">
-                                    <i class="fa-solid fa-eye"></i>
-                                </router-link>
+                                </button>
                                 &nbsp;
 
 
@@ -92,14 +86,9 @@
                     </tbody>
                 </table>
             </div>
-            <div v-if="filteredformulario.length === 0" class="text-center">
-                <h3>No hay formularios creados</h3>
-                <div class="mt-5">
-                    <label class="border-0 border-bottom rounded me-5 py-3 mb-4 text-dark"> Para Crear más formularios</label>
-                    <router-link :to="{ path: '/created_froms/' + idus }"
-                        class="btn border-secondary rounded-pill px-4 py-3 text-primary" type="button">Haz Click Aquí
-                        </router-link>
-                </div>
+            <div v-if="filteredpreguntas.length === 0" class="text-center">
+                <h3>No hay preguntas creadas</h3>
+
             </div>
             <div v-else>
                 <br><br><br>
@@ -119,14 +108,9 @@
                 <div class="d-flex justify-content-center">
                     <button class="btn btn-primary text-white" @click="actualizar">Actualizar Datos</button>
                 </div>
-                <div class="mt-5">
-                    <label class="border-0 border-bottom rounded me-5 py-3 mb-4 text-dark"> Para Crear más formularios</label>
-                    <router-link :to="{ path: '/created_froms/' + idus }"
-                        class="btn border-secondary rounded-pill px-4 py-3 text-primary" type="button">Haz Click Aquí
-                        </router-link>
-                </div>
+
                 <br><br>
-                
+
             </div>
 
 
@@ -169,9 +153,9 @@ export default {
         const usuario = await getMe();
         this.idus = ruta.params.id;
         this.getFormulario();
-       /*this.interval = setInterval(() => {
-            this.getFormulario();
-        }, 10000);*/
+        /*this.interval = setInterval(() => {
+             this.getFormulario();
+         }, 10000);*/
     },
     /*beforeUnmount() {
         clearInterval(this.interval);
@@ -292,6 +276,6 @@ export default {
         },
     },
     mixins: [script2],
-    name:'encuestas_all',
+    name: 'encuestas_all',
 }
 </script>
