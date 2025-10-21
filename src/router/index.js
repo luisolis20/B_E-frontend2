@@ -43,6 +43,7 @@ import EncuestasSeguimientoView from '../views/EncuestasSeguimientoView.vue'
 import CrearFormularioView from '../views/CrearFormularioView.vue'
 import AddPreguntasView from '../views/AddPreguntasView.vue'
 import EditarFormularioView from '../views/EditarFormularioView.vue'
+import Detalle_Encuestas_fromView from '../views/Detalle_Encuestas_fromView.vue'
 
 const routes = [
   {
@@ -265,6 +266,11 @@ const routes = [
     path: '/created_questions/:id',
     name: 'created_questions',
     component: AddPreguntasView 
+  },
+  {
+    path: '/detalle_encuestas_from/:id',
+    name: 'detalle_encuestas_from',
+    component: Detalle_Encuestas_fromView 
   },
   
 ]

@@ -76,7 +76,7 @@
                                     <i class="fa-solid fa-edit"></i>
                                 </router-link>
                                 &nbsp;
-                                <router-link :to="{ path: '/view_resp/' + emp.ID}" class="btn btn-success"
+                                <router-link :to="{ path: '/detalle_encuestas_from/' + emp.ID}" class="btn btn-success"
                                     title="Editar formulario">
                                     <i class="fa-solid fa-eye"></i>
                                 </router-link>

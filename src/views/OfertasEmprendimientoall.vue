@@ -504,7 +504,17 @@ export default {
                                     return `${context.dataset.label}: ${context.raw}`;
                                 }
                             }
-                        }
+                        },
+                        datalabels: {
+                            anchor: "center",
+                            align: "center",
+                            color: "#fff",
+                            font: {
+                                weight: "bold",
+                                size: 15,
+                            },
+                            formatter: (value) => value,
+                        },
                     },
                     scales: {
                         x: {

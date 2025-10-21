@@ -537,8 +537,23 @@
               con el fin de mejorar los procesos académicos y de vinculación con la sociedad.
               Agradecemos su participación y honestidad al responder las preguntas.
             </p>
-            <div class="text-center">
-              <button class="btn btn-primary py-3 px-5 text-white" @click="empezarEncuesta()">
+            <div class="mb-3 text-center" v-if="tieneMultiplesCarreras">
+              <label for="selectCarrera" class="form-label text-dark fw-bold">Identificamos que usted posee más de un título en nuestra institución, seleccione la carrera con la cual desea registrar su respuesta:</label>
+              <select id="selectCarrera" v-model="carreraSeleccionada" class="form-select w-50 mx-auto text-dark">
+                <option disabled value="">-- Seleccione una carrera --</option>
+                <option v-for="carrera in carreras" :key="carrera.idCarr" :value="carrera.idCarr">
+                  {{ carrera.NombCarr }}
+                </option>
+              </select>
+            </div>
+
+            <p v-else class="text-center text-dark fw-bold">
+              El sistema identifó que usted posee un título registrado en la carrera de {{ carreraUnica?.NombCarr }}
+            </p>
+
+            <div class="text-center mt-4">
+              <button class="btn btn-primary py-3 px-5 text-white"
+                :disabled="tieneMultiplesCarreras && carreraSeleccionada === ''" @click="empezarEncuesta()">
                 Empezar Encuesta
               </button>
             </div>
@@ -660,6 +675,7 @@ export default {
       urlencuesta: 'http://backendbolsaempleo.test/api/b_e/vin/verificar_usuario_encuesta',
       urlencuesta2: 'http://backendbolsaempleo.test/api/b_e/vin/seguiencuesta',
       urldetalle: 'http://backendbolsaempleo.test/api/b_e/vin/seguidetalleencuesta',
+      urltraercarrera: 'http://backendbolsaempleo.test/api/b_e/vin/registrotitulos',
       ofertas: [],
       ofertas_emprendi: [],
       categoriaSeleccionada: '',
@@ -684,6 +700,10 @@ export default {
       progreso: 0,
       tipform: 9,
       usuarioCedula: "",
+      carreras: [],
+      carreraUnica: null,
+      carreraSeleccionada: '',
+      tieneMultiplesCarreras: false,
       pageId: '708979342294904',
       accessToken: 'EAAUbvwr8S4UBPQOlAZAZA3VYZCuHhnnaN7PZAzvbcKVxcI7cxOZBePwNuQxVxyCbG57CFMZC2LBZAidBzZAOUvy3yFG6lhEdP6yX2sBrxFZCIYxLZAzXaiLqZCcMfIBk2zumZA4PmFPkkbvd7z7a1nljxrbw80ZBWgMnBQZBsjNmIhX7hCWw275GRCAmmhJrIF55EOoanVxZA76',
     }
@@ -698,8 +718,12 @@ export default {
     if (usuario.role == 'Estudiante') {
       this.idus2 = usuario.CIInfPer;
       this.usuarioCedula = usuario.CIInfPer
-      this.urltippreg += '/' + this.tipform;
-      this.verificarEncuesta();
+      //this.urltippreg += '/' + this.tipform;
+      await Promise.all([
+        this.verificarEncuesta(),
+        this.obtenerCarreras(this.usuarioCedula)
+      ]);
+      //this.verificarEncuesta();
     } else {
       this.idus2 = usuario.id;
     }
@@ -789,6 +813,22 @@ export default {
         }
       }
     },
+    async obtenerCarreras(cedula) {
+      try {
+        const res = await axios.get(`${this.urltraercarrera}/${cedula}`);
+
+        if (res.data.multiple) {
+          this.tieneMultiplesCarreras = true;
+          this.carreras = res.data.carreras;
+        } else {
+          this.tieneMultiplesCarreras = false;
+          this.carreraUnica = res.data.titulo;
+          this.carreraSeleccionada = res.data.titulo.idCarr;
+        }
+      } catch (error) {
+        console.error("Error al obtener las carreras del usuario:", error);
+      }
+    },
 
     async empezarEncuesta() {
       try {
@@ -807,7 +847,7 @@ export default {
           cedula_estudiante: this.idus,
           fecha: fechaEcuador,
           idformulario: this.preguntaActualObj.IDFORMULARIO,
-          idcarr: '',
+          idcarr: this.carreraSeleccionada,
           tipo: '',
           encuestador: '',
         }

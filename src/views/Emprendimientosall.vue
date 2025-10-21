@@ -265,6 +265,7 @@ export default {
             const conteoPostulados = {};
             const conteoaprobados = {};
             const conteonoaprobados = {};
+            const conteoenrevison = {};
             // console.log(emprendimientoempData);
 
             // Contamos emprendimientoemp y postulados por empresa
@@ -276,6 +277,7 @@ export default {
                     conteoPostulados[duenio] = 0;
                     conteoaprobados[duenio] = 0;
                     conteonoaprobados[duenio] = 0;
+                    conteoenrevison[duenio] = 0;
                 }
 
                 // Total de emprendimientos
@@ -287,7 +289,11 @@ export default {
                 // ✅ Separamos aprobados y no aprobados según estado
                 if (post.estado_empren === 1) {
                     conteoaprobados[duenio]++;
-                } else {
+                }
+                 else if (post.estado_empren === 2) {
+                    conteoenrevison[duenio]++;
+                }
+                else {
                     conteonoaprobados[duenio]++;
                 }
             });
@@ -297,6 +303,7 @@ export default {
             const datosOfertas = Object.values(conteoPostulados);
             const datosAprobados = Object.values(conteoaprobados);
             const datosNoAprobados = Object.values(conteonoaprobados);
+            const datosEnRevision = Object.values(conteoenrevison);
 
             if (this.grafico) {
                 this.grafico.data.labels = empresas;
@@ -304,6 +311,7 @@ export default {
                 this.grafico.data.datasets[1].data = datosOfertas;
                 this.grafico.data.datasets[2].data = datosAprobados;
                 this.grafico.data.datasets[3].data = datosNoAprobados;
+                this.grafico.data.datasets[4].data = datosEnRevision;
                 this.grafico.destroy();
             }
 
@@ -313,6 +321,8 @@ export default {
             const colorPostulados = "hsl(220, 80%, 50%)"; // Azul
             const colorAprobados = "hsl(150, 70%, 40%)"; // Verde oscuro
             const colorNoAprobados = "hsl(0, 80%, 50%)"; // Rojo
+            const colorEnRevision = "hsl(0, 30%, 50%)"; // Amarillo
+
 
             this.grafico = new Chart(ctx, {
                 type: 'bar',
@@ -346,6 +356,13 @@ export default {
                             backgroundColor: colorNoAprobados,
                             borderColor: colorNoAprobados,
                             borderWidth: 1
+                        },
+                        {
+                            label: 'Empren. En Revisón',
+                            data: datosEnRevision,
+                            backgroundColor: colorEnRevision,
+                            borderColor: colorEnRevision,
+                            borderWidth: 1 
                         }
                     ]
                 },
@@ -361,7 +378,17 @@ export default {
                                     return `${context.dataset.label}: ${context.raw}`;
                                 }
                             }
-                        }
+                        },
+                        datalabels: {
+                            anchor: "center",
+                            align: "center",
+                            color: "#fff",
+                            font: {
+                                weight: "bold",
+                                size: 15,
+                            },
+                            formatter: (value) => value,
+                        },
                     },
                     scales: {
                         x: {
@@ -373,7 +400,8 @@ export default {
                                         `#_Emprendimientos: ${datosemprendimientoemp[index]}`,
                                         `#_Ofertas: ${datosOfertas[index]}`,
                                         `#_Emprendimientos Aprobados: ${datosAprobados[index]}`,
-                                        `#_Emprendimientos No Aprobados: ${datosNoAprobados[index]}`
+                                        `#_Emprendimientos No Aprobados: ${datosNoAprobados[index]}`,
+                                        `#_Emprendimientos En Revisón: ${datosEnRevision[index]}`
                                     ];
                                 }
                             }
