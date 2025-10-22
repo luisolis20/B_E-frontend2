@@ -122,8 +122,8 @@
         <div class="d-flex justify-content-center mb-4">
             <select class="form-select w-75 text-dark" v-model="facultadSeleccionada" @change="actualizarGrafico">
                 <option value="">Todas las facultades</option>
-                <option v-for="f in facultades" :key="f.idfacultad" :value="f.siglas">
-                    {{ f.siglas }}
+                <option v-for="f in facultades" :key="f.idfacultad" :value="f.facultad">
+                    {{ f.facultad }}
                 </option>
             </select>
         </div>
@@ -137,7 +137,7 @@
         </div>
     </div>
 
-    <div v-if="respuestasAbiertas.length > 0" class="mt-5">
+    <div v-if="this.mostrarpreguntasabrietas" class="mt-5">
         <h5 class="text-center text-primary mb-3">
             Respuestas abiertas de la pregunta seleccionada
         </h5>
@@ -200,6 +200,7 @@ export default {
             respuestasAbiertas: [],
             facultadSeleccionada: '',
             facultades: [],
+            mostrarpreguntasabrietas: false,
             meses: [
                 "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
                 "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
@@ -283,17 +284,21 @@ export default {
                 this.graficoPreguntas?.destroy?.(); // eliminar gráfico anterior 
                 this.respuestasAbiertas = [];
                 try {
+                    this.mostrarpreguntasabrietas = true;
                     const idPregunta = datosPregunta[0].id_pregunta;
                     this.getRespuestasAbiertas(idPregunta);
                     //this.respuestasAbiertas = response.data.data; 
 
                 } catch (error) {
                     console.warn("No hay respuestas abiertas para esta pregunta");
-                } //return; 
+                } 
+            }else{
+                this.mostrarpreguntasabrietas = false;
             }
 
             // Limpiar respuestas abiertas si la pregunta no es abierta
             this.respuestasAbiertas = [];
+            //this.mostrarpreguntasabrietas = false;
 
             // Agrupar y sumar totales por opción
             const conteo = {};
