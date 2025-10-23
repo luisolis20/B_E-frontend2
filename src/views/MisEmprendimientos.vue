@@ -1,12 +1,12 @@
 <template>
-    <misemprendimientos/>
+    <mysemprendimientos/>
 </template>
 <script>
-import misemprendimientos from '@/components/misemprendimientos.vue';
+import mysemprendimientos from '@/components/mysemprendimientos.vue';
 export default {
     name:'MisEmprendimientos',
     components:{
-        misemprendimientos
+        mysemprendimientos
     }
 }
 </script>

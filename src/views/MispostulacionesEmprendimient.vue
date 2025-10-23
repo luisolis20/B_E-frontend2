@@ -1,12 +1,12 @@
 <template>
-    <mispostulacionesempendimiento/>
+    <myspostulacionesempendimiento/>
 </template>
 <script>
-import mispostulacionesempendimiento from '@/components/mispostulacionesempendimiento.vue';
+import myspostulacionesempendimiento from '@/components/myspostulacionesempendimiento.vue';
 export default {
     name:'MispostulacionesEmprendimient',
     components:{
-        mispostulacionesempendimiento
+        myspostulacionesempendimiento
     }
 }
 </script>

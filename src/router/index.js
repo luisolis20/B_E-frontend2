@@ -55,7 +55,7 @@ const routes = [
     path: '/principal/:id',
     name: 'principal',
     component: Principal,
-    props: true
+    //props: true
   },
   {
     path: '/perfil/:id',

@@ -470,6 +470,6 @@ export default {
 
     },
     mixins: [script2],
-    name: 'crearofertaemprendimiento',
+    name: 'createdofertaemprendimiento',
 };
 </script>

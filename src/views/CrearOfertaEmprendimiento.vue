@@ -1,14 +1,14 @@
 <template>
-    <crearofertaemprendimiento/>
+    <createdofertaemprendimiento/>
    
 </template>
 <script>
-import crearofertaemprendimiento from '@/components/crearofertaemprendimiento.vue';
+import createdofertaemprendimiento from '@/components/createdofertaemprendimiento.vue';
 
 export default {
   name: 'CrearOfertaEmprendimiento',
   components: {
-    crearofertaemprendimiento
+    createdofertaemprendimiento
   }
 }
 

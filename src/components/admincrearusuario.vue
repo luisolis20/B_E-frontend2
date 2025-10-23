@@ -167,7 +167,7 @@ import script2 from '@/assets/scripts/scriptfunciones/datas.js';
 
 export default {
     mixins: [script2],
-    name: 'admincreateusers',
+    name: 'admincrearusuario',
     data() {
         return {
             // Estado del tooltip Nombre

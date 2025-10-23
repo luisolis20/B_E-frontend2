@@ -306,6 +306,6 @@ export default {
         }
     },
     mixins: [script2],
-    name: 'mispostulacionesempendimiento',
+    name: 'myspostulacionesempendimiento',
 }
 </script>

@@ -302,6 +302,6 @@ export default {
         },
     },
     mixins: [script2],
-    name: 'misemprendimientos',
+    name: 'mysemprendimientos',
 }
 </script>

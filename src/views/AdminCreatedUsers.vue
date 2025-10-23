@@ -1,14 +1,14 @@
 <template>
-    <admincreateusers/>
+    <admincrearusuario/>
    
 </template>
 <script>
-import admincreateusers from '@/components/admincreateusers.vue';
+import admincrearusuario from '@/components/admincrearusuario.vue';
 
 export default {
   name: 'AdminCreatedUsers',
   components: {
-    admincreateusers
+    admincrearusuario
   }
 }
 
