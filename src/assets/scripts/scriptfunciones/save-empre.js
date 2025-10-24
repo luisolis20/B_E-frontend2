@@ -28,8 +28,8 @@ export default {
             mision: '',
             vision: '',
             lugar: '',
-            url: 'http://backendbolsaempleo.test/api/b_e/vin/empresasEM',
-            ur3: 'http://backendbolsaempleo.test/api/b_e/vin/empresas',
+            url: `${__API_BOLSA__}/b_e/vin/empresasEM`,
+            ur3: `${__API_BOLSA__}/b_e/vin/empresas`,
 
             cargando: false,
             Errorfoto: false,
@@ -174,7 +174,7 @@ export default {
 
 
                     }
-                    enviarsolig('POST', parametros, 'http://backendbolsaempleo.test/api/b_e/vin/empresas', 'Empresa Creada');
+                    enviarsolig('POST', parametros, `${__API_BOLSA__}/b_e/vin/empresas`, 'Empresa Creada');
                     this.$router.push('/empresas/' + this.idus);
                 }
 

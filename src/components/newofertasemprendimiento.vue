@@ -330,7 +330,7 @@ export default {
             nombre_emprendimiento: '',
             dueño: '',
             email_contacto: '',
-            url: 'http://backendbolsaempleo.test/api/b_e/vin/view-emprendimiento',
+            url: `${__API_BOLSA__}/b_e/vin/view-emprendimiento`,
 
         }
     },
@@ -454,7 +454,7 @@ export default {
             try {
                 // Enviar el correo electrónico
 
-                const responseCorreo = await axios.post("http://backendbolsaempleo.test/api/b_e/vin/revision-oferta-emprendimiento", {
+                const responseCorreo = await axios.post(`${__API_BOLSA__}/b_e/vin/revision-oferta-emprendimiento`, {
 
                     email: this.email_contacto.trim(),
                     firts_name: this.dueño,
@@ -494,7 +494,7 @@ export default {
                 emprendimiento_id: this.idus
 
             }
-            enviarsolig('POST', parametros, 'http://backendbolsaempleo.test/api/b_e/vin/oferta_empleos_emprendimiento', 'Oferta Creada');
+            enviarsolig('POST', parametros, `${__API_BOLSA__}/b_e/vin/oferta_empleos_emprendimiento`, 'Oferta Creada');
             this.$router.push('/emprendimientosofertview/' + store.state.idusu);
         },
 

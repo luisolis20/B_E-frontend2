@@ -24,7 +24,7 @@ export default {
             direccion: '',
             fotografia: '',
             previewFoto: '',
-            url: 'http://backendbolsaempleo.test/api/b_e/vin/users',
+            url: `${__API_BOLSA__}/b_e/vin/users`,
 
             si_cvn: false,
             no_cvn: true,

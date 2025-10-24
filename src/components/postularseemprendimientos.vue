@@ -311,9 +311,9 @@ export default {
             estado_oferta: 0,
             botonesBloqueados: false,
             updated_at: '',
-            urlofeempre: 'http://backendbolsaempleo.test/api/b_e/vin/view-oferta_empleos_emprendimiento',
-            urk32: 'http://backendbolsaempleo.test/api/b_e/vin/consultaofertempr',
-            url255: 'http://backendbolsaempleo.test/api/b_e/vin/postulacionemprendi',
+            urlofeempre: `${__API_BOLSA__}/b_e/vin/view-oferta_empleos_emprendimiento`,
+            urk32: `${__API_BOLSA__}/b_e/vin/consultaofertempr`,
+            url255: `${__API_BOLSA__}/b_e/vin/postulacionemprendi`,
             apiBaseUrl: "http://vinculacionconlasociedad.utelvt.edu.ec/cvubackendv2/api/cvn/v1",
             urls: {
 
@@ -518,7 +518,7 @@ export default {
             };
 
             if (this.si_cvn) {
-                const response = await enviarsolig23('POST', parametros, 'http://backendbolsaempleo.test/api/b_e/vin/postulacionemprendi', 'Postulado con éxito');
+                const response = await enviarsolig23('POST', parametros, `${__API_BOLSA__}/b_e/vin/postulacionemprendi`, 'Postulado con éxito');
 
                 const fechaEcuador = dayjs().tz('America/Guayaquil').format('YYYY-MM-DDTHH:mm:ss');
                 const thisidpostu = response.data.id;
@@ -529,8 +529,8 @@ export default {
                     fecha: fechaEcuador,
                     detalle_estado: "Verificando Datos de postulación",
                 };
-                axios.post('http://backendbolsaempleo.test/api/b_e/vin/estadopostuserempr', parametros2)
-                //enviarsolig('POST', parametros2, 'http://backendbolsaempleo.test/api/b_e/vin/estadopostuserempr', 'Postulación Aceptada');
+                axios.post(`${__API_BOLSA__}/b_e/vin/estadopostuserempr`, parametros2)
+                //enviarsolig('POST', parametros2, '${__API_BOLSA__}/b_e/vin/estadopostuserempr', 'Postulación Aceptada');
 
                 this.$router.push('/principal/' + this.ide);
             } else {
@@ -808,7 +808,7 @@ export default {
             try {
                 //console.log('funciona')
                 const responsae = await confimarhabi(
-                    'http://backendbolsaempleo.test/api/b_e/vin/oferta_empleos_emprendimientohabi/',
+                    `${__API_BOLSA__}/b_e/vin/oferta_empleos_emprendimientohabi/`,
                     id,
                     'Aprobar oferta',
                     '¿Desea aprobar la oferta ' + nombre + '?',
@@ -826,7 +826,7 @@ export default {
                     const data = response2.data.data[0];
 
                     const apellidos = data.ApellInfPer + ' ' + data.ApellMatInfPer + ' ' + data.NombInfPer;
-                    const responseCorreo = await axios.post("http://backendbolsaempleo.test/api/b_e/vin/enviar-aprobacion-oferta-emprendimiento", {
+                    const responseCorreo = await axios.post(`${__API_BOLSA__}/b_e/vin/enviar-aprobacion-oferta-emprendimiento`, {
 
                         email: data.email_contacto,
                         firts_name: apellidos,
@@ -852,7 +852,7 @@ export default {
         },
         async eliminar(id, nombre) {
             try {
-                const response = await confimar('http://backendbolsaempleo.test/api/b_e/vin/oferta_empleos_emprendimiento/',
+                const response = await confimar(`${__API_BOLSA__}/b_e/vin/oferta_empleos_emprendimiento/`,
                     id,
                     'Rechazar oferta',
                     '¿Realmente desea rechazar la oferta ' + nombre + '?',
@@ -870,7 +870,7 @@ export default {
                     const data = response2.data.data[0];
 
                     const apellidos = data.ApellInfPer + ' ' + data.ApellMatInfPer + ' ' + data.NombInfPer;
-                    const responseCorreo = await axios.post("http://backendbolsaempleo.test/api/b_e/vin/enviar-oferta-rechazo-emprendimiento", {
+                    const responseCorreo = await axios.post(`${__API_BOLSA__}/b_e/vin/enviar-oferta-rechazo-emprendimiento`, {
 
                         email: data.email_contacto,
                         firts_name: apellidos,

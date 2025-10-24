@@ -309,7 +309,7 @@ export default {
             modalidad:'',
             categoriaSeleccionada:'',
             Fechafinofer:'',
-            ur3:'http://backendbolsaempleo.test/api/b_e/vin/oferta_empleos_emprendimientos2',
+            ur3:`${__API_BOLSA__}/b_e/vin/oferta_empleos_emprendimientos2`,
             emprendimiento_id:'',
             cargando: false,
             showTooltiptitulo: false,

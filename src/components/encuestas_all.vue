@@ -14,8 +14,8 @@
                     <form class="d-none d-md-flex ms-4">
                         <div class="input-with-icon col-sm-6">
                             <input class="form-control py-3 border-1 text-dark lg" type="search"
-                                placeholder="Buscar usuario..." v-model="searchQuery"
-                                @input="filterResults" @keypress="onlyNumbers">
+                                placeholder="Buscar formulario..." v-model="searchQuery"
+                                @input="filterResults">
                             <!-- Botón de ayuda -->
                             <span class="help-icon" @mouseenter="showTooltipbuscar = true"
                                 @mouseleave="hideOnLeave('buscar')" @click.stop="toggleTooltip('buscar')"
@@ -24,7 +24,7 @@
                             <!-- Tooltip -->
                             <div v-if="showTooltipbuscar" class="tooltip-box" ref="tooltipBoxbuscar"
                                 @mouseenter="hoveringTooltipbuscar = true" @mouseleave="hideOnLeave('buscar')">
-                                Escriba el nombre del usuario creador del formulario que desea buscar.
+                                Escriba el nombre del formulario  que desea buscar.
                                 <div class="tooltip-arrow"></div>
                             </div>
                         </div>
@@ -152,7 +152,9 @@ export default {
     data() {
         return {
             idus: 0,
-            url2: 'http://backendbolsaempleo.test/api/b_e/vin/seguiformulario',
+            url2: `${__API_BOLSA__}/b_e/vin/seguiformulario`,
+            urlhabilitar: `${__API_BOLSA__}/b_e/vin/seguiformulariohabi/`,
+            urlinhabilitar: `${__API_BOLSA__}/b_e/vin/seguiformularioelim/`,
             formularioemp: [],
             filteredformulario: [],
             searchQuery: '',
@@ -215,7 +217,7 @@ export default {
             if (query) {
                 this.buscando = true;
                 this.filteredformulario = this.formularioemp.filter(inves =>
-                    inves.ruc.includes(query)
+                    inves.NOMBRE.includes(query)
                 );
             } else {
                 this.buscando = false;
@@ -243,7 +245,7 @@ export default {
         eliminar(id, nombre) {
             try {
                 confimar(
-                    'http://backendbolsaempleo.test/api/b_e/vin/consultaredirempelim/',
+                    this.urlinhabilitar,
                     id,
                     'Inhabilitar registro',
                     '¿Realmente desea inhabilitar el emprenidmiento  ' + nombre + '?',
@@ -257,7 +259,7 @@ export default {
         habilitar(id, nombre) {
             try {
                 confimarhabi(
-                    'http://backendbolsaempleo.test/api/b_e/vin/consultaredirempelim2/',
+                    this.urlhabilitar,
                     id,
                     'Hbailitar registro',
                     '¿Desea habilitar el emprendimiento ' + nombre + '?',

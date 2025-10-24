@@ -288,9 +288,9 @@ export default {
     data() {
         return {
             idus: 0,
-            url255: 'http://backendbolsaempleo.test/api/b_e/vin/consultanopostempre',
-            url2552: 'http://backendbolsaempleo.test/api/b_e/vin/oferta_empleos_emprendimiento',
-            urlofeempre: 'http://backendbolsaempleo.test/api/b_e/vin/view-oferta_empleos_emprendimiento',
+            url255: `${__API_BOLSA__}/b_e/vin/consultanopostempre`,
+            url2552: `${__API_BOLSA__}/b_e/vin/oferta_empleos_emprendimiento`,
+            urlofeempre: `${__API_BOLSA__}/b_e/vin/view-oferta_empleos_emprendimiento`,
             ofertas: [],
             filteredofertas: [],
             searchQuery: '',
@@ -663,7 +663,7 @@ export default {
         },
         async eliminar(id, nombre) {
             try {
-                const response = await confimar('http://backendbolsaempleo.test/api/b_e/vin/oferta_empleos_emprendimiento/',
+                const response = await confimar(`${__API_BOLSA__}/b_e/vin/oferta_empleos_emprendimiento/`,
                     id,
                     'Rechazar oferta',
                     '¿Realmente desea rechazar la oferta ' + nombre + '?',
@@ -678,7 +678,7 @@ export default {
                     const data = response2.data.data[0];
 
                     const apellidos = data.ApellInfPer + ' ' + data.ApellMatInfPer + ' ' + data.NombInfPer;
-                    const responseCorreo = await axios.post("http://backendbolsaempleo.test/api/b_e/vin/enviar-oferta-rechazo-emprendimiento", {
+                    const responseCorreo = await axios.post(`${__API_BOLSA__}/b_e/vin/enviar-oferta-rechazo-emprendimiento`, {
 
                         email: data.email_contacto,
                         firts_name: apellidos,
@@ -706,7 +706,7 @@ export default {
             try {
                 //console.log('funciona')
                 const responsae = await confimarhabi(
-                    'http://backendbolsaempleo.test/api/b_e/vin/oferta_empleos_emprendimientohabi/',
+                    `${__API_BOLSA__}/b_e/vin/oferta_empleos_emprendimientohabi/`,
                     id,
                     'Aprobar oferta',
                     '¿Desea aprobar la oferta ' + nombre + '?',
@@ -721,7 +721,7 @@ export default {
                     const data = response2.data.data[0];
 
                     const apellidos = data.ApellInfPer + ' ' + data.ApellMatInfPer + ' ' + data.NombInfPer;
-                    const responseCorreo = await axios.post("http://backendbolsaempleo.test/api/b_e/vin/enviar-aprobacion-oferta-emprendimiento", {
+                    const responseCorreo = await axios.post(`${__API_BOLSA__}/b_e/vin/enviar-aprobacion-oferta-emprendimiento`, {
 
                         email: data.email_contacto,
                         firts_name: apellidos,

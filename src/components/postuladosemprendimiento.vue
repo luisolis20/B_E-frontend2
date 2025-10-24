@@ -111,7 +111,7 @@ export default {
     data() {
         return {
             idus: 0,
-            url213: 'http://backendbolsaempleo.test/api/b_e/vin/postulacionemprendi',
+            url213: `${__API_BOLSA__}/b_e/vin/postulacionemprendi`,
             postulacionespr: [],
             filteredpostulaciones: [],
             searchQuery: '',

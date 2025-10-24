@@ -124,7 +124,7 @@ export default {
             modalidad:'',
             categoria:'',
             jefe:'',
-            urk32:'http://backendbolsaempleo.test/api/b_e/vin/consultaofert',
+            urk32:`${__API_BOLSA__}/b_e/vin/consultaofert`,
             
             cargando: false,
         }

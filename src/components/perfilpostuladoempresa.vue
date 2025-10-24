@@ -351,14 +351,14 @@ export default {
                 investigacion: '', // URL de investigación y publicaciones
                 otrosDatos: '', // URL de otros datos relevantes
             },
-            url44: 'http://backendbolsaempleo.test/api/b_e/vin/consultapostuserestado2',
+            url44: '${__API_BOLSA__}/b_e/vin/consultapostuserestado2',
             cargando: false,
             si_postula: false,
             postulacionespr: [],
             detalle_si: "",
             company_name: "",
             job_offer: "",
-            urlest: "http://backendbolsaempleo.test/api/b_e/vin/estadopostuser",
+            urlest: "${__API_BOLSA__}/b_e/vin/estadopostuser",
 
         }
     },
@@ -1573,7 +1573,7 @@ export default {
 
             try {
                 // Enviar el correo electrónico
-                const responseCorreo = await axios.post("http://backendbolsaempleo.test/api/b_e/vin/enviar-aceptacion-postulacion", {
+                const responseCorreo = await axios.post(`${__API_BOLSA__}/b_e/vin/enviar-aceptacion-postulacion`, {
 
                     email: this.mailPer.trim(),
                     firts_name: this.apellidos.trim(),
@@ -1603,7 +1603,7 @@ export default {
 
             try {
                 // Enviar el correo electrónico
-                const responseCorreo = await axios.post("http://backendbolsaempleo.test/api/b_e/vin/enviar-rechazo-postulacion", {
+                const responseCorreo = await axios.post(`${__API_BOLSA__}/b_e/vin/enviar-rechazo-postulacion`, {
 
                     email: this.mailPer.trim(),
                     firts_name: this.apellidos.trim(),

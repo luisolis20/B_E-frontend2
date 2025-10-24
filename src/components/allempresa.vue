@@ -119,7 +119,7 @@ export default {
     data() {
         return {
             idus: 0,
-            url255: 'http://backendbolsaempleo.test/api/b_e/vin/empresas',
+            url255: `${__API_BOLSA__}/b_e/vin/empresas`,
             empresasprac: [],
             filteredempresas: [],
             searchQuery: '',
@@ -195,7 +195,7 @@ export default {
         eliminar(id, nombre) {
             try {
                 confimar(
-                    'http://backendbolsaempleo.test/api/b_e/vin/empresas/',
+                    `${__API_BOLSA__}/b_e/vin/empresas/`,
                     id,
                     'Inhabilitar registro',
                     '¿Realmente desea inhabilitar la empresa  ' + nombre + '?',
@@ -209,7 +209,7 @@ export default {
         habilitar(id, nombre) {
             try {
                 confimarhabi(
-                    'http://backendbolsaempleo.test/api/b_e/vin/empresashabi/',
+                    `${__API_BOLSA__}/b_e/vin/empresashabi/`,
                     id,
                     'Habilitar registro',
                     '¿Desea habilitar la empresa ' + nombre + '?',

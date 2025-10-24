@@ -162,7 +162,7 @@ export default {
     data() {
         return {
             idus: 0,
-            url213: 'http://backendbolsaempleo.test/api/b_e/vin/consultapostuser',
+            url213: `${__API_BOLSA__}/b_e/vin/consultapostuser`,
             postulacionespr: [],
             filteredpostulaciones: [],
             searchQuery: '',
@@ -271,7 +271,7 @@ export default {
             }
         },
         eliminar(id, nombre) {
-            confimar('http://backendbolsaempleo.test/api/b_e/vin/consultapostuser/', id, 'Eliminar registro', '¿Realmente desea eliminar la postulación de la oferta ' + nombre + '?');
+            confimar(`${__API_BOLSA__}/b_e/vin/consultapostuser/`, id, 'Eliminar registro', '¿Realmente desea eliminar la postulación de la oferta ' + nombre + '?');
             this.getPostulaciones();
             this.cargando = false;
             this.$router.push('/principal/' + this.idus);

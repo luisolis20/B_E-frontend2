@@ -269,8 +269,8 @@ export default {
     data() {
         return {
             idus: 0,
-            url255: 'http://backendbolsaempleo.test/api/b_e/vin/consultanopostofert',
-            url2552: 'http://backendbolsaempleo.test/api/b_e/vin/oferta__empleos',
+            url255: `${__API_BOLSA__}/b_e/vin/consultanopostofert`,
+            url2552: `${__API_BOLSA__}/b_e/vin/oferta__empleos`,
 
             ofertas: [],
             filteredofertas: [],
@@ -641,7 +641,7 @@ export default {
         },
         eliminar(id, nombre) {
             try {
-                confimar('http://backendbolsaempleo.test/api/b_e/vin/oferta__empleos/',
+                confimar(`${__API_BOLSA__}/b_e/vin/oferta__empleos/`,
                     id,
                     'Inhabilitar registro',
                     '¿Realmente desea inhabilitar la oferta ' + nombre + '?',
@@ -656,7 +656,7 @@ export default {
         habilitar(id, nombre) {
             try {
                 confimarhabi(
-                    'http://backendbolsaempleo.test/api/b_e/vin/oferta__empleoshabi/',
+                    `${__API_BOLSA__}/b_e/vin/oferta__empleoshabi/`,
                     id,
                     'Habilitar registro',
                     '¿Desea habilitar la oferta ' + nombre + '?',

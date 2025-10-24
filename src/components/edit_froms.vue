@@ -163,7 +163,7 @@ export default {
             hoveringTooltiptipoencuesta: false,
             showTooltipACTIVO: false,
             hoveringTooltipACTIVO: false,
-            url: 'http://backendbolsaempleo.test/api/b_e/vin/seguiformulario'
+            url: `${__API_BOLSA__}/b_e/vin/seguiformulario`
 
         }
     },

@@ -118,7 +118,7 @@ export default {
   data() {
     return {
       idus: 0,
-      url213: '',
+      url213: 'http://vinculacionconlasociedad.utelvt.edu.ec/backendbolsaempleo/api/b_e/vin/informacionpersonalD',
       postulacionespr: [],
       filteredpostulaciones: [],
       searchQuery: '',

@@ -422,7 +422,7 @@ export default {
 
                 }
                
-                enviarsolig('POST',parametros,'http://backendbolsaempleo.test/api/b_e/vin/oferta__empleos','Oferta Creada');
+                enviarsolig('POST',parametros,`${__API_BOLSA__}/b_e/vin/oferta__empleos`,'Oferta Creada');
                 this.$router.push('/ofertas/'+store.state.idusu);
             }
         },

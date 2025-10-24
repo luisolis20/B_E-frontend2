@@ -316,10 +316,10 @@ export default {
             updated_at: '',
             idemprendimiento: 0,
             urlinformacionpersonal: "http://vinculacionconlasociedad.utelvt.edu.ec/cvubackendv2/api/cvn/v1/informacionpersonal",
-            urk3: 'http://backendbolsaempleo.test/api/b_e/vin/consultarediremp',
+            urk3: `${__API_BOLSA__}/b_e/vin/consultarediremp`,
             cargando: false,
             botonesBloqueados: false,
-            urlofeempre: 'http://backendbolsaempleo.test/api/b_e/vin/view-oferta_empleos_emprendimiento',
+            urlofeempre: `${__API_BOLSA__}/b_e/vin/view-oferta_empleos_emprendimiento`,
         }
     },
     async mounted() {
@@ -379,7 +379,7 @@ export default {
         async eliminar(id, nombre) {
             try {
                 const w = await confimar(
-                    'http://backendbolsaempleo.test/api/b_e/vin/consultaredirempelim/',
+                    `${__API_BOLSA__}/b_e/vin/consultaredirempelim/`,
                     id,
                     'No aprobar Emprendimiento',
                     '¿Realmente desea no aprobar el emprendimiento  ' + nombre + '?',
@@ -393,7 +393,7 @@ export default {
                     const response = await axios.get(this.urlinformacionpersonal);
                     const data = response.data.data[0];
                     const apellidos = data.ApellInfPer + ' ' + data.ApellMatInfPer + ' ' + data.NombInfPer;
-                    const responseCorreo = await axios.post("http://backendbolsaempleo.test/api/b_e/vin/enviar-rechazo-emprendimiento", {
+                    const responseCorreo = await axios.post(`${__API_BOLSA__}/b_e/vin/enviar-rechazo-emprendimiento`, {
 
                         email: w.data.email_contacto,
                         firts_name: apellidos,
@@ -424,7 +424,7 @@ export default {
         async habilitar(id, nombre) {
             try {
                 const w = await confimarhabi(
-                    'http://backendbolsaempleo.test/api/b_e/vin/consultaredirempelim2/',
+                    `${__API_BOLSA__}/b_e/vin/consultaredirempelim2/`,
                     id,
                     'Aprobar Emprendimiento',
                     '¿Desea aprobar el emprendimiento ' + nombre + '?',
@@ -439,7 +439,7 @@ export default {
                     const response = await axios.get(this.urlinformacionpersonal);
                     const data = response.data.data[0];
                     const apellidos = data.ApellInfPer + ' ' + data.ApellMatInfPer + ' ' + data.NombInfPer;
-                    const responseCorreo = await axios.post("http://backendbolsaempleo.test/api/b_e/vin/enviar-aprobacion-emprendimiento", {
+                    const responseCorreo = await axios.post(`${__API_BOLSA__}/b_e/vin/enviar-aprobacion-emprendimiento`, {
 
                         email: w.data.email_contacto,
                         firts_name: apellidos,

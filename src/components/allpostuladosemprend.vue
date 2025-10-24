@@ -142,7 +142,7 @@ export default {
     data() {
         return {
             idus: 0,
-            url213: 'http://backendbolsaempleo.test/api/b_e/vin/postulacions2empre',
+            url213: `${__API_BOLSA__}/b_e/vin/postulacions2empre`,
             postulacionespr: [],
             filteredpostulaciones: [],
             searchQuery: '',
@@ -349,7 +349,7 @@ export default {
             });
         },
         eliminar(id, nombre) {
-            confimar('http://backendbolsaempleo.test/api/b_e/vin/postulacions/', id, 'Eliminar registro', '¿Realmente desea eliminar a ' + nombre + '?');
+            confimar(`${__API_BOLSA__}/b_e/vin/postulacions/`, id, 'Eliminar registro', '¿Realmente desea eliminar a ' + nombre + '?');
             this.cargando = false;
             this.$router.push('/principal/' + this.idus);
 

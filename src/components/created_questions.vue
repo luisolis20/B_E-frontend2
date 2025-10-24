@@ -317,9 +317,9 @@ export default {
             idusop: 0,
             PREGUNTA: '',
             nombre_forms: 'Formulario',
-            url: 'http://backendbolsaempleo.test/api/b_e/vin/seguipreguntas',
-            url2: 'http://backendbolsaempleo.test/api/b_e/vin/seguiformulario',
-            url23: 'http://backendbolsaempleo.test/api/b_e/vin/seguitiporespuesta',
+            url: `${__API_BOLSA__}/b_e/vin/seguipreguntas`,
+            url2: `${__API_BOLSA__}/b_e/vin/seguiformulario`,
+            url23: `${__API_BOLSA__}/b_e/vin/seguitiporespuesta`,
             tipo: '',
             cargando2: false,
             showTooltipPREGUNTA: false,
@@ -632,7 +632,7 @@ export default {
         },
         async guardarop(event) {
             event.preventDefault();
-            const url234 = 'http://backendbolsaempleo.test/api/b_e/vin/seguitiporespuesta';
+            const url234 = `${__API_BOLSA__}/b_e/vin/seguitiporespuesta`;
             try {
                 const fechaEcuador = dayjs().tz('America/Guayaquil').format('YYYY-MM-DD HH:mm:ss');
 

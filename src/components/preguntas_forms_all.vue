@@ -181,9 +181,9 @@ export default {
     data() {
         return {
             idus: 0,
-            url2: 'http://backendbolsaempleo.test/api/b_e/vin/ver_rep',
-            url2a: 'http://backendbolsaempleo.test/api/b_e/vin/ver_respuestas_abiertas',
-            urlBackend: 'http://backendbolsaempleo.test/api/b_e/vin/facultad',
+            url2: `${__API_BOLSA__}/b_e/vin/ver_rep`,
+            url2a: `${__API_BOLSA__}/b_e/vin/ver_respuestas_abiertas`,
+            urlBackend: `${__API_BOLSA__}/b_e/vin/facultad`,
             formularioemp: [],
             filtered_pregresp: [],
             searchQuery: '',
@@ -428,7 +428,7 @@ export default {
         eliminar(id, nombre) {
             try {
                 confimar(
-                    'http://backendbolsaempleo.test/api/b_e/vin/consultaredirempelim/',
+                    `${__API_BOLSA__}/b_e/vin/consultaredirempelim/`,
                     id,
                     'Inhabilitar registro',
                     '¿Realmente desea inhabilitar el emprenidmiento  ' + nombre + '?',
@@ -442,7 +442,7 @@ export default {
         habilitar(id, nombre) {
             try {
                 confimarhabi(
-                    'http://backendbolsaempleo.test/api/b_e/vin/consultaredirempelim2/',
+                    `${__API_BOLSA__}/b_e/vin/consultaredirempelim2/`,
                     id,
                     'Hbailitar registro',
                     '¿Desea habilitar el emprendimiento ' + nombre + '?',

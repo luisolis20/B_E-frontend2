@@ -29,11 +29,11 @@ export default {
             sitio_web: '',
             redes_sociales: '',
             estado_empren: '',
-            url: 'http://backendbolsaempleo.test/api/b_e/vin/emprendimientos_E',
+            url: `${__API_BOLSA__}/b_e/vin/emprendimientos_E`,
             cargando: false,
             Errorfoto: false,
             guardaremprendimiento: true,
-            ur3: 'http://backendbolsaempleo.test/api/b_e/vin/consultarediremp',
+            ur3: `${__API_BOLSA__}/b_e/vin/consultarediremp`,
             urlinformacionpersonal: "http://vinculacionconlasociedad.utelvt.edu.ec/cvubackendv2/api/cvn/v1/informacionpersonal",
             // Verificación de correo
             mostrarModal: false,
@@ -202,7 +202,7 @@ export default {
         async enviarCodigo() {
             try {
 
-                const response = await axios.post("http://backendbolsaempleo.test/api/b_e/vin/enviar-correo",
+                const response = await axios.post(`${__API_BOLSA__}/b_e/vin/enviar-correo`,
                     {
                         email: this.email_contacto.trim(),
                     }
@@ -262,7 +262,7 @@ export default {
                 estado_empren: 2,
                 CIInfPer: this.idus
             };
-            enviarsolig('POST', parametros, 'http://backendbolsaempleo.test/api/b_e/vin/emprendimientos_E', 'Emprendimiento Creado');
+            enviarsolig('POST', parametros, `${__API_BOLSA__}/b_e/vin/emprendimientos_E`, 'Emprendimiento Creado');
             this.$router.push('/misemprendimientos/' + this.idus);
         },
         async procesarActualizar() {
@@ -294,7 +294,7 @@ export default {
                 const response = await axios.get(this.urlinformacionpersonal);
                 const data = response.data.data[0];
                 const apellidos = data.ApellInfPer + ' ' + data.ApellMatInfPer + ' ' + data.NombInfPer;
-                const responseCorreo = await axios.post("http://backendbolsaempleo.test/api/b_e/vin/revision-emprendimiento", {
+                const responseCorreo = await axios.post(`${__API_BOLSA__}/b_e/vin/revision-emprendimiento`, {
 
                     email: this.email_contacto.trim(),
                     firts_name: apellidos,
@@ -327,7 +327,7 @@ export default {
                 const response = await axios.get(this.urlinformacionpersonal);
                 const data = response.data.data[0];
                 const apellidos = data.ApellInfPer + ' ' + data.ApellMatInfPer + ' ' + data.NombInfPer;
-                const responseCorreo = await axios.post("http://backendbolsaempleo.test/api/b_e/vin/revision-actualizacion-emprendimiento", {
+                const responseCorreo = await axios.post(`${__API_BOLSA__}/b_e/vin/revision-actualizacion-emprendimiento`, {
 
                     email: this.email_contacto.trim(),
                     firts_name: apellidos,

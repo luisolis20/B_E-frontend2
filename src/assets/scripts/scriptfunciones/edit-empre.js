@@ -24,7 +24,7 @@ export default {
             mision:'',
             vision:'',
             usuario_id:'',
-            ur3:'http://backendbolsaempleo.test/api/b_e/vin/consultaredir',
+            ur3:`${__API_BOLSA__}/b_e/vin/consultaredir`,
             cargando: false,
             
         }

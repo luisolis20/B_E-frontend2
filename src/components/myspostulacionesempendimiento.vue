@@ -161,7 +161,7 @@ export default {
     data() {
         return {
             idus: 0,
-            url213: 'http://backendbolsaempleo.test/api/b_e/vin/consultapostuserempr',
+            url213: `${__API_BOLSA__}/b_e/vin/consultapostuserempr`,
             postulacionespr: [],
             filteredpostulaciones: [],
             searchQuery: '',
@@ -271,7 +271,7 @@ export default {
         },
         eliminar(id, nombre) {
             try {
-                confimar('http://backendbolsaempleo.test/api/b_e/vin/consultapostuserempr/', id, 'Eliminar registro', '¿Realmente desea eliminar la postulación de la oferta ' + nombre + '?', this.actualizar);
+                confimar(`${__API_BOLSA__}/b_e/vin/consultapostuserempr/`, id, 'Eliminar registro', '¿Realmente desea eliminar la postulación de la oferta ' + nombre + '?', this.actualizar);
 
             } catch (error) {
                 console.error("Error al eliminar la postulación:", error);

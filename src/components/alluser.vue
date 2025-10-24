@@ -120,7 +120,9 @@ export default {
     data() {
         return {
             idus: 0,
-            url255: 'http://backendbolsaempleo.test/api/b_e/vin/users',
+            url255:  `${__API_BOLSA__}/b_e/vin/users`,
+            urlinhabilitar: `${__API_BOLSA__}/b_e/vin/users/`,
+            urlhabilitar: `${__API_BOLSA__}/b_e/vin/usershabi/`,
             usuariosarr: [],
             filteredusuarios: [],
             searchQuery: '',
@@ -139,8 +141,9 @@ export default {
            this.idus = usuario.CIInfPer;
         } else {
             this.idus= usuario.id;
-        }
+        } 
         this.getUsers();
+        //this.url255 =;
     },
 
     methods: {
@@ -196,7 +199,7 @@ export default {
         },
         eliminar(id, nombre) {
             try {
-                confimar('http://backendbolsaempleo.test/api/b_e/vin/users/',
+                confimar(this.urlinhabilitar,
                     id, 'Inhabilitar registro',
                     '¿Realmente desea inhabilitar el usuario  ' + nombre + '?',
                     this.actualizar
@@ -211,7 +214,7 @@ export default {
         habilitar(id, nombre) {
             try {
                 confimarhabi(
-                    'http://backendbolsaempleo.test/api/b_e/vin/usershabi/',
+                    this.urlhabilitar,
                     id,
                     'Hbailitar registro',
                     '¿Desea habilitar el usuario ' + nombre + '?',

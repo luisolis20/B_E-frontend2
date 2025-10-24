@@ -135,7 +135,7 @@ export default {
             modalidad: '',
             categoria: '',
             jefe: '',
-            urk32: 'http://backendbolsaempleo.test/api/b_e/vin/consultaofert',
+            urk32: `${__API_BOLSA__}/b_e/vin/consultaofert`,
             url214: '',
 
             cargando: false,
@@ -152,7 +152,7 @@ export default {
 
 
         this.urk32 += '/' + this.idus;
-        this.url214 = 'http://backendbolsaempleo.test/api/b_e/vin/estadopostuser/' + customscript.computed.idUsuario();
+        this.url214 = `${__API_BOLSA__}/b_e/vin/estadopostuser/` + customscript.computed.idUsuario();
         Promise.all([
             this.getEmpresa(),
             this.getDetalle(),
