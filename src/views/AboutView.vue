@@ -104,7 +104,8 @@
 @import url('@/assets/styles/styles.css');
 </style>
 <script>
-import axios from 'axios';
+//import axios from 'axios';
+import API from '@/assets/scripts/services/axios';
 import { useRoute } from 'vue-router';
 import { confimar } from '@/assets/scripts/scriptfunciones/funciones';
 import script2 from '@/assets/scripts/custom.js';
@@ -118,7 +119,7 @@ export default {
   data() {
     return {
       idus: 0,
-      url213: 'http://vinculacionconlasociedad.utelvt.edu.ec/backendbolsaempleo/api/b_e/vin/informacionpersonalD',
+      url213: "/b_e/vin/informacionpersonalD",
       postulacionespr: [],
       filteredpostulaciones: [],
       searchQuery: '',
@@ -140,21 +141,17 @@ export default {
     async getAdministrativosD(page = 1) {
       this.cargando = true;
       try {
-        const response = await axios.get(this.url213 + "?page=" + page);
+        const response = await API.get(`${this.url213}?page=${page}&withPhotos=true`);
 
-        // Laravel devuelve data + paginación
         this.postulacionespr = response.data?.data || [];
-        this.currentPage = response.data?.current_page || 1;
-        this.lastPage = response.data?.last_page || 1;
+        const pagination = response.data?.pagination || {};
+        this.currentPage = pagination.current_page || 1;
+        this.lastPage = pagination.last_page || 1;
 
-        // Ya no uses slice, porque el backend manda solo la página
         this.filteredpostulaciones = this.postulacionespr;
-
       } catch (error) {
-        console.error("Error al obtener postulaciones:", error);
-        this.postulacionespr = [];
+        console.warn("⚠️ Error al obtener datos:", error?.response?.data || error);
         this.filteredpostulaciones = [];
-        this.lastPage = 1;
       } finally {
         this.cargando = false;
       }
@@ -177,45 +174,18 @@ export default {
       this.getAdministrativosD()
     },
     async filterResults() {
-      const query = this.searchQuery.trim();
+      const query = this.searchQuery.trim().toLowerCase();
       if (!query) {
-        this.buscando = false;
-        this.getAdministrativosD(); // recarga normal con paginación
+        this.filteredpostulaciones = this.postulacionespr;
         return;
       }
 
-      this.buscando = true;
-      this.cargando = true;
-      try {
-        let currentPage = 1;
-        let lastPage = 1;
-        let resultados = [];
-
-        do {
-          const response = await axios.get(`${this.url213}?page=${currentPage}`);
-          const registros = response.data.data || [];
-          lastPage = response.data.last_page;
-
-          // Filtro por cédula (o cualquier otro campo)
-          const coincidencias = registros.filter(inves =>
-            inves.CIInfPer.includes(query) ||
-            (inves.NombInfPer && inves.NombInfPer.toLowerCase().includes(query.toLowerCase())) ||
-            (inves.ApellInfPer && inves.ApellInfPer.toLowerCase().includes(query.toLowerCase())) ||
-            (inves.ApellMatInfPer && inves.ApellMatInfPer.toLowerCase().includes(query.toLowerCase()))
-          );
-
-          resultados = resultados.concat(coincidencias);
-          currentPage++;
-        } while (currentPage <= lastPage);
-
-        this.filteredpostulaciones = resultados;
-
-      } catch (error) {
-        console.error("Error al buscar:", error);
-        this.filteredpostulaciones = [];
-      } finally {
-        this.cargando = false;
-      }
+      this.filteredpostulaciones = this.postulacionespr.filter(inves =>
+        inves.CIInfPer.toLowerCase().includes(query) ||
+        (inves.NombInfPer && inves.NombInfPer.toLowerCase().includes(query)) ||
+        (inves.ApellInfPer && inves.ApellInfPer.toLowerCase().includes(query)) ||
+        (inves.ApellMatInfPer && inves.ApellMatInfPer.toLowerCase().includes(query))
+      );
     },
     onlyNumbers(event) {
       const charCode = event.which ? event.which : event.keyCode;
@@ -273,7 +243,7 @@ export default {
 
         do {
           //  Cambiar al endpoint real
-          const response = await axios.get(`${this.url213}?page=${currentPage}`);
+          const response = await API.get(`${this.url213}?page=${currentPage}`);
 
           const registros = response.data.data;   // Datos de la página actual
           lastPage = response.data.last_page;     // Total de páginas

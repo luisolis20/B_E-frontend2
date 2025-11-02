@@ -1,5 +1,6 @@
 import Swal from 'sweetalert2';
 import axios from 'axios';
+import API from '@/assets/scripts/services/axios';
 import store from '@/store';
 
 export function mostraralertas(titulo, icono, foco = '') {
@@ -41,7 +42,7 @@ export function confimar(urlconslash, id, titulo, mensaje, actualizarTabla) {
         cancelButtonText: '<i class="fa-solid fa-ban"></i> Cancelar'
     }).then((res) => {
         if (res.isConfirmed) {
-            return axios.delete(url)   // 👈 Ya NO mandamos { data: { id } }
+            return API.delete(url)   // 👈 Ya NO mandamos { data: { id } }
                 .then((response) => {
                     mostraralertas(response.data.mensaje ?? 'Eliminado con éxito', 'success');
                     if (typeof actualizarTabla === "function") {
@@ -78,7 +79,7 @@ export function confimarhabi(urlconslash, id, titulo, mensaje, actualizarTabla) 
         cancelButtonText: '<i class="fa-solid fa-ban"></i> Cancelar'
     }).then((res) => {
         if (res.isConfirmed) {
-            return axios.delete(url)   // 👈 Ya NO mandamos { data: { id } }
+            return API.delete(url)   // 👈 Ya NO mandamos { data: { id } }
                 .then((response) => {
                     mostraralertas(response.data.mensaje ?? 'Habilitado con éxito', 'success');
                     if (typeof actualizarTabla === "function") {
@@ -119,7 +120,7 @@ export function guardarcambios(metodo, parametros, urlid, titulo) {
 
 }
 export function enviarsoli(metodo, parametros, url, mensaje) {
-    axios({
+    API({
         method: metodo,
         url: url,
         data: parametros
@@ -136,7 +137,7 @@ export function enviarsoli(metodo, parametros, url, mensaje) {
     });
 }
 export function enviarsolig(metodo, parametros, url, mensaje) {
-    axios({
+    API({
         method: metodo,
         url: url,
         data: parametros
@@ -154,7 +155,7 @@ export function enviarsolig(metodo, parametros, url, mensaje) {
     });
 }
 export function enviarsoligp(metodo, parametros, url, mensaje) {
-    axios({
+    API({
         method: metodo,
         url: url,
         data: parametros
@@ -171,7 +172,7 @@ export function enviarsoligp(metodo, parametros, url, mensaje) {
     });
 }
 export function enviarsoligp2(metodo, parametros, url) {
-    axios({
+    API({
         method: metodo,
         url: url,
         data: parametros
@@ -191,7 +192,7 @@ export function enviarsoligp2(metodo, parametros, url) {
 }
 export async function enviarsoligp3(metodo, parametros, url) {
   try {
-    const res = await axios({
+    const res = await API({
       method: metodo,
       url,
       data: parametros,
@@ -203,7 +204,7 @@ export async function enviarsoligp3(metodo, parametros, url) {
   }
 }
 export function enviarsolig23(metodo, parametros, url, mensaje) {
-    return axios({
+    return API({
         method: metodo,
         url: url,
         data: parametros
@@ -223,7 +224,7 @@ export function enviarsolig23(metodo, parametros, url, mensaje) {
 }
 export async function enviarsoliedit(metodo, parametros, url, mensaje) {
     try {
-        var response = await axios({
+        var response = await API({
             method: metodo,
             url: url,
             data: parametros

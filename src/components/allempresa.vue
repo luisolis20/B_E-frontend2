@@ -110,7 +110,7 @@
 </style>
 <script>
 import script2 from '@/assets/scripts/custom.js';
-import axios from 'axios';
+import API from '@/assets/scripts/services/axios';
 import { useRoute } from 'vue-router';
 import { confimar,confimarhabi } from '@/assets/scripts/scriptfunciones/funciones';
 import { Chart, registerables } from 'chart.js';
@@ -119,7 +119,8 @@ export default {
     data() {
         return {
             idus: 0,
-            url255: `${__API_BOLSA__}/b_e/vin/empresas`,
+            url255: `/b_e/vin/empresas`,
+            urlhabilitar: `/b_e/vin/empresashabi/`,
             empresasprac: [],
             filteredempresas: [],
             searchQuery: '',
@@ -139,7 +140,7 @@ export default {
         async getEmpresas() {
             this.cargando = true;
             try {
-                const response = await axios.get(`${this.url255}?all=true`);
+                const response = await API.get(`${this.url255}?all=true`);
                 const allData = response.data.data;
 
                 this.empresasprac = allData;
@@ -195,7 +196,7 @@ export default {
         eliminar(id, nombre) {
             try {
                 confimar(
-                    `${__API_BOLSA__}/b_e/vin/empresas/`,
+                    `${this.url255}/`,
                     id,
                     'Inhabilitar registro',
                     '¿Realmente desea inhabilitar la empresa  ' + nombre + '?',
@@ -209,7 +210,7 @@ export default {
         habilitar(id, nombre) {
             try {
                 confimarhabi(
-                    `${__API_BOLSA__}/b_e/vin/empresashabi/`,
+                    `${this.urlhabilitar}`,
                     id,
                     'Habilitar registro',
                     '¿Desea habilitar la empresa ' + nombre + '?',

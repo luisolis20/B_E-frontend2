@@ -1,6 +1,6 @@
 
 import { mostraralertas, enviarsoli, enviarsoliedit,enviarsolig } from '@/assets/scripts/scriptfunciones/funciones'
-import axios from 'axios';
+import API from '@/assets/scripts/services/axios';
 import { useRoute } from 'vue-router';
 import { getMe } from '@/store/auth';
 import store from '@/store';
