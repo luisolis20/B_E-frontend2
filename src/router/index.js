@@ -39,6 +39,7 @@ import Empresall from '../views/Empresall.vue'
 import Emprendimientosall from '../views/Emprendimientosall.vue'
 import MisEmprendimientos from '../views/MisEmprendimientos.vue'
 import AboutView from '../views/AboutView.vue'
+import EstudiantesAbout from '../views/EstudiantesAbout.vue'
 import EncuestasSeguimientoView from '../views/EncuestasSeguimientoView.vue'
 import CrearFormularioView from '../views/CrearFormularioView.vue'
 import AddPreguntasView from '../views/AddPreguntasView.vue'
@@ -251,6 +252,11 @@ const routes = [
     path: '/about/:id',
     name: 'about',
     component: AboutView
+  },
+  {
+    path: '/estabout/:id',
+    name: 'estabout',
+    component: EstudiantesAbout
   },
   {
     path: '/encuestas_all/:id',

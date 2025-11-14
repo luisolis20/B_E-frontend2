@@ -1,10 +1,10 @@
 <template>
   <div class="container-fluid py-5">
     <div class="container-fluid py-5">
-      <h1 class="display-5 mb-4" style="text-align: center;"> Todas los Administrativos </h1>
+      <h1 class="display-5 mb-4" style="text-align: center;"> Todas los Estudiantes </h1>
       <small
         class="d-inline-block fw-bold text-dark text-uppercase bg-light border border-primary rounded-pill px-4 py-1 mb-3">
-        Administrativos</small>
+        Est</small>
 
       &nbsp;&nbsp;&nbsp;&nbsp;
       <div class="row gx-4 gy-3 d-flex justify-content-center">
@@ -26,7 +26,7 @@
               <th scope="col">Cedula</th>
               <th scope="col">Datos Personales</th>
               <th scope="col">Correo</th>
-              <th scope="col">Rol</th>
+              <th scope="col">Carrera</th>
             </tr>
           </thead>
           <tbody id="contenido">
@@ -47,11 +47,8 @@
               <td v-text="post.CIInfPer"></td>
               <td v-text="post.NombInfPer + ' ' + post.ApellInfPer + ' ' + post.ApellMatInfPer"></td>
               <td v-text="post.mailPer"></td>
-              <td>
-                <label v-if="post.TipoInfPer === 'D'" class="text-warning fw-bold">Docente</label>
-                <label v-else-if="post.TipoInfPer === 'A'" class="text-warning fw-bold">Administrativo</label>
-                <label v-else-if="post.TipoInfPer === 'T'" class="text-warning fw-bold">Trabajador</label>
-              </td>
+              <td v-text="post.NombCarr"></td>
+
 
               <!-- Cédula
                             -->
@@ -119,7 +116,7 @@ export default {
   data() {
     return {
       idus: 0,
-      url213: "/b_e/vin/informacionpersonalD",
+      url213: "/b_e/vin/estudiantesfoto",
       postulacionespr: [],
       filteredpostulaciones: [],
       searchQuery: '',
@@ -141,7 +138,10 @@ export default {
     async getAdministrativosD(page = 1) {
       this.cargando = true;
       try {
-        const response = await API.get(`${this.url213}?page=${page}&withPhotos=true`);
+        // En la vista principal, queremos las fotos
+        const response = await API.get(`${this.url213}?page=${page}&withPhotos=true`, {
+          timeout: 60000
+        });
 
         this.postulacionespr = response.data?.data || [];
         const pagination = response.data?.pagination || {};
@@ -155,6 +155,14 @@ export default {
       } finally {
         this.cargando = false;
       }
+    },
+
+    // 🆕 Nueva función para obtener solo los metadatos paginados (sin fotos)
+    async getStudentMetadata(page = 1) {
+      const response = await API.get(`${this.url213}?page=${page}&withPhotos=false`, {
+        timeout: 60000
+      });
+      return response.data;
     },
 
 
@@ -241,55 +249,71 @@ export default {
         let currentPage = 1;
         let lastPage = 1;
 
+        // 1. ITERAR SOBRE TODAS LAS PÁGINAS DEL API
         do {
-          // ⚙️ Pedimos los datos con fotos
-          const response = await API.get(`${this.url213}?page=${currentPage}&withPhotos=true`);
+          // ⏱ Petición para obtener la página actual de estudiantes con fotos (máx 60s)
+          // Usamos la misma lógica que getAdministrativosD pero con un loop
+          const response = await API.get(`${this.url213}?page=${currentPage}&withPhotos=true`, {
+            timeout: 90000 // Aumentamos el timeout a 90s para el proceso de descarga masiva
+          });
 
-          const registros = response.data.data || [];
+          const registros = response.data.data;
           const pagination = response.data.pagination || {};
           lastPage = pagination.last_page || 1;
+          
+          console.log(`Procesando página ${currentPage} de ${lastPage}...`);
 
-          // 🖼️ Procesamos cada registro
+          // 2. PROCESAR CADA REGISTRO Y AÑADIR AL ZIP
           for (const post of registros) {
+            // Asegúrate de que la foto exista y tenga datos
             if (!post.fotografia || !post.fotografia.data) continue;
 
-            // 📁 Carpeta por tipo
-            let folderName = "Otros";
-            if (post.TipoInfPer === "D") folderName = "Docente";
-            else if (post.TipoInfPer === "A") folderName = "Administrativo";
-            else if (post.TipoInfPer === "T") folderName = "Trabajador";
+            const carreraNombre = post.NombCarr
+              ? post.NombCarr.replace(/[\\/:*?"<>|]/g, "_")
+              : "Sin_Carrera";
+            
+            // Creamos o accedemos a la carpeta de la carrera
+            const folder = zip.folder(carreraNombre);
 
-            const folder = zip.folder(folderName);
-
-            // 🧩 Determinar extensión según el tipo MIME
+            // Determinar extensión
             let extension = "jpg";
             if (post.fotografia.mime === "image/png") extension = "png";
             else if (["image/jpeg", "image/jpg"].includes(post.fotografia.mime)) extension = "jpeg";
 
-            // 📝 Nombre del archivo
+            // Generar nombre de archivo
             const nombre = (post.NombInfPer || "sinNombre").replace(/\s+/g, " ");
             const apellido = (post.ApellInfPer || "sinApellido").replace(/\s+/g, " ");
             const apellido2 = (post.ApellMatInfPer || "sinApellido").replace(/\s+/g, " ");
             const cedula = post.CIInfPer || "sinCedula";
             const fileName = `${nombre} ${apellido} ${apellido2}_${cedula}.${extension}`;
 
-            // 🔄 Base64 → binario
+            // Convertir Base64 a binario y añadir al ZIP
             const byteCharacters = atob(post.fotografia.data);
             const byteArray = new Uint8Array([...byteCharacters].map(c => c.charCodeAt(0)));
-
-            // 📦 Agregamos la imagen al ZIP
+            
+            // Añadir al ZIP
             folder.file(fileName, byteArray, { binary: true });
           }
 
           currentPage++;
         } while (currentPage <= lastPage);
+        
+        console.log("Generando archivo ZIP...");
+        
+        // 3. GENERAR Y DESCARGAR EL ZIP
+        const content = await zip.generateAsync({ 
+          type: "blob", 
+          compression: "DEFLATE", // Usar compresión para reducir el tamaño final
+          compressionOptions: {
+            level: 9 // Nivel máximo de compresión
+          }
+        });
+        saveAs(content, "Estudiantes_por_Carrera.zip");
+        alert("Descarga completada con éxito!");
 
-        // 💾 Generar y descargar ZIP
-        const content = await zip.generateAsync({ type: "blob" });
-        saveAs(content, "Personal_UTLVTE.zip");
       } catch (error) {
         console.error("Error al generar ZIP:", error);
-        alert("Ocurrió un error al generar el archivo ZIP.");
+        alert("Ocurrió un error al descargar los datos. Revise la consola para más detalles.");
       } finally {
         this.cargando = false;
       }

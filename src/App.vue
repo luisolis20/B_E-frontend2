@@ -200,6 +200,8 @@
 
               <router-link :to="{ path: '/about/' + idus }" class="nav-item nav-link" v-if="mostrarOpciones3"
                 :class="{ 'active': $route.path === '/about/' + idus }">Nuevo</router-link>
+              <router-link :to="{ path: '/estabout/' + idus }" class="nav-item nav-link" v-if="mostrarOpciones3"
+                :class="{ 'active': $route.path === '/estabout/' + idus }">NuevoE</router-link>
 
               <!--<router-link :to="{ path: '/userall/' + idus }" class="nav-item nav-link" v-if="mostrarOpciones3"
                 :class="{ 'active': $route.path === '/userall/' + idus }">Usuarios Registrados</router-link>-->

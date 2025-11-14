@@ -5,7 +5,7 @@ module.exports = defineConfig({
   transpileDependencies: true,
 
   // ✅ Usa ruta raíz en producción (evita revelar nombre de carpeta)
-  publicPath: process.env.NODE_ENV === 'production' ? '/' : '/',
+  publicPath: process.env.NODE_ENV === 'production' ? '/b_e/' : '/',
 
   // ✅ Carpeta limpia para build
   outputDir: 'dist',
@@ -31,7 +31,7 @@ module.exports = defineConfig({
         __API_BOLSA__: JSON.stringify(
           process.env.NODE_ENV === 'production'
             ? 'http://vinculacionconlasociedad.utelvt.edu.ec/backendbolsaempleo/api'
-            : 'http://backendbolsaempleo.test/api'
+            : 'http://vinculacionconlasociedad.utelvt.edu.ec/backendbolsaempleo/api'
         ),
         __API_CVN__: JSON.stringify(
           process.env.NODE_ENV === 'production'
