@@ -328,10 +328,10 @@ export default {
                 if (error.response?.status === 404) {
                     // ✅ Se controla el error y NO se imprime en consola como un error
                     // ⚠️ Importante: No lanzamos el error ni usamos console.error
-                    console.warn("El estudiante no poseee información personal.");
+                    //console.warn("El estudiante no poseee información personal.");
                 } else {
                     // ⚠️ Solo mostramos otros errores reales
-                    console.error("Error inesperado al obtener la información personal:", error.message);
+                    //console.error("Error inesperado al obtener la información personal:", error.message);
                 }
                 return null;
 

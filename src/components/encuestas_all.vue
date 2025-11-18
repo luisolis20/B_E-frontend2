@@ -194,7 +194,7 @@ export default {
                 if (error.response?.status === 404) {
                     // ✅ Se controla el error y NO se imprime en consola como un error
                     // ⚠️ Importante: No lanzamos el error ni usamos console.error
-                    console.warn("No hay formularios creados");
+                    //console.warn("No hay formularios creados");
                 } else {
                     // ⚠️ Solo mostramos otros errores reales
                     console.error("Error inesperado:", error.message);

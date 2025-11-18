@@ -30,8 +30,8 @@ module.exports = defineConfig({
       new webpack.DefinePlugin({
         __API_BOLSA__: JSON.stringify(
           process.env.NODE_ENV === 'production'
-            ? 'http://backendbolsaempleo.test/api'
-            : 'http://backendbolsaempleo.test/api'
+            ? 'http://192.168.1.19/backendbolsaempleo/api'
+            : 'http://192.168.1.19/backendbolsaempleo/api'
         ),
         __API_CVN__: JSON.stringify(
           process.env.NODE_ENV === 'production'

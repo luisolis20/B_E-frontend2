@@ -200,7 +200,7 @@ export default {
                 }
             } catch (error) {
                 if (error.response?.status === 404) {
-                    console.warn("El estudiante no posee emprendimientos.");
+                    //console.warn("El estudiante no posee emprendimientos.");
                 } else {
                     console.error("Error inesperado:", error.message);
                 }

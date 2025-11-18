@@ -114,14 +114,14 @@
                     const allData = response.data?.data || [];
 
                     if (allData.length === 0) {
-                        console.warn("No se encontraron postulaciones.");
+                        //console.warn("No se encontraron postulaciones.");
                     }
 
                     this.postulacionespr = allData;
                     this.lastPage = Math.ceil(this.postulacionespr.length / 10);
                     this.updateFilteredData();
                 } catch (error) {
-                    console.warn("No hay postulaciones para este usuario");
+                    //console.warn("No hay postulaciones para este usuario");
                     this.postulacionespr = []; // Asegura que no queden datos anteriores
                     this.lastPage = 1;
                     this.updateFilteredData();
