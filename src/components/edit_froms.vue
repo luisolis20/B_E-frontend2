@@ -143,6 +143,7 @@ import store from '@/store';
 import axios from 'axios';
 import { mostraralertas, enviarsolig } from '@/assets/scripts/scriptfunciones/funciones';
 import { getMe } from '@/store/auth';
+import API from '@/assets/scripts/services/axios';
 import { useRoute } from 'vue-router';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
@@ -163,7 +164,7 @@ export default {
             hoveringTooltiptipoencuesta: false,
             showTooltipACTIVO: false,
             hoveringTooltipACTIVO: false,
-            url: `${__API_BOLSA__}/b_e/vin/seguiformulario`
+            url: `/b_e/vin/seguiformulario`
 
         }
     },
@@ -179,7 +180,7 @@ export default {
     methods: {
         async getFormulario() {
             try {
-                const response = await axios.get(this.url);
+                const response = await API.get(this.url);
                 //console.log(response.data.data[0]);
 
 

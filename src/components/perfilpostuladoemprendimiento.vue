@@ -103,6 +103,7 @@ import { mostraralertas, enviarsoliedit,enviarsolig,enviarsoli } from '@/assets/
 import { useRoute } from 'vue-router';
 import { getMe } from '@/store/auth';
 import axios from 'axios';
+import API from '@/assets/scripts/services/axios';
 import store from '@/store';
 import jsPDF from 'jspdf';
 import dayjs from 'dayjs';
@@ -343,12 +344,12 @@ export default {
                 investigacion: '', // URL de investigación y publicaciones
                 otrosDatos: '', // URL de otros datos relevantes
             },
-            url44: `${__API_BOLSA__}/b_e/vin/consultapostuserestado2empr`,
+            url44: `/b_e/vin/consultapostuserestado2empr`,
             cargando: false,
             si_postula: false,
             postulacionespr: [],
             detalle_si: "",
-            urlest: `${__API_BOLSA__}/b_e/vin/estadopostuserempr`,
+            urlest: `/b_e/vin/estadopostuserempr`,
             
         }
     },
@@ -393,7 +394,7 @@ export default {
             this.cargando=true;
             try{
                 
-                const response = await axios.get(this.url44);
+                const response = await API.get(this.url44);
                 // Verifica si la respuesta tiene datos válidos
                 const allData = response.data?.data || [];
                 //console.log(allData);
@@ -1564,7 +1565,7 @@ export default {
            
             try {
                     // Enviar el correo electrónico
-                    const responseCorreo = await axios.post(`${__API_BOLSA__}/b_e/vin/enviar-aceptacion-postulacion`, {
+                    const responseCorreo = await API.post(`/b_e/vin/enviar-aceptacion-postulacion`, {
                     
                         email: this.email.trim(),
                         firts_name:this.nombre.trim(),
@@ -1574,7 +1575,7 @@ export default {
                     if (responseCorreo.status === 200) {
                         // Si el correo se envió correctamente, proceder a eliminar la postulación
                     
-                        const responseEliminar = await axios.delete('${__API_BOLSA__}/b_e/vin/postulacions/' + this.id);
+                        const responseEliminar = await API.delete('/b_e/vin/postulacions/' + this.id);
 
                         // Verificar si la postulación se eliminó correctamente
                         if (responseEliminar.status === 200) {
@@ -1596,7 +1597,7 @@ export default {
             
          /*   try {
 
-                const responseCorreo = await axios.post("${__API_BOLSA__}/b_e/vin/enviar-aceptacion-postulacion",
+                const responseCorreo = await axios.post("/b_e/vin/enviar-aceptacion-postulacion",
                     {
                         email: this.email.trim(),
                         firts_name:this.nombre.trim(),

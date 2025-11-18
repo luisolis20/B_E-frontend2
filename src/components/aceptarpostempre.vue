@@ -106,6 +106,7 @@
 
 import { useRoute } from 'vue-router';
 import axios from 'axios';
+import API from '@/assets/scripts/services/axios';
 import store from '@/store';
 import {mostraralertas, enviarsolig, mostraralertas2} from '@/assets/scripts/scriptfunciones/funciones';
 import { getMe } from '@/store/auth';
@@ -124,7 +125,7 @@ export default {
             modalidad:'',
             categoria:'',
             jefe:'',
-            urk32:`${__API_BOLSA__}/b_e/vin/consultaofert`,
+            urk32:`/b_e/vin/consultaofert`,
             
             cargando: false,
         }
@@ -150,7 +151,7 @@ export default {
     methods:{
         async fetchData(url) {
             try {
-                const response = await axios.get(url);
+                const response = await API.get(url);
                 return response.data;
             } catch (error) {
                 console.error(`Error al obtener datos desde ${url}:`, error);
@@ -159,7 +160,7 @@ export default {
         },
         
         getEmpresa(){
-           axios.get(this.urk32).then(
+           API.get(this.urk32).then(
                 res=>{
                     this.empresa=res.data.data[0].Empresa;
                     this.titulo=res.data.data[0].titulo;

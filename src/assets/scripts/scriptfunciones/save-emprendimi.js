@@ -1,6 +1,7 @@
 import { mostraralertas, enviarsolig, enviarsoliedit } from '@/assets/scripts/scriptfunciones/funciones';
 import { useRoute } from 'vue-router';
 import { getMe } from '@/store/auth';
+import API from '@/assets/scripts/services/axios';
 import axios from 'axios';
 import store from '@/store';
 
@@ -29,12 +30,12 @@ export default {
             sitio_web: '',
             redes_sociales: '',
             estado_empren: '',
-            url: `${__API_BOLSA__}/b_e/vin/emprendimientos_E`,
+            url: `/b_e/vin/emprendimientos_E`,
             cargando: false,
             Errorfoto: false,
             guardaremprendimiento: true,
-            ur3: `${__API_BOLSA__}/b_e/vin/consultarediremp`,
-            urlinformacionpersonal: "http://vinculacionconlasociedad.utelvt.edu.ec/cvubackendv2/api/cvn/v1/informacionpersonal",
+            ur3: `/b_e/vin/consultarediremp`,
+            urlinformacionpersonal: `${__API_CVN__}/cvn/v1/infromaciondata`,
             // Verificación de correo
             mostrarModal: false,
             codigov: "",
@@ -61,7 +62,7 @@ export default {
     methods: {
         async getEmprendiemi() {
             try {
-                const response = await axios.get(this.ur3);
+                const response = await API.get(this.ur3);
                 //console.log(response.data.data[0]);
 
 
@@ -85,7 +86,7 @@ export default {
                     this.sitio_web = response.data.data[0].sitio_web;
                     this.redes_sociales = response.data.data[0].redes_sociales;
                     this.est = response.data.data[0].estado_empren;
-                    console.log(this.fotografia2);
+                    //console.log(this.fotografia2);
                     /*if (this.est == 1) {
                         this.estado_empren = "Disponible"
                     } else if (this.est == 2) {
@@ -128,22 +129,22 @@ export default {
                 }
 
                 else if (this.tiempo_emprendimiento == '') {
-                    mostraralertas('Ingrese tiempo del emprendimiento', 'warning', 'tiempo');
+                    mostraralertas('Ingrese tiempo del emprendimiento', 'warning', 'tiempo_emprendimiento');
                 } else if (this.horarios_atencion == '') {
-                    mostraralertas('Seleccione horario de atencion del emprendimiento', 'warning', 'horario');
+                    mostraralertas('Seleccione horario de atencion del emprendimiento', 'warning', 'horarios_atencion');
                 } else if (this.direccion == '') {
                     mostraralertas('Ingrese direccion del emprendimiento', 'warning', 'direccion');
                 } else if (this.telefono_contacto == '') {
-                    mostraralertas('Ingrese telefono de contacto del emprendimiento', 'warning', 'telefono');
+                    mostraralertas('Ingrese telefono de contacto del emprendimiento', 'warning', 'telefono_contacto');
                 } else if (this.email_contacto == '') {
-                    mostraralertas('Ingrese email de contacto del emprendimiento', 'warning', 'email');
+                    mostraralertas('Ingrese email de contacto del emprendimiento', 'warning', 'email_contacto');
                 } else if (this.sitio_web == '') {
-                    mostraralertas('Ingrese sitio web del emprendimiento', 'warning', 'sitio');
+                    mostraralertas('Ingrese sitio web del emprendimiento', 'warning', 'sitio_web');
                 } else if (this.redes_sociales == '') {
-                    mostraralertas('Ingrese redes sociales del emprendimiento', 'warning', 'redes');
+                    mostraralertas('Ingrese redes sociales del emprendimiento', 'warning', 'redes_sociales');
                 }
                 else if (!this.email_contacto.endsWith("@gmail.com")) {
-                    mostraralertas('El correo de Empresa debe ser de Gmail (@gmail.com)', 'error', 'email');
+                    mostraralertas('El correo de Empresa debe ser de Gmail (@gmail.com)', 'error', 'email_contacto');
                 } else {
                     this.enviarCodigo();
 
@@ -202,7 +203,7 @@ export default {
         async enviarCodigo() {
             try {
 
-                const response = await axios.post(`${__API_BOLSA__}/b_e/vin/enviar-correo`,
+                const response = await API.post(`/b_e/vin/enviar-correo`,
                     {
                         email: this.email_contacto.trim(),
                     }
@@ -262,7 +263,7 @@ export default {
                 estado_empren: 2,
                 CIInfPer: this.idus
             };
-            enviarsolig('POST', parametros, `${__API_BOLSA__}/b_e/vin/emprendimientos_E`, 'Emprendimiento Creado');
+            enviarsolig('POST', parametros, `/b_e/vin/emprendimientos_E`, 'Emprendimiento Creado');
             this.$router.push('/misemprendimientos/' + this.idus);
         },
         async procesarActualizar() {
@@ -294,7 +295,7 @@ export default {
                 const response = await axios.get(this.urlinformacionpersonal);
                 const data = response.data.data[0];
                 const apellidos = data.ApellInfPer + ' ' + data.ApellMatInfPer + ' ' + data.NombInfPer;
-                const responseCorreo = await axios.post(`${__API_BOLSA__}/b_e/vin/revision-emprendimiento`, {
+                const responseCorreo = await API.post(`/b_e/vin/revision-emprendimiento`, {
 
                     email: this.email_contacto.trim(),
                     firts_name: apellidos,
@@ -327,7 +328,7 @@ export default {
                 const response = await axios.get(this.urlinformacionpersonal);
                 const data = response.data.data[0];
                 const apellidos = data.ApellInfPer + ' ' + data.ApellMatInfPer + ' ' + data.NombInfPer;
-                const responseCorreo = await axios.post(`${__API_BOLSA__}/b_e/vin/revision-actualizacion-emprendimiento`, {
+                const responseCorreo = await API.post(`/b_e/vin/revision-actualizacion-emprendimiento`, {
 
                     email: this.email_contacto.trim(),
                     firts_name: apellidos,

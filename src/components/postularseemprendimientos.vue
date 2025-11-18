@@ -8,6 +8,7 @@
                 <p class="text-dark" v-if="mostrarOpciones2">Estos son los datos de la oferta. Te recordamos que si no
                     posees un CVN no vas a poder postular a la oferta, revisa
                     en tu perfil tu CVN antes de postular.</p>
+                <h1 class="display-2 text-primary" v-if="mostrarOpciones3 && estado_oferta == 2">Datos de la Oferta</h1>
                 <p class="text-dark" v-if="mostrarOpciones3 && estado_oferta == 2">Estos son los datos de la oferta.
                     Antes
                     de aprobar la oferta, revisa que todos los datos sean correctos.</p>
@@ -275,6 +276,7 @@
 import { useRoute } from 'vue-router';
 import script2 from '@/assets/scripts/custom.js';
 import axios from 'axios';
+import API from '@/assets/scripts/services/axios';
 import store from '@/store';
 import { mostraralertas, enviarsolig, mostraralertas2, enviarsolig23, confimar, confimarhabi } from '@/assets/scripts/scriptfunciones/funciones';
 import dayjs from 'dayjs';
@@ -311,9 +313,9 @@ export default {
             estado_oferta: 0,
             botonesBloqueados: false,
             updated_at: '',
-            urlofeempre: `${__API_BOLSA__}/b_e/vin/view-oferta_empleos_emprendimiento`,
-            urk32: `${__API_BOLSA__}/b_e/vin/consultaofertempr`,
-            url255: `${__API_BOLSA__}/b_e/vin/postulacionemprendi`,
+            urlofeempre: `/b_e/vin/view-oferta_empleos_emprendimiento`,
+            urk32: `/b_e/vin/consultaofertempr`,
+            url255: `/b_e/vin/postulacionemprendi`,
             apiBaseUrl: "http://vinculacionconlasociedad.utelvt.edu.ec/cvubackendv2/api/cvn/v1",
             urls: {
 
@@ -476,7 +478,7 @@ export default {
         },
         async getEmpresa() {
             try {
-                const res = await axios.get(this.urk32);
+                const res = await API.get(this.urk32);
                 if (res.data.data) {
                     this.empresa = res.data.data[0].Empresa;
                     this.titulo = res.data.data[0].titulo;
@@ -518,7 +520,7 @@ export default {
             };
 
             if (this.si_cvn) {
-                const response = await enviarsolig23('POST', parametros, `${__API_BOLSA__}/b_e/vin/postulacionemprendi`, 'Postulado con éxito');
+                const response = await enviarsolig23('POST', parametros, `/b_e/vin/postulacionemprendi`, 'Postulado con éxito');
 
                 const fechaEcuador = dayjs().tz('America/Guayaquil').format('YYYY-MM-DDTHH:mm:ss');
                 const thisidpostu = response.data.id;
@@ -529,8 +531,8 @@ export default {
                     fecha: fechaEcuador,
                     detalle_estado: "Verificando Datos de postulación",
                 };
-                axios.post(`${__API_BOLSA__}/b_e/vin/estadopostuserempr`, parametros2)
-                //enviarsolig('POST', parametros2, '${__API_BOLSA__}/b_e/vin/estadopostuserempr', 'Postulación Aceptada');
+                axios.post(`/b_e/vin/estadopostuserempr`, parametros2)
+                //enviarsolig('POST', parametros2, '/b_e/vin/estadopostuserempr', 'Postulación Aceptada');
 
                 this.$router.push('/principal/' + this.ide);
             } else {
@@ -808,7 +810,7 @@ export default {
             try {
                 //console.log('funciona')
                 const responsae = await confimarhabi(
-                    `${__API_BOLSA__}/b_e/vin/oferta_empleos_emprendimientohabi/`,
+                    `/b_e/vin/oferta_empleos_emprendimientohabi/`,
                     id,
                     'Aprobar oferta',
                     '¿Desea aprobar la oferta ' + nombre + '?',
@@ -821,12 +823,12 @@ export default {
                 if (responsae.mensaje === 'Habilitado con Éxito!!') {
                     //console.log('funciona')
                     this.urlofeempre += '/' + id;
-                    const response2 = await axios.get(this.urlofeempre);
+                    const response2 = await API.get(this.urlofeempre);
                     //console.log(response2);
                     const data = response2.data.data[0];
 
                     const apellidos = data.ApellInfPer + ' ' + data.ApellMatInfPer + ' ' + data.NombInfPer;
-                    const responseCorreo = await axios.post(`${__API_BOLSA__}/b_e/vin/enviar-aprobacion-oferta-emprendimiento`, {
+                    const responseCorreo = await API.post(`/b_e/vin/enviar-aprobacion-oferta-emprendimiento`, {
 
                         email: data.email_contacto,
                         firts_name: apellidos,
@@ -852,7 +854,7 @@ export default {
         },
         async eliminar(id, nombre) {
             try {
-                const response = await confimar(`${__API_BOLSA__}/b_e/vin/oferta_empleos_emprendimiento/`,
+                const response = await confimar(`/b_e/vin/oferta_empleos_emprendimiento/`,
                     id,
                     'Rechazar oferta',
                     '¿Realmente desea rechazar la oferta ' + nombre + '?',
@@ -865,12 +867,12 @@ export default {
                 if (response.mensaje === 'Inhabilitado con Éxito!!') {
 
                     this.urlofeempre += '/' + id;
-                    const response2 = await axios.get(this.urlofeempre);
+                    const response2 = await API.get(this.urlofeempre);
 
                     const data = response2.data.data[0];
 
                     const apellidos = data.ApellInfPer + ' ' + data.ApellMatInfPer + ' ' + data.NombInfPer;
-                    const responseCorreo = await axios.post(`${__API_BOLSA__}/b_e/vin/enviar-oferta-rechazo-emprendimiento`, {
+                    const responseCorreo = await API.post(`/b_e/vin/enviar-oferta-rechazo-emprendimiento`, {
 
                         email: data.email_contacto,
                         firts_name: apellidos,

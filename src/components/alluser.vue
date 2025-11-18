@@ -78,7 +78,7 @@
                 </table>
             </div>
             <div v-if="filteredusuarios.length === 0" class="text-center">
-                <h3>No hay ofertas disponibles</h3>
+                <h3>No hay usuarios creados</h3>
             </div>
             <div class="mt-5">
                 <label class="border-0 border-bottom rounded me-5 py-3 mb-4 text-dark">Para crear usuarios</label>
@@ -113,6 +113,7 @@
 <script>
 import script2 from '@/assets/scripts/custom.js';
 import axios from 'axios';
+import API from '@/assets/scripts/services/axios';
 import { getMe } from '@/store/auth';
 import { useRoute } from 'vue-router';
 import { confimar, confimarhabi } from '@/assets/scripts/scriptfunciones/funciones';
@@ -120,9 +121,9 @@ export default {
     data() {
         return {
             idus: 0,
-            url255:  `${__API_BOLSA__}/b_e/vin/users`,
-            urlinhabilitar: `${__API_BOLSA__}/b_e/vin/users/`,
-            urlhabilitar: `${__API_BOLSA__}/b_e/vin/usershabi/`,
+            url255:  `/b_e/vin/users`,
+            urlinhabilitar: `/b_e/vin/users/`,
+            urlhabilitar: `/b_e/vin/usershabi/`,
             usuariosarr: [],
             filteredusuarios: [],
             searchQuery: '',
@@ -150,7 +151,7 @@ export default {
         async getUsers() {
             this.cargando = true;
             try {
-                const response = await axios.get(`${this.url255}?all=true`);
+                const response = await API.get(`${this.url255}?all=true`);
                 const allData = response.data.data;
 
                 this.usuariosarr = allData;

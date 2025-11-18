@@ -304,6 +304,7 @@ import store from '@/store';
 import axios from 'axios';
 import { mostraralertas, enviarsoligp } from '@/assets/scripts/scriptfunciones/funciones';
 import { getMe } from '@/store/auth';
+import API from '@/assets/scripts/services/axios';
 import { useRoute } from 'vue-router';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
@@ -317,9 +318,9 @@ export default {
             idusop: 0,
             PREGUNTA: '',
             nombre_forms: 'Formulario',
-            url: `${__API_BOLSA__}/b_e/vin/seguipreguntas`,
-            url2: `${__API_BOLSA__}/b_e/vin/seguiformulario`,
-            url23: `${__API_BOLSA__}/b_e/vin/seguitiporespuesta`,
+            url: `/b_e/vin/seguipreguntas`,
+            url2: `/b_e/vin/seguiformulario`,
+            url23: `/b_e/vin/seguitiporespuesta`,
             tipo: '',
             cargando2: false,
             showTooltipPREGUNTA: false,
@@ -366,7 +367,7 @@ export default {
     methods: {
         async getFormulario() {
             try {
-                const response = await axios.get(this.url2);
+                const response = await API.get(this.url2);
                 const allData = response.data.data;
                 //console.log(allData);
                 this.nombre_forms = allData[0].NOMBRE;
@@ -446,7 +447,7 @@ export default {
         async getPreguntas() {
             this.cargando = true;
             try {
-                const response = await axios.get(`${this.url}?all=true`);
+                const response = await API.get(`${this.url}?all=true`);
                 const allData = response.data.data;
                 //console.log(allData);
 
@@ -470,7 +471,7 @@ export default {
             const newurl = this.url23 + '/' + this.preguntaId;
             this.cargando2 = true;
             try {
-                const response = await axios.get(newurl);
+                const response = await API.get(newurl);
                 if (response.data.data) {
                     const allData = response.data.data;
 
@@ -632,7 +633,7 @@ export default {
         },
         async guardarop(event) {
             event.preventDefault();
-            const url234 = `${__API_BOLSA__}/b_e/vin/seguitiporespuesta`;
+            const url234 = `/b_e/vin/seguitiporespuesta`;
             try {
                 const fechaEcuador = dayjs().tz('America/Guayaquil').format('YYYY-MM-DD HH:mm:ss');
 

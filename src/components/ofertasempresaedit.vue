@@ -294,6 +294,7 @@
 import store from '@/store';
 import {mostraralertas, enviarsolig,enviarsoliedit} from '@/assets/scripts/scriptfunciones/funciones';
 import { useRoute } from 'vue-router';
+import API from '@/assets/scripts/services/axios';
 import { getMe } from '@/store/auth';
 import axios from 'axios';
 export default {
@@ -309,7 +310,7 @@ export default {
             modalidad:'',
             categoriaSeleccionada:'',
             Fechafinofer:'',
-            ur3:`${__API_BOLSA__}/b_e/vin/oferta__empleos2`,
+            ur3:`/b_e/vin/oferta__empleos2`,
             empresa_id:'',
             cargando: false,
             showTooltiptitulo: false,
@@ -343,7 +344,7 @@ export default {
     },
     methods:{
         async getOfertas(){
-            axios.get(this.ur3).then(
+            API.get(this.ur3).then(
                 res=>{
                     this.titulo= res.data.data[0].titulo;
                     this.descripcion= res.data.data[0].descripcion;

@@ -78,6 +78,7 @@
 </style>
 <script>
     import axios from 'axios';
+    import API from '@/assets/scripts/services/axios';
     import { useRoute } from 'vue-router';
     import { confimar } from '@/assets/scripts/scriptfunciones/funciones';
     import { getMe } from '@/store/auth';
@@ -85,7 +86,7 @@
         data(){
             return{
                 idus:0,
-                url213:`${__API_BOLSA__}/b_e/vin/consultapostuserestado`,
+                url213:`/b_e/vin/consultapostuserestado`,
                 postulacionespr: [],
                 filteredpostulaciones: [],
                 searchQuery: '',
@@ -107,7 +108,7 @@
             async getPostulaciones(){
                 this.cargando=true;
                 try {
-                    const response = await axios.get(this.url213);
+                    const response = await API.get(this.url213);
                     
                     // Verifica si la respuesta tiene datos válidos
                     const allData = response.data?.data || [];
@@ -169,7 +170,7 @@
                 }
             },
             eliminar(id,nombre){
-                confimar(`${__API_BOLSA__}/b_e/vin/consultapostuserestado/`,id,'Eliminar registro','¿Realmente desea eliminar a '+nombre+'?');
+                confimar(`/b_e/vin/consultapostuserestado/`,id,'Eliminar registro','¿Realmente desea eliminar a '+nombre+'?');
                 this.cargando = false;
                 this.$router.push('/principal/'+this.idus);
 

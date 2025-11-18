@@ -11,7 +11,7 @@ export default {
       email: '',
       password: '',
       rol: '',
-      url: `${__API_BOLSA__}/b_e/vin/users`,
+      url: `/b_e/vin/users`,
 
       // Verificación de correo
       mostrarModal: false,
@@ -102,7 +102,7 @@ export default {
     },
     async getUsuairoSS() {
       try {
-        const response = await axios.get(this.url);
+        const response = await API.get(this.url);
         if (response) {
           const data = response.data.data;
           this.nombre = data.name;
@@ -118,7 +118,7 @@ export default {
     async enviarCodigo() {
       try {
 
-        const response = await axios.post(`${__API_BOLSA__}/b_e/vin/enviar-correo`,
+        const response = await API.post(`/b_e/vin/enviar-correo`,
           {
             email: this.email.trim(),
           }
@@ -153,7 +153,7 @@ export default {
 
     // ✅ Guardar usuario en backend
     procesarGuardar() {
-      const urlg = `${__API_BOLSA__}/b_e/vin/users`
+      const urlg = `/b_e/vin/users`
       const parametros = {
         name: this.nombre.trim(),
         email: this.email.trim(),
@@ -172,7 +172,7 @@ export default {
         role: this.rol.trim(),
         estado: 1,
       };
-      enviarsoliedit("PUT", parametros, this.url, "ACtualizado");
+      enviarsoliedit("PUT", parametros, this.url, "Actualizado");
       this.$router.push('/userall/' + store.state.idusu);
     },
 

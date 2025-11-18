@@ -144,13 +144,14 @@
     import { useRoute } from 'vue-router';
     import { confimar } from '@/assets/scripts/scriptfunciones/funciones';
     import { getMe } from '@/store/auth';
+    import API from '@/assets/scripts/services/axios';
     import script2 from '@/assets/scripts/custom.js';
     export default{
         data(){
             return{
                 ide:0,
                 idus:0,
-                url21:`${__API_BOLSA__}/b_e/vin/oferta_empleos_emprendimiento`,
+                url21:`/b_e/vin/oferta_empleos_emprendimiento`,
                 ofertas:[],
                 filteredofertas: [],
                 searchQuery: '',
@@ -179,7 +180,7 @@
             async getOFertas() {
                 this.cargando=true;
                 try {
-                    const response = await axios.get(`${this.url21}?all=true`);
+                    const response = await API.get(`${this.url21}?all=true`);
                     const allData = response.data.data;
 
                     this.ofertas = allData;
@@ -246,7 +247,7 @@
             },
             eliminar(id,nombre){
                 try {
-                    confimar(`${__API_BOLSA__}/b_e/vin/oferta_empleos_emprendimiento/`,id,'Eliminar registro','¿Realmente desea eliminar la oferta'+nombre+'?', this.actualizar);
+                    confimar(`/b_e/vin/oferta_empleos_emprendimiento/`,id,'Eliminar registro','¿Realmente desea eliminar la oferta'+nombre+'?', this.actualizar);
                     
                 } catch (error) {
                     console.error("Error al eliminar:", error);

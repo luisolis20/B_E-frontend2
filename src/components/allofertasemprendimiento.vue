@@ -277,6 +277,7 @@
 import script2 from '@/assets/scripts/custom.js';
 import { nextTick } from "vue";
 import axios from 'axios';
+import API from '@/assets/scripts/services/axios';
 import "owl.carousel/dist/assets/owl.carousel.css";
 import "owl.carousel";
 import { useRoute } from 'vue-router';
@@ -288,9 +289,9 @@ export default {
     data() {
         return {
             idus: 0,
-            url255: `${__API_BOLSA__}/b_e/vin/consultanopostempre`,
-            url2552: `${__API_BOLSA__}/b_e/vin/oferta_empleos_emprendimiento`,
-            urlofeempre: `${__API_BOLSA__}/b_e/vin/view-oferta_empleos_emprendimiento`,
+            url255: `b_e/vin/consultanopostempre`,
+            url2552: `/b_e/vin/oferta_empleos_emprendimiento`,
+            urlofeempre: `/b_e/vin/view-oferta_empleos_emprendimiento`,
             ofertas: [],
             filteredofertas: [],
             searchQuery: '',
@@ -334,7 +335,7 @@ export default {
         async getOFertas() {
             this.cargando = true;
             try {
-                const response = await axios.get(`${this.url255}?all=true`, {
+                const response = await API.get(`${this.url255}?all=true`, {
                     params: { CIInfPer: this.idus }
                 });
                 const allData = response.data.data;
@@ -351,7 +352,7 @@ export default {
         async getOFertas2() {
             this.cargando = true;
             try {
-                const response = await axios.get(`${this.url2552}?all=true`);
+                const response = await API.get(`${this.url2552}?all=true`);
                 const allData = response.data.data;
 
                 this.ofertas = allData;
@@ -663,7 +664,7 @@ export default {
         },
         async eliminar(id, nombre) {
             try {
-                const response = await confimar(`${__API_BOLSA__}/b_e/vin/oferta_empleos_emprendimiento/`,
+                const response = await confimar(`/b_e/vin/oferta_empleos_emprendimiento/`,
                     id,
                     'Rechazar oferta',
                     '¿Realmente desea rechazar la oferta ' + nombre + '?',
@@ -673,12 +674,12 @@ export default {
                 if (response.mensaje === 'Inhabilitado con Éxito!!') {
 
                     this.urlofeempre += '/' + id;
-                    const response2 = await axios.get(this.urlofeempre);
+                    const response2 = await API.get(this.urlofeempre);
 
                     const data = response2.data.data[0];
 
                     const apellidos = data.ApellInfPer + ' ' + data.ApellMatInfPer + ' ' + data.NombInfPer;
-                    const responseCorreo = await axios.post(`${__API_BOLSA__}/b_e/vin/enviar-oferta-rechazo-emprendimiento`, {
+                    const responseCorreo = await API.post(`/b_e/vin/enviar-oferta-rechazo-emprendimiento`, {
 
                         email: data.email_contacto,
                         firts_name: apellidos,
@@ -706,7 +707,7 @@ export default {
             try {
                 //console.log('funciona')
                 const responsae = await confimarhabi(
-                    `${__API_BOLSA__}/b_e/vin/oferta_empleos_emprendimientohabi/`,
+                    `/b_e/vin/oferta_empleos_emprendimientohabi/`,
                     id,
                     'Aprobar oferta',
                     '¿Desea aprobar la oferta ' + nombre + '?',
@@ -716,12 +717,12 @@ export default {
                 if (responsae.mensaje === 'Habilitado con Éxito!!') {
                     //console.log('funciona')
                     this.urlofeempre += '/' + id;
-                    const response2 = await axios.get(this.urlofeempre);
+                    const response2 = await API.get(this.urlofeempre);
                     //console.log(response2);
                     const data = response2.data.data[0];
 
                     const apellidos = data.ApellInfPer + ' ' + data.ApellMatInfPer + ' ' + data.NombInfPer;
-                    const responseCorreo = await axios.post(`${__API_BOLSA__}/b_e/vin/enviar-aprobacion-oferta-emprendimiento`, {
+                    const responseCorreo = await API.post(`/b_e/vin/enviar-aprobacion-oferta-emprendimiento`, {
 
                         email: data.email_contacto,
                         firts_name: apellidos,

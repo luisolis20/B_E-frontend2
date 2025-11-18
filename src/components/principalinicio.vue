@@ -85,6 +85,7 @@
 
                           </div>
                           <div class="col-md-12 col-lg-8">
+                            <br><br>
                             <h4>{{ ofe.titulo }}</h4>
                             <h6>Fecha de publicación: {{ new Date(ofe.created_at).toLocaleDateString('es-ES') }}</h6>
                             <div v-if="new Date(ofe.fechaFinOferta) > new Date() && tiemposRestantes[ofe.id]">
@@ -102,7 +103,7 @@
                               <h6 class="text-danger">La oferta ya caducó</h6>
                             </div>
                             <h6>Categoría / Área: {{ ofe.categoria }}</h6>
-                            <p class="text-dark">Descripcion: {{ ofe.descripcion }}</p>
+                            <p class="descripcionmia text-dark">Descripcion: {{ ofe.descripcion }}</p>
                             <div class="d-flex justify-content-between flex-lg-wrap">
                               <p class="text-dark fs-5 fw-bold mb-0">Nombre de la Empresa: {{ ofe.Empresa }}</p>
                             </div>
@@ -653,6 +654,7 @@
 import customscript from '@/assets/scripts/custom.js';
 import { mostraralertas, enviarsoligp2, enviarsoligp3 } from '@/assets/scripts/scriptfunciones/funciones';
 import axios from 'axios';
+import API from '@/assets/scripts/services/axios';
 import { useRoute } from 'vue-router';
 import dayjs from 'dayjs';
 import { getMe } from '@/store/auth';
@@ -669,13 +671,13 @@ export default {
     return {
       idus: 0,
       id_encuesta: 0,
-      url255: `${__API_BOLSA__}/b_e/vin/consultanopostofert`,
-      url2552: `${__API_BOLSA__}/b_e/vin/consultanopostempre`,
-      urltippreg: `${__API_BOLSA__}/b_e/vin/ver_pregunta_en`,
-      urlencuesta: `${__API_BOLSA__}/b_e/vin/verificar_usuario_encuesta`,
-      urlencuesta2: `${__API_BOLSA__}/b_e/vin/seguiencuesta`,
-      urldetalle: `${__API_BOLSA__}/b_e/vin/seguidetalleencuesta`,
-      urltraercarrera: `${__API_BOLSA__}/b_e/vin/registrotitulos`,
+      url255: `/b_e/vin/consultanopostofert`,
+      url2552: `/b_e/vin/consultanopostempre`,
+      urltippreg: `/b_e/vin/ver_pregunta_en`,
+      urlencuesta: `/b_e/vin/verificar_usuario_encuesta`,
+      urlencuesta2: `/b_e/vin/seguiencuesta`,
+      urldetalle: `/b_e/vin/seguidetalleencuesta`,
+      urltraercarrera: `/b_e/vin/registrotitulos`,
       ofertas: [],
       ofertas_emprendi: [],
       categoriaSeleccionada: '',
@@ -795,7 +797,7 @@ export default {
   methods: {
     async verificarEncuesta() {
       try {
-        const res = await axios.get(`${this.urlencuesta}/${this.usuarioCedula}`);
+        const res = await API.get(`${this.urlencuesta}/${this.usuarioCedula}`);
         if (res.data.mensaje === "Debe volver a llenar la encuesta." || res.status === 404) {
           this.mostrarModalEncuesta = true;
           this.mostrarIntroduccion = true;
@@ -815,7 +817,7 @@ export default {
     },
     async obtenerCarreras(cedula) {
       try {
-        const res = await axios.get(`${this.urltraercarrera}/${cedula}`);
+        const res = await API.get(`${this.urltraercarrera}/${cedula}`);
 
         if (res.data.multiple) {
           this.tieneMultiplesCarreras = true;
@@ -832,7 +834,7 @@ export default {
 
     async empezarEncuesta() {
       try {
-        const res = await axios.get(this.urltippreg);
+        const res = await API.get(this.urltippreg);
         this.preguntas = res.data.data;
         this.preguntas.forEach(p => {
           if (p.tipo === "SELECCIÓN MÚLTIPLE") {
@@ -863,14 +865,14 @@ export default {
     async siguientePregunta(idpregunta, id_enc) {
       try {
 
-        console.log(id_enc);
-        console.log(idpregunta);
+        //console.log(id_enc);
+        //console.log(idpregunta);
         const pregunta = this.preguntaActualObj;
         const respuesta = this.respuestas[pregunta.id];
 
-        console.log(pregunta.tipo);
-        console.log(pregunta.respuestas[0].id_respuesta);
-        console.log(respuesta);
+        //console.log(pregunta.tipo);
+        //console.log(pregunta.respuestas[0].id_respuesta);
+        //console.log(respuesta);
 
 
         // Si no hay respuesta, no continuar
@@ -988,7 +990,7 @@ export default {
         }
 
         // Pasar a la siguiente pregunta
-        console.log("Respuestas del usuario:", this.respuestas);
+        //console.log("Respuestas del usuario:", this.respuestas);
         alert("¡Gracias por completar la encuesta!");
         this.mostrarModalEncuesta = false;
 
@@ -1000,7 +1002,7 @@ export default {
     },
     async getOFertas() {
       this.cargando = true;
-      return axios.get(`${this.url255}?all=true`, {
+      return API.get(`${this.url255}?all=true`, {
         params: { user_id: this.idus }
       }).then(res => {
         this.ofertas = res.data.data.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
@@ -1010,7 +1012,7 @@ export default {
     },
     async getOFertasEmpr() {
       this.cargando = true;
-      return axios.get(`${this.url2552}?all=true`, {
+      return API.get(`${this.url2552}?all=true`, {
         params: { CIInfPer: this.idus }
       }).then(res => {
         this.ofertas_emprendi = res.data.data.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));

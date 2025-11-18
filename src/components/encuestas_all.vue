@@ -145,6 +145,7 @@
 import axios from 'axios';
 import store from '@/store';
 import { useRoute } from 'vue-router';
+import API from '@/assets/scripts/services/axios';
 import { confimar, confimarhabi } from '@/assets/scripts/scriptfunciones/funciones';
 import script2 from '@/assets/scripts/custom.js';
 import { getMe } from '@/store/auth';
@@ -152,9 +153,9 @@ export default {
     data() {
         return {
             idus: 0,
-            url2: `${__API_BOLSA__}/b_e/vin/seguiformulario`,
-            urlhabilitar: `${__API_BOLSA__}/b_e/vin/seguiformulariohabi/`,
-            urlinhabilitar: `${__API_BOLSA__}/b_e/vin/seguiformularioelim/`,
+            url2: `/b_e/vin/seguiformulario`,
+            urlhabilitar: `/b_e/vin/seguiformulariohabi/`,
+            urlinhabilitar: `/b_e/vin/seguiformularioelim/`,
             formularioemp: [],
             filteredformulario: [],
             searchQuery: '',
@@ -182,7 +183,7 @@ export default {
         async getFormulario() {
             this.cargando = true;
             try {
-                const response = await axios.get(`${this.url2}?all=true`);
+                const response = await API.get(`${this.url2}?all=true`);
                 const allData = response.data.data;
                 //console.log(allData);
 

@@ -153,6 +153,7 @@
 <script>
 import axios from 'axios';
 import { useRoute } from 'vue-router';
+import API from '@/assets/scripts/services/axios';
 import { confimar, confimarhabi } from '@/assets/scripts/scriptfunciones/funciones';
 import script2 from '@/assets/scripts/custom.js';
 import { getMe } from '@/store/auth';
@@ -160,7 +161,7 @@ export default {
     data() {
         return {
             idus: 0,
-            url2: `${__API_BOLSA__}/b_e/vin/emprendimientos_E`,
+            url2: `/b_e/vin/emprendimientos_E`,
             emprendimientoemp: [],
             filteredemprend: [],
             searchQuery: '',
@@ -190,7 +191,7 @@ export default {
         async getEmprendimiento() {
             this.cargando = true;
             try {
-                const response = await axios.get(`${this.url2}?all=true`);
+                const response = await API.get(`${this.url2}?all=true`);
                 const allData = response.data.data;
                 //console.log(allData);
 
@@ -253,7 +254,7 @@ export default {
         eliminar(id, nombre) {
             try {
                 confimar(
-                    `${__API_BOLSA__}/b_e/vin/consultaredirempelim/`,
+                    `/b_e/vin/consultaredirempelim/`,
                     id,
                     'Inhabilitar registro',
                     '¿Realmente desea inhabilitar el emprenidmiento  ' + nombre + '?',
@@ -267,7 +268,7 @@ export default {
         habilitar(id, nombre) {
             try {
                 confimarhabi(
-                    `${__API_BOLSA__}/b_e/vin/consultaredirempelim2/`,
+                    `/b_e/vin/consultaredirempelim2/`,
                     id,
                     'Hbailitar registro',
                     '¿Desea habilitar el emprendimiento ' + nombre + '?',

@@ -293,6 +293,7 @@
 </style>
 <script>
 import store from '@/store';
+import API from '@/assets/scripts/services/axios';
 import { mostraralertas, enviarsolig } from '@/assets/scripts/scriptfunciones/funciones';
 import { getMe } from '@/store/auth';
 import { useRoute } from 'vue-router';
@@ -330,7 +331,7 @@ export default {
             nombre_emprendimiento: '',
             dueño: '',
             email_contacto: '',
-            url: `${__API_BOLSA__}/b_e/vin/view-emprendimiento`,
+            url: `/b_e/vin/view-emprendimiento`,
 
         }
     },
@@ -388,7 +389,7 @@ export default {
         },
         async getEmprendiemi() {
             try {
-                const response = await axios.get(this.url);
+                const response = await API.get(this.url);
                 //console.log(response.data.data[0]);
 
 
@@ -454,7 +455,7 @@ export default {
             try {
                 // Enviar el correo electrónico
 
-                const responseCorreo = await axios.post(`${__API_BOLSA__}/b_e/vin/revision-oferta-emprendimiento`, {
+                const responseCorreo = await API.post(`/b_e/vin/revision-oferta-emprendimiento`, {
 
                     email: this.email_contacto.trim(),
                     firts_name: this.dueño,
@@ -494,7 +495,7 @@ export default {
                 emprendimiento_id: this.idus
 
             }
-            enviarsolig('POST', parametros, `${__API_BOLSA__}/b_e/vin/oferta_empleos_emprendimiento`, 'Oferta Creada');
+            enviarsolig('POST', parametros, `/b_e/vin/oferta_empleos_emprendimiento`, 'Oferta Creada');
             this.$router.push('/emprendimientosofertview/' + store.state.idusu);
         },
 

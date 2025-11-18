@@ -64,7 +64,7 @@
                                     v-if="emp.estado_empr == 1 && new Date(emp.fechafin) >= new Date()">
                                     <i class="fa-solid fa-eye"></i>
                                 </router-link>
-                               
+
                                 &nbsp;
                                 <button class="btn btn-danger" v-on:click="eliminar(emp.idempresa, emp.empresacorta)"
                                     v-if="emp.estado_empr == 1 && new Date(emp.fechafin) <= new Date() && emp.total_ofertas == 0"
@@ -103,6 +103,26 @@
 
         </div>
     </div>
+    <div class="container mt-5" v-if="mostrarOpciones3">
+        <div class="row gx-4 gy-3 d-flex justify-content-center mt-3" v-if="mostrarOpciones3">
+            <div class="mb-3 col-sm-2">
+                <label class="form-label fw-bold text-dark">Filtrar por Año:</label>
+                <select v-model="filtroAnio" @change="aplicarFiltros" class="form-select text-dark">
+                    <option value="">Todos</option>
+                    <option v-for="anio in aniosDisponibles" :key="anio" :value="anio">{{ anio }}</option>
+                </select>
+            </div>
+            <div class="mb-3 col-sm-2">
+                <label class="form-label fw-bold text-dark">Filtrar por Mes:</label>
+                <select v-model="filtroMes" @change="aplicarFiltros" class="form-select text-dark">
+                    <option value="">Todos</option>
+                    <option v-for="(mes, index) in meses" :key="index" :value="index + 1">{{ mes }}</option>
+                </select>
+            </div>
+        </div>
+        <h4 class="text-center mb-3">Gráfico estadístico de emprendimientos</h4>
+        <canvas id="graficoemprendimientoemp" height="100"></canvas>
+    </div>
     <!-- Cart Page End -->
 </template>
 <style>
@@ -112,7 +132,7 @@
 import script2 from '@/assets/scripts/custom.js';
 import API from '@/assets/scripts/services/axios';
 import { useRoute } from 'vue-router';
-import { confimar,confimarhabi } from '@/assets/scripts/scriptfunciones/funciones';
+import { confimar, confimarhabi } from '@/assets/scripts/scriptfunciones/funciones';
 import { Chart, registerables } from 'chart.js';
 Chart.register(...registerables);
 export default {
@@ -128,6 +148,15 @@ export default {
             currentPage: 1,
             lastPage: 1,
             buscando: false,
+            grafico: null,
+            filtroMes: '',
+            filtroAnio: '',
+            aniosDisponibles: [],
+            meses: [
+                "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+                "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
+            ],
+            interval: null,
         }
     },
     mounted() {
@@ -146,12 +175,177 @@ export default {
                 this.empresasprac = allData;
                 this.lastPage = Math.ceil(this.empresasprac.length / 10);
                 this.updateFilteredData();
+                if (this.filtroAnio === '' || this.filtroMes === '') {
+                    this.generarGrafico();
+                    this.aniosDisponibles = [...new Set(
+                        this.empresasprac.map(o => new Date(o.created_at).getFullYear())
+                    )].sort((a, b) => b - a);
+                } else {
+                    this.aniosDisponibles = [...new Set(
+                        this.empresasprac.map(o => new Date(o.created_at).getFullYear())
+                    )].sort((a, b) => b - a);
+                }
             } catch (error) {
                 console.error("Error al obtener datos:", error);
             } finally {
                 this.cargando = false;
             }
 
+        },
+        aplicarFiltros() {
+            let filtradas = this.empresasprac;
+
+            if (this.filtroAnio) {
+                filtradas = filtradas.filter(ofe =>
+                    new Date(ofe.created_at).getFullYear() == this.filtroAnio
+                );
+            }
+
+            if (this.filtroMes) {
+                filtradas = filtradas.filter(ofe =>
+                    new Date(ofe.created_at).getMonth() + 1 == this.filtroMes
+                );
+            }
+
+            // Tabla
+            this.filteredempresas = filtradas;
+
+            this.lastPage = Math.ceil(this.filteredempresas.length / 10);
+            this.currentPage = 1;
+            this.filteredempresas = this.filteredempresas.slice(0, 10);
+
+            this.generarGrafico(filtradas);
+        },
+        generarGrafico(empresaData = this.empresasprac) {
+            const conteoemprendimientoemp = {};
+            const conteoPostulados = {};
+            // console.log(emprendimientoempData);
+
+            // Contamos emprendimientoemp y postulados por empresa
+            empresaData.forEach(post => {
+                const duenio = post.representante;
+
+                if (!conteoemprendimientoemp[duenio]) {
+                    conteoemprendimientoemp[duenio] = 0;
+                    conteoPostulados[duenio] = 0;
+                }
+
+                // Total de emprendimientos
+                conteoemprendimientoemp[duenio]++;
+
+                // Total de ofertas
+                conteoPostulados[duenio] += post.total_ofertas || 0;
+
+                
+            });
+
+            const empresas = Object.keys(conteoemprendimientoemp);
+            const datosemprendimientoemp = Object.values(conteoemprendimientoemp);
+            const datosOfertas = Object.values(conteoPostulados);
+            
+
+            if (this.grafico) {
+                this.grafico.data.labels = empresas;
+                this.grafico.data.datasets[0].data = datosemprendimientoemp;
+                this.grafico.data.datasets[1].data = datosOfertas;
+                this.grafico.destroy();
+            }
+
+            const ctx = document.getElementById('graficoemprendimientoemp');
+
+            const coloremprendimientoemp = "hsl(120, 80%, 50%)";   // Verde
+            const colorPostulados = "hsl(220, 80%, 50%)"; // Azul
+
+
+            this.grafico = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: empresas,
+                    datasets: [
+                        {
+                            label: 'Empresas',
+                            data: datosemprendimientoemp,
+                            backgroundColor: coloremprendimientoemp,
+                            borderColor: coloremprendimientoemp,
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'Ofertas',
+                            data: datosOfertas,
+                            backgroundColor: colorPostulados,
+                            borderColor: colorPostulados,
+                            borderWidth: 1
+                        },
+                        
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                title: function (context) {
+                                    return `Dueño: ${context[0].label}`;
+                                },
+                                label: function (context) {
+                                    return `${context.dataset.label}: ${context.raw}`;
+                                }
+                            }
+                        },
+                        datalabels: {
+                            anchor: "center",
+                            align: "center",
+                            color: "#fff",
+                            font: {
+                                weight: "bold",
+                                size: 15,
+                            },
+                            formatter: (value) => value,
+                        },
+                    },
+                    scales: {
+                        x: {
+                            ticks: {
+                                callback: function (value, index) {
+                                    const empresa = this.getLabelForValue(value);
+                                    return [
+                                        `Dueño: ${empresa}`,
+                                        `#_Empresas: ${datosemprendimientoemp[index]}`,
+                                       
+                                    ];
+                                }
+                            }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            stepSize: 1
+                        }
+                    }
+                },
+                plugins: [{
+                    id: 'customLabels',
+                    afterDraw(chart) {
+                        const ctx = chart.ctx;
+                        chart.scales.x.ticks.forEach((tick, i) => {
+                            const x = chart.scales.x.getPixelForTick(i);
+                            const y = chart.scales.x.bottom + 10;
+
+                            ctx.save();
+                            ctx.textAlign = 'center';
+                            ctx.textBaseline = 'top';
+                            ctx.fillStyle = '#000';
+                            ctx.fillText(`Dueño: ${empresas[i]}`, x, y);
+
+                            ctx.fillStyle = coloremprendimientoemp;
+                            ctx.fillText(`Empresa: ${datosemprendimientoemp[i]}`, x, y + 15);
+
+                            ctx.fillStyle = colorPostulados;
+                            ctx.fillText(`Oferta: ${datosOfertas[i]}`, x, y + 30);
+                            ctx.restore();
+                        });
+                    }
+                }]
+            });
         },
         updateFilteredData() {
             // Aplicar paginación local

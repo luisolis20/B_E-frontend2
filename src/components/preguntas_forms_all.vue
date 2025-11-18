@@ -168,6 +168,7 @@
 </style>
 <script>
 import axios from 'axios';
+import API from '@/assets/scripts/services/axios';
 import store from '@/store';
 import { useRoute } from 'vue-router';
 import { confimar, confimarhabi } from '@/assets/scripts/scriptfunciones/funciones';
@@ -181,9 +182,9 @@ export default {
     data() {
         return {
             idus: 0,
-            url2: `${__API_BOLSA__}/b_e/vin/ver_rep`,
-            url2a: `${__API_BOLSA__}/b_e/vin/ver_respuestas_abiertas`,
-            urlBackend: `${__API_BOLSA__}/b_e/vin/facultad`,
+            url2: `/b_e/vin/ver_rep`,
+            url2a: `/b_e/vin/ver_respuestas_abiertas`,
+            urlBackend: `/b_e/vin/facultad`,
             formularioemp: [],
             filtered_pregresp: [],
             searchQuery: '',
@@ -232,7 +233,7 @@ export default {
     methods: {
         async getFacultades() {
             try {
-                const response = await axios.get(`${this.urlBackend}`);
+                const response = await API.get(`${this.urlBackend}`);
                 //console.log(response);
                 this.facultades = response.data.data;
                 //console.log(this.facultades);
@@ -243,7 +244,7 @@ export default {
         async getPregresp() {
             this.cargando = true;
             try {
-                const response = await axios.get(this.url2);
+                const response = await API.get(this.url2);
                 const allData = response.data.data;
                 //console.log(allData);
 
@@ -379,7 +380,7 @@ export default {
         async getRespuestasAbiertas(idpregunta) {
             try {
                 //this.url2a += `/${idpregunta}`;
-                const response = await axios.get(`${this.url2a}/${idpregunta}`);
+                const response = await API.get(`${this.url2a}/${idpregunta}`);
                 this.respuestasAbiertas = response.data.data;
             } catch (error) {
                 console.error("Error al obtener respuestas abiertas:", error);
@@ -428,7 +429,7 @@ export default {
         eliminar(id, nombre) {
             try {
                 confimar(
-                    `${__API_BOLSA__}/b_e/vin/consultaredirempelim/`,
+                    `/b_e/vin/consultaredirempelim/`,
                     id,
                     'Inhabilitar registro',
                     '¿Realmente desea inhabilitar el emprenidmiento  ' + nombre + '?',
@@ -442,7 +443,7 @@ export default {
         habilitar(id, nombre) {
             try {
                 confimarhabi(
-                    `${__API_BOLSA__}/b_e/vin/consultaredirempelim2/`,
+                    `/b_e/vin/consultaredirempelim2/`,
                     id,
                     'Hbailitar registro',
                     '¿Desea habilitar el emprendimiento ' + nombre + '?',

@@ -1,11 +1,14 @@
 
-import { mostraralertas, enviarsoliedit, mostraralertas2 } from '@/assets/scripts/scriptfunciones/funciones';
+import { mostraralertas, enviarsoliedit, mostraralertas2,enviarsoligqr } from '@/assets/scripts/scriptfunciones/funciones';
 import { useRoute } from 'vue-router';
 import { getMe } from '@/store/auth';
+import API from '@/assets/scripts/services/axios';
 import customscript from '@/assets/scripts/custom.js';
 import axios from 'axios';
 import store from '@/store';
 import jsPDF from 'jspdf';
+import QRCode from "qrcode";
+import { v4 as uuidv4 } from "uuid";
 
 export default {
     data() {
@@ -24,13 +27,17 @@ export default {
             direccion: '',
             fotografia: '',
             previewFoto: '',
-            url: `${__API_BOLSA__}/b_e/vin/users`,
+            url: `/b_e/vin/users`,
 
             si_cvn: false,
-            no_cvn: true,
+            no_cvn: false,
             cargando: false,
+            cvincompleto: false,
+            cvcompleto: false,
             //Datos Personales
-            urlinformacionpersonal: "http://vinculacionconlasociedad.utelvt.edu.ec/cvubackendv2/api/cvn/v1/informacionpersonal",
+            urlinformacionpersonal: `${__API_CVN__}/cvn/v1/infromaciondata`,
+            urlqr: `${__API_CVN__}/cvn/v1/validar`,
+            urlstatuscvn: `${__API_CVN__}/cvn/v1/getCVNstatusInd`,
             iddatos_personales: 0,
             datos_personales: null,
             CIInfPer: "",
@@ -47,21 +54,32 @@ export default {
             mailPer: "",
             edad: "",
             //Formacion Academica
-            urlformacion_academica: "http://vinculacionconlasociedad.utelvt.edu.ec/cvubackendv2/api/cvn/v1/formacion_academica",
-            urlfichasocioeconomica: "http://vinculacionconlasociedad.utelvt.edu.ec/cvubackendv2/api/cvn/v1/fichasocioeconomica",
+            url2: "/cvn/v1/formacion_academica",
+            url11: "/cvn/v1/fichasocioeconomica",
+            urlti: "/cvn/v1/titulog",
             idformacion_academica: 0,
             idfichasocioeconomica: 0,
             formacion_academica: null,
+
+
             titulosUniversitarios: [],
             titulosPosgrado: [],
             titulosBachiller: [],
+            estudioactualtitulosUniversitarios: [],
             //  título universitario
             nuevoTituloUniversitario: {
                 titulo_universitario_obtenido: "",
                 institucion_universitaria: "",
                 fecha_graduacion: "",
-                especialidad: ""
+                especialidad: "",
             },
+            nuevoTituloUniversitarioUTLVTE: {
+                titulo_universitario_obtenido: "",
+                institucion_universitaria: "",
+                fecha_graduacion: "",
+                especialidad: "",
+            },
+            tituloUniversitarioEditIndex: null,
             // nuevo título de posgrado
             nuevoTituloPosgrado: {
                 titulo_posgrado_obtenido: "",
@@ -69,6 +87,13 @@ export default {
                 fecha_graduacion_posgrado: "",
                 especialidad_posgrado: ""
             },
+            nuevoTituloPosgradoUTLVTE: {
+                titulo_posgrado_obtenido: "",
+                institucion_posgrado: "",
+                fecha_graduacion_posgrado: "",
+                especialidad_posgrado: ""
+            },
+            tituloPosgradoEditIndex: null,
             // nuevo título de Bachiller
             nuevoTituloBachiller: {
                 titulo_bachiller_obtenido: "",
@@ -76,11 +101,18 @@ export default {
                 fecha_graduacion_bachiller: "",
                 especialidad_bachiller: ""
             },
+
+
             estudios_universitarios_culminados: "",
             estudios_posgrado_culminados: "",
             estudios_bachiller_culminados: "",
+
+
+
+
+
             //Experiencias Profesionales
-            urlexperiencia_profesionale: "http://vinculacionconlasociedad.utelvt.edu.ec/cvubackendv2/api/cvn/v1/experiencia_profesionale",
+            url3: "/cvn/v1/experiencia_profesionale",
             idexperiencias_profesionales: 0,
             experiencias_profesionales: null,
             mostrarexperienciasprofesionales: true,
@@ -111,13 +143,22 @@ export default {
             practicas_profesionales: "",
             fechacargos: "",
             fechaFinLabel: "",
+
+
             //fechas del curso
             fechacursos: "",
             fechaFinLabelCursos: "",
+
+
+
+
             //Investigacion y publicaciones
-            urlinvestigacion_publicacione: "http://vinculacionconlasociedad.utelvt.edu.ec/cvubackendv2/api/cvn/v1/investigacion_publicacione",
+            url4: "/cvn/v1/investigacion_publicacione",
             idinvestigacion_publicaciones: 0,
             investigacion_publicaciones: null,
+
+
+
             publicaciones: "",
             publicacionesarray: [],
             //  Publicaciones
@@ -127,10 +168,15 @@ export default {
                 link_publicación: "",
                 congreso_evento: "",
             },
-            //Idiom
-            urlidioma: "http://vinculacionconlasociedad.utelvt.edu.ec/cvubackendv2/api/cvn/v1/idioma",
+
+
+
+            //Idioma
+            url5: "/cvn/v1/idioma",
             idlenguaje: 0,
             lenguaje: null,
+
+
             idiomasarray: [],
             //  Idiomas
             nuevosidiomas: {
@@ -142,26 +188,34 @@ export default {
                 expresion_escrita: "",
                 certificado: "",
             },
+
+
+
+
             //SW
-            urlhabilidades_informatica: "http://vinculacionconlasociedad.utelvt.edu.ec/cvubackendv2/api/cvn/v1/habilidades_informatica",
+            url6: "/cvn/v1/habilidades_informatica",
             idhabilidades_informaticas: 0,
             habilidades_informaticas: null,
+
             habilidades_comunicativas_array: [],
             habilidades_creativas_array: [],
             habilidades_liderazgo_array: [],
             habilidades_informaticas_array: [],
             oficios_subactividades_array: [],
             otro_habilidades_array: [],
+
             //  Habilidades Comunicativas
             nuevashabilidades_comunicativas: {
                 habilidades_comunicativas: "",
                 descripcion_habilidades_comunicativas: "",
             },
+
             //  Habilidades Creativas
             nuevashabilidades_creativas: {
                 habilidades_creativas: "",
                 descripcion_habilidades_creativas: "",
             },
+
             //  Habilidades Liderazgo
             nuevashabilidades_liderazgo: {
                 habilidades_liderazgo: "",
@@ -191,8 +245,13 @@ export default {
             habi_informaticos_cv: "",
             habi_oficios: "",
             habi_otros_habi: "",
+
+
+
+
             //Cursos Capacitaciones
-            urlcursoscapacitacion: "http://vinculacionconlasociedad.utelvt.edu.ec/cvubackendv2/api/cvn/v1/cursoscapacitacion",
+
+            url10: "/cvn/v1/cursoscapacitacion",
             idcursoscapacitaciones: 0,
             curso_capacitacion: null,
             curso_capacitacionarray: [],
@@ -208,11 +267,17 @@ export default {
                 fecha_fin_curso: "",
                 dias_curso: "",
                 horas_curso: "",
+                certificado: "",
             },
+
+
+
             //Datos Relevantes
-            urlotros_datos_relevante: "http://vinculacionconlasociedad.utelvt.edu.ec/cvubackendv2/api/cvn/v1/otros_datos_relevante",
+            url7: "/cvn/v1/otros_datos_relevante",
             idotros_datos_personales: 0,
             otros_datos_personales: null,
+
+
             otros_datos_personalesarray: [],
             //  otros_datos_personales
             nuevosotros_datos_personales: {
@@ -220,10 +285,15 @@ export default {
                 descripcion_logros: "",
                 descripcion_fracasos: "",
             },
+
+
+
             //Informacion de Contacto
-            urlinformacion_contacto: "http://vinculacionconlasociedad.utelvt.edu.ec/cvubackendv2/api/cvn/v1/informacion_contacto",
+            url8: "/cvn/v1/informacion_contacto",
             idinformacion_contacto: 0,
             informacion_contacto: null,
+
+
             informacion_contactoarray: [],
             //  informacion_contacto
             nuevosinformacion_contacto: {
@@ -232,34 +302,20 @@ export default {
                 referencia_correo_electronico: "",
                 referencia_telefono: "",
             },
+
             //Declaracion Personal
-            urldeclaracion_personal: "http://vinculacionconlasociedad.utelvt.edu.ec/cvubackendv2/api/cvn/v1/declaracion_personal",
-            urlDeclaracionPersonal: "http://vinculacionconlasociedad.utelvt.edu.ec/cvubackendv2/api/cvn/v1/sicvn",
+            url9: "/cvn/v1/declaracion_personal",
             iddeclaracion_personal: 0,
             declaracion_personal: null,
-            texto: "",
-            apiBaseUrl: "http://vinculacionconlasociedad.utelvt.edu.ec/cvubackendv2/api/cvn/v1",
-            urls: {
+            urlqr: "/cvn/v1/validar",
 
-                formacion: '', // URL de formación académica
-                experiencia: '', // URL de experiencia profesional
-                declaracion: '', // URL de declaración personal
-                habilidades: '', // URL de habilidades informáticas
-                idiomas: '', // URL de idiomas
-                contacto: '', // URL de información de contacto
-                cursos: '', // URL de cursos y capacitaciones
-                investigacion: '', // URL de investigación y publicaciones
-                otrosDatos: '', // URL de otros datos relevantes
-            },
-            filtereddeclaracion_personals2: [],
-            filteredcursos2: [],
-            experiencia_profesionales2: [],
-            formacion_academicas2: [],
-            habilidades_informaticas2: [],
-            filteredidiomas2: [],
-            filteredreferencias2: [],
-            filteredpublicacion2: [],
-            otros_datos_relevantes2: [],
+
+            texto: "",
+            titulosEncontrados: [],
+            tituloActualIndex: 0,
+            titulosEncontradosPosgrado: [],
+            tituloActualIndexPosgrado: 0,
+            allCVNData: [],
         }
     },
     async mounted() {
@@ -269,19 +325,9 @@ export default {
         if (customscript.computed.rolUsuario() == 'Estudiante') {
 
 
-            this.urlinformacionpersonal += '/' + this.id;
-            this.urlformacion_academica += '/' + this.id;
-            this.urlexperiencia_profesionale += '/' + this.id;
-            this.urlinvestigacion_publicacione += '/' + this.id;
-            this.urlidioma += '/' + this.id;
-            this.urlhabilidades_informatica += '/' + this.id;
-            this.urlotros_datos_relevante += '/' + this.id;
-            this.urlinformacion_contacto += '/' + this.id;
-            this.urldeclaracion_personal += '/' + this.id;
-            this.urlcursoscapacitacion += '/' + this.id;
-            this.urlfichasocioeconomica += '/' + this.id;
+            this.urlstatuscvn += '/' + this.id;
             Promise.all([
-                this.getUsuario_CVN(),
+                /*this.getUsuario_CVN(),
                 this.getDatosPersonales(),
                 this.getDeclaracionPersonal(),
                 this.getFormacionAcademica(),
@@ -291,7 +337,9 @@ export default {
                 this.getHabilidadesInformaticas(),
                 this.getCursosCapacitaciones(),
                 this.getDatosRelevantes(),
-                this.getInformacionContacto(),
+                this.getInformacionContacto(),*/
+                this.getStatusIUserCVN(),
+                this.getCvCompleto()
 
             ])
         } else if (customscript.computed.rolUsuario() == 'Empresa' || 'Administrador') {
@@ -300,79 +348,8 @@ export default {
         }
 
     },
-    computed: {
-        // Generar dinámicamente las URLs basadas en el ID del usuario actual
-        generatedUrls() {
-            return {
-
-                formacion: `${this.apiBaseUrl}/formacion_academica/${this.id}`,
-                experiencia: `${this.apiBaseUrl}/experiencia_profesionale/${this.id}`,
-                declaracion: `${this.apiBaseUrl}/declaracion_personal/${this.id}`,
-                habilidades: `${this.apiBaseUrl}/habilidades_informatica/${this.id}`,
-                idiomas: `${this.apiBaseUrl}/idioma/${this.id}`,
-                contacto: `${this.apiBaseUrl}/informacion_contacto/${this.id}`,
-                cursos: `${this.apiBaseUrl}/cursoscapacitacion/${this.id}`,
-                investigacion: `${this.apiBaseUrl}/investigacion_publicacione/${this.id}`,
-                otrosDatos: `${this.apiBaseUrl}/otros_datos_relevante/${this.id}`,
-            };
-        }
-    },
     methods: {
-        //Datos Personales
-        async getDatosPersonales() {
-            try {
-
-                const response = await axios.get(this.urlinformacionpersonal);
-                if (response.data.data && response.data.data.length > 0) {
-                    const data = response.data.data[0];
-                    //console.log(data);
-                    this.CIInfPer = data.CIInfPer;
-                    this.ApellInfPer = data.ApellInfPer;
-                    this.ApellMatInfPer = data.ApellMatInfPer;
-                    this.apellidos = this.ApellInfPer + ' ' + this.ApellMatInfPer;
-                    this.NombInfPer = data.NombInfPer;
-                    //this.NacionalidadPer = data.NacionalidadPer;
-                    if (data.NacionalidadPer = "EC") {
-                        this.NacionalidadPer = "ECUADOR";
-                    } else {
-                        this.NacionalidadPer = data.NacionalidadPer;
-                    }
-                    // this.LugarNacimientoPer = data.LugarNacimientoPer;
-                    this.FechNacimPer = data.FechNacimPer;
-                    //this.GeneroPer = data.GeneroPer;
-                    if (data.GeneroPer = "H") {
-                        this.GeneroPer = "HOMBRE";
-                    } else if (data.GeneroPer = "M") {
-                        this.GeneroPer = "MUJER";
-                    }
-                    this.CiudadPer = data.CiudadPer;
-                    this.DirecDomicilioPer = data.DirecDomicilioPer;
-                    this.Telf1InfPer = data.Telf1InfPer;
-                    this.mailPer = data.mailPer;
-                    this.fotografia = data.fotografia;
-                    this.previewFoto = 'data:image/jpeg;base64,' + data.fotografia;
-                    const añoActual = new Date().getFullYear();
-                    const añoNacimiento = new Date(data.FechNacimPer).getFullYear();
-                    this.edad = añoActual - añoNacimiento;
-
-                } else {
-                    console.log("usuario sin Datos");
-                }
-                return response;
-
-            } catch (error) {
-                if (error.response?.status === 404) {
-                    // ✅ Se controla el error y NO se imprime en consola como un error
-                    // ⚠️ Importante: No lanzamos el error ni usamos console.error
-                    console.warn("El estudiante no poseee información personal.");
-                } else {
-                    // ⚠️ Solo mostramos otros errores reales
-                    console.error("Error inesperado al obtener la información personal:", error.message);
-                }
-                return null;
-
-            }
-        },
+        
         handleFotoUpload(event) {
             const file = event.target.files[0];
             if (!file) return;
@@ -400,505 +377,343 @@ export default {
             };
             reader.readAsDataURL(file);
         },
+        getFotoUrl(ci) {
+            if (!ci) {
+                return 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/User_icon_2.svg/480px-User_icon_2.svg.png';
+            }
+            // Obtenemos la URL base de Axios para asegurarnos de que el endpoint sea absoluto
+            const baseURL = API.defaults.baseURL || '';
 
-        //Formacion Academica
-        async getFormacionAcademica() {
+            // Generamos la URL completa que llama al nuevo método de streaming en Laravel
+            return `${__API_CVN__}/cvn/v1/informacionpersonal/${ci}/foto`;
+        },
+        async getStatusIUserCVN() {
+
+
             try {
-                const response = await axios.get(this.urlformacion_academica);
-                console.log(this.estudioactualmentefacultadcarreras);
+                // 1. Traer todos los datos de CVN iniciados + el conteo de omitidos
+                const response = await API.get(`${this.urlstatuscvn}`);
+                const allData = response.data.data;
+                this.totalsincvn = response.data.omittedCount || 0;
 
-
-                if (response.data.data && response.data.data.length > 0) {
-                    const data = response.data.data;
-                    this.formacion_academicas2 = data;
-
-                    // Limpiamos los arreglos existentes
-                    this.titulosBachiller = [];
-                    this.titulosUniversitarios = [];
-                    this.titulosPosgrado = [];
-                    this.estudioactualtitulosUniversitarios = [];
-
-                    // Recorremos los datos obtenidos para separar títulos universitarios y de posgrado
-                    data.forEach(item => {
-                        if (item.estudios_bachiller_culminados === 'Si' && item.titulo_bachiller_obtenido && item.institucion_bachiller) {
-                            this.titulosBachiller.push({
-
-                                idformacion_academica: item.id,
-                                titulo_bachiller_obtenido: item.titulo_bachiller_obtenido || '',
-                                institucion_bachiller: item.institucion_bachiller || '',
-                                fecha_graduacion_bachiller: item.fecha_graduacion_bachiller || '',
-                                especialidad_bachiller: item.especialidad_bachiller || ''
-                            });
-                            if (this.titulosBachiller.length > 0) {
-                                this.sidatos = false;
-                            } else {
-                                this.sidatos = true;
-                            }
-                        }
-                        if (item.estudios_universitarios_culminados === 'Si' && item.titulo_universitario_obtenido && item.institucion_universitaria) {
-                            this.titulosUniversitarios.push({
-
-                                idformacion_academica: item.id,
-                                titulo_universitario_obtenido: item.titulo_universitario_obtenido || '',
-                                institucion_universitaria: item.institucion_universitaria || '',
-                                fecha_graduacion: item.fecha_graduacion || '',
-                                especialidad: item.especialidad || ''
-                            });
-                        }
-                        if (item.estudios_universitarios_culminados === 'No' && item.titulo_universitario_obtenido && item.institucion_universitaria) {
-                            this.estudioactualtitulosUniversitarios.push({
-
-                                idformacion_academica: item.id,
-                                facultades_universidad: item.titulo_universitario_obtenido || '',
-                                titulo_carrera_universidad: item.institucion_universitaria || '',
-                                fechaestudioactual: item.fecha_graduacion || '',
-                                carrera_universidad: item.especialidad || ''
-                            });
-                        }
-
-                        if (item.estudios_posgrado_culminados === 'Si' && item.titulo_posgrado_obtenido && item.institucion_posgrado) {
-                            this.titulosPosgrado.push({
-
-                                idformacion_academica: item.id,
-                                titulo_posgrado_obtenido: item.titulo_posgrado_obtenido || '',
-                                institucion_posgrado: item.institucion_posgrado || '',
-                                fecha_graduacion_posgrado: item.fecha_graduacion_posgrado || '',
-                                especialidad_posgrado: item.especialidad_posgrado || ''
-                            });
-                        }
-                    });
-
-
+                // 2. Guardar la data original (solo CVN iniciados)
+                this.allCVNData = allData.ApellInfPer;
+                this.CIInfPer = allData.CIInfPer;
+                this.ApellInfPer = allData.ApellInfPer;
+                this.ApellMatInfPer = allData.ApellMatInfPer;
+                this.apellidos = this.ApellInfPer + ' ' + this.ApellMatInfPer;
+                this.NombInfPer = allData.NombInfPer;
+                //this.NacionalidadPer = data.NacionalidadPer;
+                if (allData.NacionalidadPer = "EC") {
+                    this.NacionalidadPer = "ECUADOR";
                 } else {
-                    console.log("usuario sin Datos");
+                    this.NacionalidadPer = allData.NacionalidadPer;
                 }
-                return response;
+                // this.LugarNacimientoPer = data.LugarNacimientoPer;
+                this.FechNacimPer = allData.FechNacimPer;
+                //this.GeneroPer = data.GeneroPer;
+                if (allData.GeneroPer = "H") {
+                    this.GeneroPer = "HOMBRE";
+                } else if (data.GeneroPer = "M") {
+                    this.GeneroPer = "MUJER";
+                }
+                this.CiudadPer = allData.CiudadPer;
+                this.DirecDomicilioPer = allData.DirecDomicilioPer;
+                this.Telf1InfPer = allData.Telf1InfPer;
+                this.mailPer = allData.mailPer;
+                //console.log(response.data.completionStatus);
+                if (response.data.completionStatus === "Completado") {
+                    this.cvcompleto = true;
+                    this.cvincompleto = false;
+                } else if (response.data.completionStatus === "Incompleto") {
+                    this.cvcompleto = false;
+                    this.cvincompleto = true;
+                } else {
+                    this.cvcompleto = false;
+                    this.cvincompleto = false;
+                    this.no_cvn = true;
+                }
 
             } catch (error) {
-                if (error.response?.status === 404) {
-                    // ✅ Se controla el error y NO se imprime en consola como un error
-                    // ⚠️ Importante: No lanzamos el error ni usamos console.error
-                    console.warn("El estudiante no ha llenado la formación académica y es su primera vez (404).");
-                } else {
-                    // ⚠️ Solo mostramos otros errores reales
-                    console.error("Error inesperado al obtener la formación académica:", error.message);
-                }
-                return null;
-
-
+                console.error("Error al obtener datos:", error);
+                this.totalsincvn = 0;
+            } finally {
+                this.cargando = false;
             }
         },
-        //Experiencias Profesionales
-        async getExperienciasProfesionales() {
+        async getCvCompleto() {
             try {
-                const response = await axios.get(this.urlexperiencia_profesionale);
-                if (response.data.data && response.data.data.length > 0) {
-                    const data = response.data.data;
-                    this.experiencia_profesionales2 = data;
-                    this.cargosEmpresas = [];
-                    this.cargosPasantias = [];
+                const genhom = "HOMBRE";
+                const genMuj = "MUJER";
+                const response = await axios.get(`${__API_CVN__}/cvn/v1/cvcompleto/${this.idus}`);
+                const data = response.data.data;
 
-                    data.forEach(item => {
-                        if (item.cargos_desempenados === 'Si' && item.empresa_institucion && item.cargo_desempenado_empresa) {
-                            this.cargosEmpresas.push({
-
-                                idexperiencias_profesionales: item.id,
-                                empresa_institucion: item.empresa_institucion || '',
-                                fecha_inicio_empresa: item.fecha_inicio_empresa || '',
-                                fecha_fin_empresa: item.fecha_fin_empresa || '',
-                                cargo_desempenado_empresa: item.cargo_desempenado_empresa || '',
-                                descripcion_funciones_empresa: item.descripcion_funciones_empresa || '',
-                                logros_resultados_empresa: item.logros_resultados_empresa || ''
-                            });
-                            if (item.fecha_inicio_empresa) {
-                                const añoInicio = new Date(item.fecha_inicio_empresa).getFullYear();
-                                this.fecha_inicio_empresa2 = añoInicio;
-                            }
-                        }
-
-                        if (item.practicas_profesionales === 'Si' && item.empresa_institucion_practicas && item.area_trabajo_practicas) {
-                            this.cargosPasantias.push({
-
-                                idexperiencias_profesionales: item.id,
-                                empresa_institucion_practicas: item.empresa_institucion_practicas || '',
-                                fecha_inicio_practicas: item.fecha_inicio_practicas || '',
-                                fecha_fin_practicas: item.fecha_fin_practicas || '',
-                                area_trabajo_practicas: item.area_trabajo_practicas || '',
-                                descripcion_funciones_practicas: item.descripcion_funciones_practicas || ''
-                            });
-                            if (item.fecha_inicio_practicas) {
-                                const añoInicio2 = new Date(item.fecha_inicio_practicas).getFullYear();
-                                this.fecha_inicio_practicas2 = añoInicio2;
-                            }
-                        }
-
-
-                    });
-
-
-
+                this.datos_personales = data.informacion_personal;
+                //console.log(this.datos_personales);
+                this.CIInfPer = data.informacion_personal.CIInfPer;
+                this.ApellInfPer = data.informacion_personal.ApellInfPer;
+                this.ApellMatInfPer = data.informacion_personal.ApellMatInfPer;
+                this.NombInfPer = data.informacion_personal.NombInfPer;
+                //this.NacionalidadPer = data.NacionalidadPer;
+                if (data.informacion_personal.NacionalidadPer == "EC") {
+                    this.NacionalidadPer = "ECUADOR";
                 } else {
-                    console.log("usuario sin Datos");
+                    this.NacionalidadPer = data.informacion_personal.NacionalidadPer;
                 }
-                return response;
-
-            } catch (error) {
-                if (error.response?.status === 404) {
-                    // ✅ Se controla el error y NO se imprime en consola como un error
-                    // ⚠️ Importante: No lanzamos el error ni usamos console.error
-                    console.warn("El estudiante no ha llenado la experiencia profesional y es su primera vez (404).");
+                // this.LugarNacimientoPer = data.LugarNacimientoPer;
+                this.FechNacimPer = data.informacion_personal.FechNacimPer;
+                //this.GeneroPer = data.GeneroPer;
+                if (data.informacion_personal.GeneroPer == "M") {
+                    this.GeneroPer = genMuj;
                 } else {
-                    // ⚠️ Solo mostramos otros errores reales
-                    console.error("Error inesperado al obtener la experiencia profesional:", error.message);
+                    this.GeneroPer = genhom;
                 }
-                return null;
+                //console.log(data.GeneroPer);
+                //console.log(this.GeneroPer);
+                this.CiudadPer = data.informacion_personal.CiudadPer.toUpperCase();
+                this.DirecDomicilioPer = data.informacion_personal.DirecDomicilioPer;
+                this.Telf1InfPer = data.informacion_personal.Telf1InfPer;
+                this.mailPer = data.informacion_personal.mailPer;
+                this.fotografia = data.informacion_personal.fotografia;
+                this.previewFoto = 'data:image/jpeg;base64,' + data.informacion_personal.fotografia;
+                const añoActual = new Date().getFullYear();
+                const añoNacimiento = new Date(data.informacion_personal.FechNacimPer).getFullYear();
+                this.edad = añoActual - añoNacimiento;
 
-            }
-        },
-        //Investigacion y Publicaciones
-        async getInvestigacionPublicaciones() {
-            try {
-                const response = await axios.get(this.urlinvestigacion_publicacione);
-                if (response.data.data && response.data.data.length > 0) {
-                    const data = response.data.data;
-                    this.filteredpublicacion2 = data;
-                    this.publicacionesarray = [];
+                this.formacion_academica = data.formacion_academica;
+                //console.log(this.formacion_academica);
 
-                    data.forEach(item => {
-                        if (item.publicaciones === 'Si' && item.publicacion_tipo && item.publicacion_titulo) {
-                            this.publicacionesarray.push({
+                data.formacion_academica.forEach(item => {
+                    if (item.estudios_bachiller_culminados === 'Si' && item.titulo_bachiller_obtenido && item.institucion_bachiller) {
+                        this.titulosBachiller.push({
 
-                                idinvestigacion_publicaciones: item.id,
-                                publicacion_tipo: item.publicacion_tipo || '',
-                                publicacion_titulo: item.publicacion_titulo || '',
-                                link_publicación: item.link_publicación || '',
-                                congreso_evento: item.congreso_evento || ''
-                            });
-                        }
-
-
-                    });
-
-
-                } else {
-                    console.log("usuario sin Datos");
-                }
-                return response;
-
-            } catch (error) {
-                if (error.response?.status === 404) {
-                    // ✅ Se controla el error y NO se imprime en consola como un error
-                    // ⚠️ Importante: No lanzamos el error ni usamos console.error
-                    console.warn("El estudiante no ha llenado investigaciones/Publicaciones y es su primera vez (404).");
-                } else {
-                    // ⚠️ Solo mostramos otros errores reales
-                    console.error("Error inesperado al obtener investigaciones/Publicaciones:", error.message);
-                }
-                return null;
-
-            }
-        },
-        //Idiomas
-        async getIdiomas() {
-            try {
-                const response = await axios.get(this.urlidioma);
-                if (response.data.data && response.data.data.length > 0) {
-                    const data = response.data.data;
-                    this.filteredidiomas2 = data;
-                    this.idiomasarray = [];
-
-                    data.forEach(item => {
-
-                        this.idiomasarray.push({
-
-                            idlenguaje: item.id,
-                            idioma: item.idioma || '',
-                            comprension_auditiva: item.comprension_auditiva || '',
-                            comprension_lectura: item.comprension_lectura || '',
-                            interaccion_oral: item.interaccion_oral || '',
-                            expresion_oral: item.expresion_oral || '',
-                            expresion_escrita: item.expresion_escrita || '',
-                            certificado: item.certificado || '',
+                            idformacion_academica: item.id,
+                            titulo_bachiller_obtenido: item.titulo_bachiller_obtenido || '',
+                            institucion_bachiller: item.institucion_bachiller || '',
+                            fecha_graduacion_bachiller: item.fecha_graduacion_bachiller || '',
+                            especialidad_bachiller: item.especialidad_bachiller || ''
                         });
 
+                    }
+                    if (item.estudios_universitarios_culminados === 'Si' && item.titulo_universitario_obtenido && item.institucion_universitaria) {
+                        this.titulosUniversitarios.push({
 
-                    });
-
-
-                } else {
-                    console.log("usuario sin Datos");
-                }
-                return response;
-
-            } catch (error) {
-                if (error.response?.status === 404) {
-                    // ✅ Se controla el error y NO se imprime en consola como un error
-                    // ⚠️ Importante: No lanzamos el error ni usamos console.error
-                    console.warn("El estudiante no ha llenado Idiomas y es su primera vez (404).");
-                } else {
-                    // ⚠️ Solo mostramos otros errores reales
-                    console.error("Error inesperado al obtener Idiomas:", error.message);
-                }
-                return null;
-
-            }
-        },
-        //Habilidades Informaticas
-        async getHabilidadesInformaticas() {
-            try {
-                const response = await axios.get(this.urlhabilidades_informatica);
-                if (response.data.data && response.data.data.length > 0) {
-                    const data = response.data.data;
-                    this.habilidades_informaticas2 = data;
-                    this.habilidades_comunicativas_array = [];
-                    this.habilidades_creativas_array = [];
-                    this.habilidades_informaticas_array = [];
-                    this.habilidades_liderazgo_array = [];
-                    this.oficios_subactividades_array = [];
-                    this.otro_habilidades_array = [];
-
-                    data.forEach(item => {
-                        if (item.habilidades_comunicativas || item.descripcion_habilidades_comunicativas) {
-                            this.habilidades_comunicativas_array.push({
-
-                                idhabilidades_informaticas: item.id,
-                                habilidades_comunicativas: item.habilidades_comunicativas || '',
-                                descripcion_habilidades_comunicativas: item.descripcion_habilidades_comunicativas || '',
-                            });
-                        }
-                        if (item.habilidades_creativas || item.descripcion_habilidades_creativas) {
-                            this.habilidades_creativas_array.push({
-
-                                idhabilidades_informaticas: item.id,
-                                habilidades_creativas: item.habilidades_creativas || '',
-                                descripcion_habilidades_creativas: item.descripcion_habilidades_creativas || '',
-                            });
-                        }
-
-                        if (item.habilidades_informaticas_cv || item.descripcion_habilidades_informaticas_cv) {
-                            this.habilidades_informaticas_array.push({
-
-                                idhabilidades_informaticas: item.id,
-                                habilidades_informaticas_cv: item.habilidades_informaticas_cv || '',
-                                descripcion_habilidades_informaticas_cv: item.descripcion_habilidades_informaticas_cv || '',
-                            });
-                        }
-                        if (item.habilidades_liderazgo || item.descripcion_habilidades_liderazgo) {
-                            this.habilidades_liderazgo_array.push({
-
-                                idhabilidades_informaticas: item.id,
-                                habilidades_liderazgo: item.habilidades_liderazgo || '',
-                                descripcion_habilidades_liderazgo: item.descripcion_habilidades_liderazgo || '',
-                            });
-                        }
-                        if (item.oficios_subactividades || item.descripcion_oficios_subactividades) {
-                            this.oficios_subactividades_array.push({
-
-                                idhabilidades_informaticas: item.id,
-                                oficios_subactividades: item.oficios_subactividades || '',
-                                descripcion_oficios_subactividades: item.descripcion_oficios_subactividades || '',
-                            });
-                        }
-                        if (item.otro_habilidades) {
-                            this.otro_habilidades_array.push({
-
-                                idhabilidades_informaticas: item.id,
-                                otro_habilidades: item.otro_habilidades || '',
-                            });
-                        }
-                    });
-
-
-                } else {
-                    console.log("usuario sin Datos");
-                }
-                return response;
-
-            } catch (error) {
-                if (error.response?.status === 404) {
-                    // ✅ Se controla el error y NO se imprime en consola como un error
-                    // ⚠️ Importante: No lanzamos el error ni usamos console.error
-                    console.warn("El estudiante no ha llenado Habilidades y es su primera vez (404).");
-                } else {
-                    // ⚠️ Solo mostramos otros errores reales
-                    console.error("Error inesperado al obtener Habilidades:", error.message);
-                }
-                return null;
-
-
-            }
-        },
-        //Cursos Capacitaciones
-        async getCursosCapacitaciones() {
-            try {
-                const response = await axios.get(this.urlcursoscapacitacion);
-                if (response.data.data && response.data.data.length > 0) {
-                    const data = response.data.data;
-                    this.filteredcursos2 = data;
-                    this.curso_capacitacionarray = [];
-
-                    data.forEach(item => {
-
-                        this.curso_capacitacionarray.push({
-
-                            idcursoscapacitaciones: item.id,
-                            intitucion_curso: item.intitucion_curso || '',
-                            tipo_evento: item.tipo_evento || '',
-                            area_estudios: item.area_estudios || '',
-                            nombre_evento: item.nombre_evento || '',
-                            facilitador_curso: item.facilitador_curso || '',
-                            tipo_certificado: item.tipo_certificado || '',
-                            fecha_inicio_curso: item.fecha_inicio_curso || '',
-                            fecha_fin_curso: item.fecha_fin_curso || '',
-                            dias_curso: item.dias_curso || '',
-                            horas_curso: item.horas_curso || '',
-
+                            idformacion_academica: item.id,
+                            titulo_universitario_obtenido: item.titulo_universitario_obtenido || '',
+                            institucion_universitaria: item.institucion_universitaria || '',
+                            fecha_graduacion: item.fecha_graduacion || '',
+                            especialidad: item.especialidad || ''
                         });
 
+                    }
+                    if (item.estudios_universitarios_culminados === 'No' && item.titulo_universitario_obtenido && item.institucion_universitaria) {
+                        this.estudioactualtitulosUniversitarios.push({
 
+                            idformacion_academica: item.id,
+                            facultades_universidad: item.titulo_universitario_obtenido || '',
+                            titulo_carrera_universidad: item.institucion_universitaria || '',
+                            fechaestudioactual: item.fecha_graduacion || '',
+                            carrera_universidad: item.especialidad || ''
+                        });
+                    }
 
-                    });
+                    if (item.estudios_posgrado_culminados === 'Si' && item.titulo_posgrado_obtenido && item.institucion_posgrado) {
+                        this.titulosPosgrado.push({
 
-
-                } else {
-                    console.log("usuario sin Datos");
-                }
-                return response;
-
-            } catch (error) {
-                if (error.response?.status === 404) {
-                    // ✅ Se controla el error y NO se imprime en consola como un error
-                    // ⚠️ Importante: No lanzamos el error ni usamos console.error
-                    console.warn("El estudiante no ha llenado Cursos y es su primera vez (404).");
-                } else {
-                    // ⚠️ Solo mostramos otros errores reales
-                    console.error("Error inesperado al obtener Cursos:", error.message);
-                }
-                return null;
-
-
-            }
-        },
-        //Otros Datos Relevantes
-        async getDatosRelevantes() {
-            try {
-                const response = await axios.get(this.urlotros_datos_relevante);
-                if (response.data.data && response.data.data.length > 0) {
-                    const data = response.data.data;
-                    this.otros_datos_relevantes2 = data;
-                    this.otros_datos_personalesarray = [];
-
-                    data.forEach(item => {
-
-                        this.otros_datos_personalesarray.push({
-
-                            idotros_datos_personales: item.id,
-                            tipo_logros: item.tipo_logros || '',
-                            descripcion_logros: item.descripcion_logros || '',
-                            descripcion_fracasos: item.descripcion_fracasos || '',
-
+                            idformacion_academica: item.id,
+                            titulo_posgrado_obtenido: item.titulo_posgrado_obtenido || '',
+                            institucion_posgrado: item.institucion_posgrado || '',
+                            fecha_graduacion_posgrado: item.fecha_graduacion_posgrado || '',
+                            especialidad_posgrado: item.especialidad_posgrado || ''
                         });
 
+                    }
+                });
+                this.experiencias_profesionales = data.experiencias_profesionales;
+                data.experiencias_profesionales.forEach(item => {
+                    if (item.cargos_desempenados === 'Si' && item.empresa_institucion && item.cargo_desempenado_empresa) {
+                        this.cargosEmpresas.push({
 
-
-                    });
-
-
-                } else {
-                    console.log("usuario sin Datos");
-                }
-                return response;
-
-            } catch (error) {
-                if (error.response?.status === 404) {
-                    // ✅ Se controla el error y NO se imprime en consola como un error
-                    // ⚠️ Importante: No lanzamos el error ni usamos console.error
-                    console.warn("El estudiante no ha llenado Datos Relevantes y es su primera vez (404).");
-                } else {
-                    // ⚠️ Solo mostramos otros errores reales
-                    console.error("Error inesperado al obtener Datos Relevantes :", error.message);
-                }
-                return null;
-
-
-            }
-        },
-        //Informacion de Contacto
-        async getInformacionContacto() {
-            try {
-                const response = await axios.get(this.urlinformacion_contacto);
-                if (response.data.data && response.data.data.length > 0) {
-                    const data = response.data.data;
-                    this.filteredreferencias2 = data;
-                    this.informacion_contactoarray = [];
-
-                    data.forEach(item => {
-
-                        this.informacion_contactoarray.push({
-
-                            idinformacion_contacto: item.id,
-                            referencia_nombres: item.referencia_nombres || '',
-                            referencia_apellidos: item.referencia_apellidos || '',
-                            referencia_correo_electronico: item.referencia_correo_electronico || '',
-                            referencia_telefono: item.referencia_telefono || '',
-
+                            idexperiencias_profesionales: item.id,
+                            empresa_institucion: item.empresa_institucion || '',
+                            fecha_inicio_empresa: item.fecha_inicio_empresa || '',
+                            fecha_fin_empresa: item.fecha_fin_empresa || '',
+                            cargo_desempenado_empresa: item.cargo_desempenado_empresa || '',
+                            descripcion_funciones_empresa: item.descripcion_funciones_empresa || '',
+                            logros_resultados_empresa: item.logros_resultados_empresa || ''
                         });
+                        if (item.fecha_inicio_empresa) {
+                            const añoInicio = new Date(item.fecha_inicio_empresa).getFullYear();
+                            this.fecha_inicio_empresa2 = añoInicio;
+                        }
+                    }
+
+                    if (item.practicas_profesionales === 'Si' && item.empresa_institucion_practicas && item.area_trabajo_practicas) {
+                        this.cargosPasantias.push({
+
+                            idexperiencias_profesionales: item.id,
+                            empresa_institucion_practicas: item.empresa_institucion_practicas || '',
+                            fecha_inicio_practicas: item.fecha_inicio_practicas || '',
+                            fecha_fin_practicas: item.fecha_fin_practicas || '',
+                            area_trabajo_practicas: item.area_trabajo_practicas || '',
+                            descripcion_funciones_practicas: item.descripcion_funciones_practicas || ''
+                        });
+                        if (item.fecha_inicio_practicas) {
+                            const añoInicio2 = new Date(item.fecha_inicio_practicas).getFullYear();
+                            this.fecha_inicio_practicas2 = añoInicio2;
+                        }
+                    }
 
 
+                });
+
+                this.investigacion_publicaciones = data.investigacion_publicaciones;
+                data.investigacion_publicaciones.forEach(item => {
+                    if (item.publicaciones === 'Si' && item.publicacion_tipo && item.publicacion_titulo) {
+                        this.publicacionesarray.push({
+
+                            idinvestigacion_publicaciones: item.id,
+                            publicacion_tipo: item.publicacion_tipo || '',
+                            publicacion_titulo: item.publicacion_titulo || '',
+                            link_publicacion: item.link_publicacion || '',
+                            congreso_evento: item.congreso_evento || ''
+                        });
+                    }
+
+
+                });
+                this.idiomas = data.idiomas;
+                data.idiomas.forEach(item => {
+
+                    this.idiomasarray.push({
+
+                        idlenguaje: item.id,
+                        idioma: item.idioma || '',
+                        comprension_auditiva: item.comprension_auditiva || '',
+                        comprension_lectura: item.comprension_lectura || '',
+                        interaccion_oral: item.interaccion_oral || '',
+                        expresion_oral: item.expresion_oral || '',
+                        expresion_escrita: item.expresion_escrita || '',
+                        certificado: item.certificado || '',
+                    });
+
+
+                });
+
+                this.habilidades_informaticas = data.habilidades_informaticas;
+                data.habilidades_informaticas.forEach(item => {
+                    if (item.habilidades_comunicativas || item.descripcion_habilidades_comunicativas) {
+                        this.habilidades_comunicativas_array.push({
+
+                            idhabilidades_informaticas: item.id,
+                            habilidades_comunicativas: item.habilidades_comunicativas || '',
+                            descripcion_habilidades_comunicativas: item.descripcion_habilidades_comunicativas || '',
+                        });
+                    }
+                    if (item.habilidades_creativas || item.descripcion_habilidades_creativas) {
+                        this.habilidades_creativas_array.push({
+
+                            idhabilidades_informaticas: item.id,
+                            habilidades_creativas: item.habilidades_creativas || '',
+                            descripcion_habilidades_creativas: item.descripcion_habilidades_creativas || '',
+                        });
+                    }
+
+                    if (item.habilidades_informaticas_cv || item.descripcion_habilidades_informaticas_cv) {
+                        this.habilidades_informaticas_array.push({
+
+                            idhabilidades_informaticas: item.id,
+                            habilidades_informaticas_cv: item.habilidades_informaticas_cv || '',
+                            descripcion_habilidades_informaticas_cv: item.descripcion_habilidades_informaticas_cv || '',
+                        });
+                    }
+                    if (item.habilidades_liderazgo || item.descripcion_habilidades_liderazgo) {
+                        this.habilidades_liderazgo_array.push({
+
+                            idhabilidades_informaticas: item.id,
+                            habilidades_liderazgo: item.habilidades_liderazgo || '',
+                            descripcion_habilidades_liderazgo: item.descripcion_habilidades_liderazgo || '',
+                        });
+                    }
+                    if (item.oficios_subactividades || item.descripcion_oficios_subactividades) {
+                        this.oficios_subactividades_array.push({
+
+                            idhabilidades_informaticas: item.id,
+                            oficios_subactividades: item.oficios_subactividades || '',
+                            descripcion_oficios_subactividades: item.descripcion_oficios_subactividades || '',
+                        });
+                    }
+                    if (item.otro_habilidades) {
+                        this.otro_habilidades_array.push({
+
+                            idhabilidades_informaticas: item.id,
+                            otro_habilidades: item.otro_habilidades || '',
+                        });
+                    }
+                });
+                this.cursos_capacitacion = data.cursos_capacitacion;
+                data.cursos_capacitacion.forEach(item => {
+
+                    this.curso_capacitacionarray.push({
+
+                        idcursoscapacitaciones: item.id,
+                        intitucion_curso: item.intitucion_curso || '',
+                        tipo_evento: item.tipo_evento || '',
+                        area_estudios: item.area_estudios || '',
+                        nombre_evento: item.nombre_evento || '',
+                        facilitador_curso: item.facilitador_curso || '',
+                        tipo_certificado: item.tipo_certificado || '',
+                        fecha_inicio_curso: item.fecha_inicio_curso || '',
+                        fecha_fin_curso: item.fecha_fin_curso || '',
+                        dias_curso: item.dias_curso || '',
+                        horas_curso: item.horas_curso || '',
 
                     });
 
 
 
-                } else {
-                    console.log("usuario sin Datos");
-                }
-                return response;
+                });
+                this.otros_datos_relevantes = data.otros_datos_relevantes;
+                data.otros_datos_relevantes.forEach(item => {
+
+                    this.otros_datos_personalesarray.push({
+
+                        idotros_datos_personales: item.id,
+                        tipo_logros: item.tipo_logros || '',
+                        descripcion_logros: item.descripcion_logros || '',
+                        descripcion_fracasos: item.descripcion_fracasos || '',
+
+                    });
+
+
+
+                });
+                this.informacion_contacto = data.informacion_contacto;
+                data.informacion_contacto.forEach(item => {
+
+                    this.informacion_contactoarray.push({
+
+                        idinformacion_contacto: item.id,
+                        referencia_nombres: item.referencia_nombres || '',
+                        referencia_apellidos: item.referencia_apellidos || '',
+                        referencia_correo_electronico: item.referencia_correo_electronico || '',
+                        referencia_telefono: item.referencia_telefono || '',
+
+                    });
+
+
+
+                });
+                this.declaracion_personal = data.declaracion_personal;
+                this.texto = data.declaracion_personal.texto;
+                this.titulos_grado = data.titulos_grado;
+                this.titulos_posgrado = data.titulos_posgrado;
 
             } catch (error) {
-                if (error.response?.status === 404) {
-                    // ✅ Se controla el error y NO se imprime en consola como un error
-                    // ⚠️ Importante: No lanzamos el error ni usamos console.error
-                    console.warn("El estudiante no ha llenado Información de Contacto y es su primera vez (404).");
-                } else {
-                    // ⚠️ Solo mostramos otros errores reales
-                    console.error("Error inesperado al obtener Información de Contacto:", error.message);
-                }
-                return null;
-
-
+                console.error("Error al obtener el CV completo:", error);
             }
         },
-        //Declaracion Personal
-        async getDeclaracionPersonal() {
-            try {
-                const response = await axios.get(this.urldeclaracion_personal);
-                if (response.data.data && response.data.data.length > 0) {
-                    const data = response.data.data[0];
-                    this.filtereddeclaracion_personals2 = data;
-                    this.iddeclaracion_personal = data.id;
-                    this.texto = data.texto;
-
-
-                } else {
-                    console.log("usuario sin Datos");
-                }
-                return response;
-
-            } catch (error) {
-                if (error.response?.status === 404) {
-                    // ✅ Se controla el error y NO se imprime en consola como un error
-                    // ⚠️ Importante: No lanzamos el error ni usamos console.error
-                    console.warn("El estudiante no ha llenado la declaración personal y es su primera vez (404).");
-                } else {
-                    // ⚠️ Solo mostramos otros errores reales
-                    console.error("Error inesperado al obtener la declaración personal:", error.message);
-                }
-                return null;
-
-
-            }
-        },
+       
         async visualizarCV() {
             const doc = new jsPDF('p', 'mm', 'a4');
 
@@ -915,6 +730,39 @@ export default {
 
             const headerImg = await this.toDataURL(headerImageUrl);
             const footerImg = await this.toDataURL(footerImageUrl);
+            // === Generar código único + fecha + QR ===
+            const timestamp = new Date();
+            const fechaFormateada = timestamp.toLocaleString('es-EC', { timeZone: 'America/Guayaquil' });
+            const codigoUnico = uuidv4().split('-')[0].toUpperCase();
+
+
+            // 🔗 URL de validación
+            const urlVerificacion = `http://192.168.1.19/cvn/validacion_cvn`;
+            // === Preparar formato de nombre completo ===
+            const nombreCompleto = `${this.NombInfPer} ${this.ApellInfPer} ${this.ApellMatInfPer}`.trim();
+
+            // Texto embebido dentro del QR
+            const textoQR = `CVN generado por: ${nombreCompleto}\nFecha: ${fechaFormateada}\nCódigo: ${codigoUnico}\nVerificar en: ${urlVerificacion}`;
+
+            // Generar QR
+            const qrDataURL = await QRCode.toDataURL(textoQR, {
+                width: 100,
+                margin: 1,
+                color: { dark: "#126E1B", light: "#FFFFFF" }
+            });
+
+            // Enviar registro de validación al backend
+            try {
+                await enviarsoligqr('POST', {
+                    CIInfPer: this.CIInfPer,
+                    nombres: this.NombInfPer,
+                    apellidos: `${this.ApellInfPer} ${this.ApellMatInfPer}`,
+                    codigo_unico: codigoUnico,
+                }, this.urlqr);
+            } catch (error) {
+                console.error("Error guardando validación del CVN:", error);
+            }
+
 
             const addHeaderAndFooter = (doc, isFirstPage = false) => {
                 if (isFirstPage) {
@@ -941,10 +789,12 @@ export default {
                 return y + 14;
             };
 
-            const addText = (text, x, y) => {
+            const addText = (text, x, y, justify = false) => {
                 doc.setFontSize(11);
-                const lines = doc.splitTextToSize(text, pageWidth - x - 10);
-                lines.forEach(line => {
+                const maxWidth = pageWidth - x - 10;
+                const lines = doc.splitTextToSize(text, maxWidth);
+
+                lines.forEach((line, i) => {
                     if (y > pageHeight - marginBottom) {
                         doc.addPage();
                         addHeaderAndFooter(doc);
@@ -952,7 +802,21 @@ export default {
                         y = marginTop;
                     }
 
-                    doc.text(line, x, y);
+                    if (justify && i !== lines.length - 1) {
+                        // 🔹 Justificar todas las líneas menos la última
+                        const textWidth = doc.getTextWidth(line);
+                        const spaces = line.split(" ").length - 1;
+                        const extraSpace = (maxWidth - textWidth) / spaces;
+
+                        let cursor = x;
+                        line.split(" ").forEach(word => {
+                            doc.text(word, cursor, y);
+                            cursor += doc.getTextWidth(word + " ") + extraSpace;
+                        });
+                    } else {
+                        doc.text(line, x, y);
+                    }
+
                     y += 5;
                 });
                 return y;
@@ -1021,32 +885,99 @@ export default {
             }
 
 
+
+
+
+            // === Función para abreviar títulos universitarios ===
+            const abreviarTitulo = (titulo, genero = "M") => {
+                if (!titulo) return "";
+
+                const t = titulo.toLowerCase();
+
+                // Títulos de grado
+                if (t.includes("ingeniero")) return genero === "F" ? "Ing." : "Ing.";
+                if (t.includes("ingeniera")) return genero === "F" ? "Ing." : "Ing.";
+                if (t.includes("licenciado")) return genero === "F" ? "Lic." : "Lic.";
+                if (t.includes("licenciada")) return genero === "F" ? "Lcda." : "Lcda.";
+                if (t.includes("arquitecto")) return genero === "F" ? "Arq" : "Arq.";
+                if (t.includes("doctor") || t.includes("medicina")) return "Dr.";
+                if (t.includes("abogado")) return genero === "F" ? "Abg.a" : "Abg.";
+                if (t.includes("tecnólogo")) return genero === "F" ? "Tnlg.a" : "Tnlg.";
+                if (t.includes("bachiller")) return genero === "F" ? "Bch.a" : "Bch.";
+
+                // Títulos de posgrado
+                if (t.includes("magister") || t.includes("maestría") || t.includes("maestria")) return "MSc.";
+                if (t.includes("doctorado") || t.includes("phd")) return "PhD.";
+                if (t.includes("especialista")) return "Esp.";
+                if (t.includes("postgrado") || t.includes("posgrado")) return "Pg.";
+                if (t.includes("master")) return "MSc.";
+
+                return titulo; // Si no se detecta abreviación, dejar original
+            };
+
+            // === Detectar género ===
+            let genero = "M"; // por defecto Hombre
+            if (this.GeneroPer && this.GeneroPer.toUpperCase().startsWith("M")) {
+                genero = "F";
+            }
+
+            // === Tomar los títulos más recientes ===
+            let tituloUniv = "";
+            let tituloPos = "";
+
             if (this.titulosUniversitarios.length > 0) {
-                this.titulosUniversitarios.forEach((nuevouni2) => {
-
-                    titulacioncarr = nuevouni2['titulo_universitario_obtenido'];
-                    carrera = "";
-                });
-                //this.estudioactualtitulosUniversitarios=[];
-            }
-            else if (this.estudioactualtitulosUniversitarios.length > 0) {
-                this.estudioactualtitulosUniversitarios.forEach((nuevouni) => {
-
-                    carrera = nuevouni['carrera_universidad'];
-                    titulacioncarr = nuevouni['titulo_carrera_universidad'];
-                });
-            }
-            else {
-                titulacioncarr = "Estudiante";
-                carrera = "";
+                const masRecienteU = this.titulosUniversitarios.reduce((a, b) =>
+                    new Date(b.fecha_graduacion) > new Date(a.fecha_graduacion) ? b : a
+                );
+                tituloUniv = abreviarTitulo(masRecienteU.titulo_universitario_obtenido, genero);
             }
 
-            const text = `${this.NombInfPer}\n${this.ApellInfPer} ${this.ApellMatInfPer}\n${titulacioncarr} ${carrera}\n${this.CiudadPer}-${nuevanacionalidad}\n${this.mailPer} `;
+            if (this.titulosPosgrado.length > 0) {
+                const masRecienteP = this.titulosPosgrado.reduce((a, b) =>
+                    new Date(b.fecha_graduacion_posgrado) > new Date(a.fecha_graduacion_posgrado) ? b : a
+                );
+                tituloPos = abreviarTitulo(masRecienteP.titulo_posgrado_obtenido, genero);
+            }
+
+            // === Si aún estudia, usar el título en curso ===
+            /*if (!tituloUniv && this.estudioactualtitulosUniversitarios.length > 0) {
+                const actual = this.estudioactualtitulosUniversitarios[0];
+                tituloUniv = abreviarTitulo(actual.titulo_carrera_universidad, genero);
+            }*/
+
+            // === Armar la cadena final ===
+            let lineaTitulo = "";
+
+            if (tituloUniv && tituloPos) {
+                lineaTitulo = `${tituloUniv} ${nombreCompleto}, ${tituloPos}`;
+            } else if (tituloUniv) {
+                lineaTitulo = `${tituloUniv} ${nombreCompleto}`;
+            } else {
+                lineaTitulo = `${nombreCompleto}`;
+            }
+
+            // === Mostrar texto más pequeño ===
+            doc.setFontSize(13);
+            doc.setTextColor(2, 107, 41);
+            doc.setFont('Arial', 'bold');
+
+            const text = `${lineaTitulo}\n${this.CiudadPer}-${nuevanacionalidad}\n${this.mailPer}`;
             const textWidth = doc.getStringUnitWidth(text) * 5 / doc.internal.scaleFactor;
-            const x1 = pageWidth - textWidth - 65;
-            const y1 = pageHeight - 50;
+            const x1 = pageWidth - textWidth - 85;
+            const y1 = pageHeight - 70;
 
             doc.text(text, x1, y1);
+            // === Añadir QR solo en portada ===
+            const qrSize = 25;
+            const qrX = pageWidth / 2 - qrSize / 2;
+            const qrY = pageHeight - 45;
+            doc.addImage(qrDataURL, 'PNG', qrX, qrY, qrSize, qrSize);
+
+            doc.setFontSize(9);
+            doc.setTextColor(60, 60, 60);
+            doc.setFont('Arial', 'bold');
+            doc.text(`Código de validación del CVN: ${codigoUnico}\nValida tu CVN aquí: ${urlVerificacion}`, qrX + qrSize / 2, qrY + qrSize + 5, { align: 'center' });
+            // doc.text(`Valida tu CVN aquí: ${urlVerificacion}`);
 
             doc.setFontSize(currentFontSize);
             doc.setFont(currentFont.fontName, currentFont.fontStyle);
@@ -1058,18 +989,32 @@ export default {
 
             let y = marginTop;
 
-            // Cuadrado para foto tamaño carnet
+            // === Cuadro + Foto tamaño carnet ===
+            const fotoX = 10;
+            const fotoY = y;
+            const fotoAncho = 40;
+            const fotoAlto = 50;
 
             doc.setDrawColor(0, 0, 0);
             doc.setLineWidth(0.5);
-            doc.rect(10, y, 40, 50);
+            doc.rect(fotoX, fotoY, fotoAncho, fotoAlto); // recuadro
+
+            // 🔹 Si hay foto, añadir dentro del recuadro
+            if (this.fotografia) {
+                try {
+                    const fotoData = await this.toDataURL(`data:image/png;base64,${this.fotografia}`);
+                    doc.addImage(fotoData, 'PNG', fotoX, fotoY, fotoAncho, fotoAlto);
+                } catch (error) {
+                    console.error("Error al cargar la foto:", error);
+                }
+            }
 
             y += 5;
 
             // Declaración Personal
             let x = 60;
             y = addSectionHeader('Descripción libre del curriculum', x, y);
-            y = addText(`${this.texto}`, x, y);
+            y = addText(`${this.texto}`, x, y, true);
             y = addBoldText('', x, y);
 
             // Datos personales
@@ -1147,6 +1092,22 @@ export default {
                 });
                 y = addBoldText('', x, y);
             }
+            if (this.estudioactualtitulosUniversitarios.length > 0) {
+                //console.log(this.estudioactualtitulosUniversitarios);
+                y = addBoldText3('Formación Académica - Estudios Universitarios Actuales UTLVTE', x, y);
+                this.estudioactualtitulosUniversitarios.forEach((estudioactual, index) => {
+                    y = addBoldText(``, x, y);
+                    const formacionAcademicaData4 = [
+                        { label: 'Facultad:', key: 'facultades_universidad' },
+                        { label: 'Especialidad:', key: 'carrera_universidad' }
+                    ];
+                    formacionAcademicaData4.forEach(item => {
+                        y = addBoldText2(item.label, x, y);
+                        y = addText(`${estudioactual[item.key]}`, x + 60, y);
+                    });
+                    y = addBoldText('', x, y);
+                });
+            }
 
             if (this.titulosPosgrado.length > 0) {
 
@@ -1191,7 +1152,7 @@ export default {
 
                     experienciaData.forEach(item => {
                         y = addBoldText2(item.label, x, y);
-                        y = addText(`${empresa[item.key]}`, x + 60, y);
+                        y = addText(`${empresa[item.key]}`, x + 60, y, true);
                     });
 
                     y = addBoldText('', x, y);
@@ -1215,7 +1176,7 @@ export default {
 
                     experienciaData.forEach(item => {
                         y = addBoldText2(item.label, x, y);
-                        y = addText(`${pasn[item.key]}`, x + 60, y);
+                        y = addText(`${pasn[item.key]}`, x + 60, y, true);
                     });
 
                     y = addBoldText('', x, y);
@@ -1234,7 +1195,7 @@ export default {
                     const publicacionData2 = [
                         { label: 'Tipo de Publicación:', key: 'publicacion_tipo' },
                         { label: 'Título de la Publicación:', key: 'publicacion_titulo' },
-                        { label: 'Likn de la Publicación:', key: 'link_publicación' }
+                        { label: 'Likn de la Publicación:', key: 'link_publicacion' }
                     ];
 
                     publicacionData2.forEach(item => {
@@ -1259,7 +1220,8 @@ export default {
                         { label: 'Comprensión de Lectura:', key: 'comprension_lectura' },
                         { label: 'Interacción Oral:', key: 'interaccion_oral' },
                         { label: 'Expresión Oral:', key: 'expresion_oral' },
-                        { label: 'Expresión Escrita:', key: 'expresion_escrita' }
+                        { label: 'Expresión Escrita:', key: 'expresion_escrita' },
+                        { label: 'Certificado:', key: 'certificado' }
                     ];
 
                     idiomasData2.forEach(item => {
@@ -1289,7 +1251,7 @@ export default {
 
                     habilidadData2.forEach(item => {
                         y = addBoldText2(item.label, x, y);
-                        y = addText(`${habi[item.key]}`, x + 60, y);
+                        y = addText(`${habi[item.key]}`, x + 60, y, true);
                     });
 
                     y = addBoldText('', x, y);
@@ -1308,7 +1270,7 @@ export default {
 
                     habilidadData3.forEach(item => {
                         y = addBoldText2(item.label, x, y);
-                        y = addText(`${habic[item.key]}`, x + 60, y);
+                        y = addText(`${habic[item.key]}`, x + 60, y, true);
                     });
 
                     y = addBoldText('', x, y);
@@ -1327,7 +1289,7 @@ export default {
 
                     habilidadData4.forEach(item => {
                         y = addBoldText2(item.label, x, y);
-                        y = addText(`${habic4[item.key]}`, x + 60, y);
+                        y = addText(`${habic4[item.key]}`, x + 60, y, true);
                     });
 
                     y = addBoldText('', x, y);
@@ -1346,7 +1308,7 @@ export default {
 
                     habilidadData5.forEach(item => {
                         y = addBoldText2(item.label, x, y);
-                        y = addText(`${habic5[item.key]}`, x + 60, y);
+                        y = addText(`${habic5[item.key]}`, x + 60, y, true);
                     });
 
                     y = addBoldText('', x, y);
@@ -1365,7 +1327,7 @@ export default {
 
                     habilidadData6.forEach(item => {
                         y = addBoldText2(item.label, x, y);
-                        y = addText(`${habic6[item.key]}`, x + 60, y);
+                        y = addText(`${habic6[item.key]}`, x + 60, y, true);
                     });
 
                     y = addBoldText('', x, y);
@@ -1383,7 +1345,7 @@ export default {
 
                     habilidadData7.forEach(item => {
                         y = addBoldText2(item.label, x, y);
-                        y = addText(`${habic7[item.key]}`, x + 60, y);
+                        y = addText(`${habic7[item.key]}`, x + 60, y, true);
                     });
 
                     y = addBoldText('', x, y);
@@ -1432,7 +1394,7 @@ export default {
 
                     logrosData2.forEach(item => {
                         y = addBoldText2(item.label, x, y);
-                        y = addText(`${logr[item.key]}`, x + 60, y);
+                        y = addText(`${logr[item.key]}`, x + 60, y, true);
                     });
 
                     y = addBoldText('', x, y);
@@ -1465,6 +1427,7 @@ export default {
             // Visualizar el PDF
             const pdfUrl = doc.output('bloburl');  // Obtiene la URL temporal del PDF
             window.open(pdfUrl);
+            console.clear();
             //doc.save(`CVN-${this.CIInfPer}-${this.NombInfPer} ${this.ApellInfPer} ${this.ApellMatInfPer}.pdf`);
         },
 
@@ -1552,7 +1515,7 @@ export default {
         },
         async getUsuairoSS() {
             try {
-                const response = await axios.get(this.url);
+                const response = await API.get(this.url);
                 if (response) {
                     const data = response.data.data;
                     this.nombre = data.name;

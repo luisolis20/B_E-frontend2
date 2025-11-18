@@ -288,6 +288,7 @@ import axios from 'axios';
 import store from '@/store';
 import script2 from '@/assets/scripts/custom.js';
 import { getMe } from '@/store/auth';
+import API from '@/assets/scripts/services/axios';
 import { mostraralertas, enviarsolig, mostraralertas2, enviarsolig23, confimar, confimarhabi } from '@/assets/scripts/scriptfunciones/funciones';
 
 export default {
@@ -315,11 +316,11 @@ export default {
             previewFotologo: '',
             updated_at: '',
             idemprendimiento: 0,
-            urlinformacionpersonal: "http://vinculacionconlasociedad.utelvt.edu.ec/cvubackendv2/api/cvn/v1/informacionpersonal",
-            urk3: `${__API_BOLSA__}/b_e/vin/consultarediremp`,
+            urlinformacionpersonal: `${__API_CVN__}/cvn/v1/infromaciondata`,
+            urk3: `/b_e/vin/consultarediremp`,
             cargando: false,
             botonesBloqueados: false,
-            urlofeempre: `${__API_BOLSA__}/b_e/vin/view-oferta_empleos_emprendimiento`,
+            urlofeempre: `/b_e/vin/view-oferta_empleos_emprendimiento`,
         }
     },
     async mounted() {
@@ -333,7 +334,7 @@ export default {
     methods: {
         async getEmprendiemi() {
             try {
-                const response = await axios.get(this.urk3);
+                const response = await API.get(this.urk3);
                 //console.log(response.data.data);
 
 
@@ -379,7 +380,7 @@ export default {
         async eliminar(id, nombre) {
             try {
                 const w = await confimar(
-                    `${__API_BOLSA__}/b_e/vin/consultaredirempelim/`,
+                    `/b_e/vin/consultaredirempelim/`,
                     id,
                     'No aprobar Emprendimiento',
                     '¿Realmente desea no aprobar el emprendimiento  ' + nombre + '?',
@@ -393,7 +394,7 @@ export default {
                     const response = await axios.get(this.urlinformacionpersonal);
                     const data = response.data.data[0];
                     const apellidos = data.ApellInfPer + ' ' + data.ApellMatInfPer + ' ' + data.NombInfPer;
-                    const responseCorreo = await axios.post(`${__API_BOLSA__}/b_e/vin/enviar-rechazo-emprendimiento`, {
+                    const responseCorreo = await API.post(`/b_e/vin/enviar-rechazo-emprendimiento`, {
 
                         email: w.data.email_contacto,
                         firts_name: apellidos,
@@ -424,7 +425,7 @@ export default {
         async habilitar(id, nombre) {
             try {
                 const w = await confimarhabi(
-                    `${__API_BOLSA__}/b_e/vin/consultaredirempelim2/`,
+                    `/b_e/vin/consultaredirempelim2/`,
                     id,
                     'Aprobar Emprendimiento',
                     '¿Desea aprobar el emprendimiento ' + nombre + '?',
@@ -439,7 +440,7 @@ export default {
                     const response = await axios.get(this.urlinformacionpersonal);
                     const data = response.data.data[0];
                     const apellidos = data.ApellInfPer + ' ' + data.ApellMatInfPer + ' ' + data.NombInfPer;
-                    const responseCorreo = await axios.post(`${__API_BOLSA__}/b_e/vin/enviar-aprobacion-emprendimiento`, {
+                    const responseCorreo = await API.post(`/b_e/vin/enviar-aprobacion-emprendimiento`, {
 
                         email: w.data.email_contacto,
                         firts_name: apellidos,

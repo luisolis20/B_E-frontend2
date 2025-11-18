@@ -3,7 +3,7 @@
     <div class="container-fluid py-3">
         <div class="container-fluid py-3" v-if="mostrarOpciones2">
             <h1 class="mb-4">Perfil</h1>
-            <h5 class="text-danger">
+            <h5 class="text-dark">
                 Este es el apartado de su perfil. Aquí visualizará la información que usted tiene
                 en el sistema SIAD de la UTLVTE. Si su información no carga pruebe ingresando al
                 sistema
@@ -17,12 +17,11 @@
                         <div class="row">
                             <div class="col-md-12 col-lg-3">
                                 <div class="text-center">
-                                    <img v-if="previewFoto" :src="previewFoto" id="fotoimg" width="100%" height="300"
-                                        style="border-radius: 10px; object-fit: cover" />
-                                    <img v-else-if="fotografia" :src="'data:image/jpeg;base64,' + fotografia"
-                                        width="100%" height="300" style="border-radius: 10px; object-fit: cover" />
-                                    <img v-else src="https://emprendedores.biz/wp-content/uploads/2023/08/QEE-2.png"
-                                        width="100%" height="300" style="border-radius: 10px; object-fit: cover" />
+                                    <img :src="getFotoUrl(CIInfPer)" alt="Foto del estudiante"
+                                         width="100%" height="300"
+                                        style="border-radius: 10px; object-fit: cover"
+                                        @error.once="$event.target.src = 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/User_icon_2.svg/480px-User_icon_2.svg.png'" />
+                                   
                                 </div>
                                
                             </div>
@@ -60,27 +59,34 @@
                     </div>
                     <div class="col-md-12 col-lg-6 col-xl-5">
                         <div class="row g-4 text-center align-items-center justify-content-center pt-4">
-                            <div class="text-center" v-if="!si_cvn">
+                            <div class="text-center" v-if="no_cvn">
                                 <h4 class="mb-4">
                                     ¡Vaya! parece que no tienes una hoja de vida. Si aún no has realizado tu
                                     hoja de vida, puedes dar ir a la página del
-                                    <a href="http://vinculacionconlasociedad.utelvt.edu.ec/cvn/home"
+                                    <a href="http://192.168.1.19/cvn/home"
                                         target="_blank">CVN</a>
                                     que la UTLVTE implementó <br />
                                 </h4>
                             </div>
-                            <div class="text-center" v-if="si_cvn">
+                            <div class="text-center" v-if="cvcompleto">
                                 <h4 class="mb-4">
-                                    Parece que si tienes registrado tu hoja de vida en la página del CVN de
-                                    la UTLVTE, puedes visualizarlo en el botón de abajo <br />
-                                    Si deseas puedes editar tu CVN dando clic
-                                    <a href="http://vinculacionconlasociedad.utelvt.edu.ec/cvn/home" target="_blank"
+                                    El sistema ha detectado que tienes tu hoja de vida completa en la plataforma CVN, puedes visualizarlo en el botón de abajo <br />
+                                    También puedes editar tu CVN dando clic
+                                    <a href="http://192.168.1.19/cvn/home" target="_blank"
+                                        rel="noopener noreferrer">aquí</a>
+                                </h4>
+                            </div>
+                            <div class="text-center" v-if="cvincompleto">
+                                <h4 class="mb-4">
+                                    El sistema ha detectado que tienes tu hoja de vida incompleta en la plataforma CVN, puedes visualizarlo en el botón de abajo <br />
+                                    También puedes editar tu CVN dando clic
+                                    <a href="http://192.168.1.19/cvn/home" target="_blank"
                                         rel="noopener noreferrer">aquí</a>
                                 </h4>
                             </div>
                         </div>
 
-                        <div class="row g-4 text-center align-items-center justify-content-center pt-4" v-if="si_cvn">
+                        <div class="row g-4 text-center align-items-center justify-content-center pt-4" v-if="cvcompleto || cvincompleto">
                             <button v-on:click="visualizarCV" type="button"
                                 class="btn border-secondary py-3 px-4 text-uppercase w-100 text-primary">
                                 Visualizar mi hoja de Vida

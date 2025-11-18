@@ -124,7 +124,7 @@
                 </select>
             </div>
         </div>
-        <h4 class="text-center mb-3">Estadísticas de emprendimientoemp por empresas</h4>
+        <h4 class="text-center mb-3">Gráfico estadístico de emprendimientos</h4>
         <canvas id="graficoemprendimientoemp" height="100"></canvas>
     </div>
 </template>
@@ -134,6 +134,7 @@
 <script>
 import script2 from '@/assets/scripts/custom.js';
 import axios from 'axios';
+import API from '@/assets/scripts/services/axios';
 import { useRoute } from 'vue-router';
 import { confimar, confimarhabi } from '@/assets/scripts/scriptfunciones/funciones';
 import { Chart, registerables } from 'chart.js';
@@ -142,8 +143,8 @@ export default {
     data() {
         return {
             idus: 0,
-            url255: `${__API_BOLSA__}/b_e/vin/emprendimientos_E`,
-            urlinformacionpersonal: "http://vinculacionconlasociedad.utelvt.edu.ec/cvubackendv2/api/cvn/v1/informacionpersonal",
+            url255: `/b_e/vin/emprendimientos_E`,
+            urlinformacionpersonal: `${__API_CVN__}/cvn/v1/infromaciondata`,
             emprendimientoemp: [],
             filteredemprend: [],
             searchQuery: '',
@@ -178,7 +179,7 @@ export default {
         async getEmprendimiento() {
             this.cargando = true;
             try {
-                const response = await axios.get(`${this.url255}?all=true`);
+                const response = await API.get(`${this.url255}?all=true`);
                 const allData = response.data.data;
                 //console.log(response);
                 // console.log(allData);
@@ -480,7 +481,7 @@ export default {
         async eliminar(id, nombre) {
             try {
                 const w = await confimar(
-                    `${__API_BOLSA__}/b_e/vin/consultaredirempelim/`,
+                    `/b_e/vin/consultaredirempelim/`,
                     id,
                     'No aprobar Emprendimiento',
                     '¿Realmente desea no aprobar el emprendimiento  ' + nombre + '?',
@@ -491,7 +492,7 @@ export default {
                     const response = await axios.get(this.urlinformacionpersonal);
                     const data = response.data.data[0];
                     const apellidos = data.ApellInfPer + ' ' + data.ApellMatInfPer + ' ' + data.NombInfPer;
-                    const responseCorreo = await axios.post(`${__API_BOLSA__}/b_e/vin/enviar-rechazo-emprendimiento`, {
+                    const responseCorreo = await API.post(`/b_e/vin/enviar-rechazo-emprendimiento`, {
 
                         email: w.data.email_contacto,
                         firts_name: apellidos,
@@ -517,7 +518,7 @@ export default {
         async habilitar(id, nombre) {
             try {
                 const w = await confimarhabi(
-                    `${__API_BOLSA__}/b_e/vin/consultaredirempelim2/`,
+                    `/b_e/vin/consultaredirempelim2/`,
                     id,
                     'Aprobar Emprendimiento',
                     '¿Desea aprobar el emprendimiento ' + nombre + '?',
@@ -529,7 +530,7 @@ export default {
                     const response = await axios.get(this.urlinformacionpersonal);
                     const data = response.data.data[0];
                     const apellidos = data.ApellInfPer + ' ' + data.ApellMatInfPer + ' ' + data.NombInfPer;
-                    const responseCorreo = await axios.post(`${__API_BOLSA__}/b_e/vin/enviar-aprobacion-emprendimiento`, {
+                    const responseCorreo = await API.post(`/b_e/vin/enviar-aprobacion-emprendimiento`, {
 
                         email: w.data.email_contacto,
                         firts_name: apellidos,

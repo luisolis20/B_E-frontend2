@@ -683,6 +683,10 @@ option:checked {
   background-color: transparent;
   border-color: transparent;
 }
+.descripcionmia{
+  text-align: justify;
+  
+}
 
 .nav-tabs1 .nav-link1.active,
 .nav-tabs1 .nav-item.show .nav-link1 {

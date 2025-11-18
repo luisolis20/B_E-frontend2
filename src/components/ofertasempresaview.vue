@@ -155,6 +155,7 @@
 <script>
 import axios from 'axios';
 import { useRoute } from 'vue-router';
+import API from '@/assets/scripts/services/axios';
 import { confimar,confimarhabi } from '@/assets/scripts/scriptfunciones/funciones';
 import { getMe } from '@/store/auth';
 import script2 from '@/assets/scripts/custom.js';
@@ -163,7 +164,7 @@ export default {
         return {
             ide: 0,
             idus: 0,
-            url21: `${__API_BOLSA__}/b_e/vin/oferta__empleos`,
+            url21: `/b_e/vin/oferta__empleos`,
             ofertas: [],
             filteredofertas: [],
             searchQuery: '',
@@ -191,7 +192,7 @@ export default {
         async getOFertas() {
             this.cargando = true;
             try {
-                const response = await axios.get(`${this.url21}?all=true`);
+                const response = await API.get(`${this.url21}?all=true`);
                 const allData = response.data.data;
 
                 this.ofertas = allData;
@@ -258,7 +259,7 @@ export default {
         },
         eliminar(id, nombre) {
             try {
-                confimar(`${__API_BOLSA__}/b_e/vin/oferta__empleos/`,
+                confimar(`/b_e/vin/oferta__empleos/`,
                     id,
                     'Inhabilitar registro',
                     '¿Realmente desea inhabilitar la oferta ' + nombre + '?',
@@ -273,7 +274,7 @@ export default {
          habilitar(id, nombre) {
             try {
                 confimarhabi(
-                    `${__API_BOLSA__}/b_e/vin/oferta__empleoshabi/`,
+                    `/b_e/vin/oferta__empleoshabi/`,
                     id,
                     'Hbailitar registro',
                     '¿Desea habilitar la oferta ' + nombre + '?',

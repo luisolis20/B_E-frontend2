@@ -295,6 +295,7 @@
 import store from '@/store';
 import {mostraralertas, enviarsolig} from '@/assets/scripts/scriptfunciones/funciones';
 import { getMe } from '@/store/auth';
+import API from '@/assets/scripts/services/axios';
 import { useRoute } from 'vue-router';
 export default {
    data(){
@@ -422,7 +423,7 @@ export default {
 
                 }
                
-                enviarsolig('POST',parametros,`${__API_BOLSA__}/b_e/vin/oferta__empleos`,'Oferta Creada');
+                enviarsolig('POST',parametros,`/b_e/vin/oferta__empleos`,'Oferta Creada');
                 this.$router.push('/ofertas/'+store.state.idusu);
             }
         },

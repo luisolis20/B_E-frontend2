@@ -132,6 +132,7 @@
 </style>
 <script>
 import axios from 'axios';
+import API from '@/assets/scripts/services/axios';
 import { useRoute } from 'vue-router';
 import { getMe } from '@/store/auth';
 import { confimar } from '@/assets/scripts/scriptfunciones/funciones';
@@ -142,7 +143,7 @@ export default {
     data() {
         return {
             idus: 0,
-            url213: `${__API_BOLSA__}/b_e/vin/postulacions2empre`,
+            url213: `/b_e/vin/postulacions2empre`,
             postulacionespr: [],
             filteredpostulaciones: [],
             searchQuery: '',
@@ -170,7 +171,7 @@ export default {
         async getPostulaciones() {
             this.cargando = true;
             try {
-                const response = await axios.get(`${this.url213}?all=true`, {
+                const response = await API.get(`${this.url213}?all=true`, {
                     params: {
                         CIInfPer: this.idus
                     }
@@ -349,7 +350,7 @@ export default {
             });
         },
         eliminar(id, nombre) {
-            confimar(`${__API_BOLSA__}/b_e/vin/postulacions/`, id, 'Eliminar registro', '¿Realmente desea eliminar a ' + nombre + '?');
+            confimar(`/b_e/vin/postulacions/`, id, 'Eliminar registro', '¿Realmente desea eliminar a ' + nombre + '?');
             this.cargando = false;
             this.$router.push('/principal/' + this.idus);
 

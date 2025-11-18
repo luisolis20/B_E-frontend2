@@ -261,6 +261,7 @@
 import script2 from '@/assets/scripts/custom.js';
 import axios from 'axios';
 import { useRoute } from 'vue-router';
+import API from '@/assets/scripts/services/axios';
 import { getMe } from '@/store/auth';
 import { confimar, confimarhabi } from '@/assets/scripts/scriptfunciones/funciones';
 import { Chart, registerables } from 'chart.js';
@@ -269,8 +270,8 @@ export default {
     data() {
         return {
             idus: 0,
-            url255: `${__API_BOLSA__}/b_e/vin/consultanopostofert`,
-            url2552: `${__API_BOLSA__}/b_e/vin/oferta__empleos`,
+            url255: `/b_e/vin/consultanopostofert`,
+            url2552: `/b_e/vin/oferta__empleos`,
 
             ofertas: [],
             filteredofertas: [],
@@ -317,7 +318,7 @@ export default {
         async getOFertas() {
             this.cargando = true;
             try {
-                const response = await axios.get(`${this.url255}?all=true`, {
+                const response = await API.get(`${this.url255}?all=true`, {
                     params: { user_id: this.idus }
                 });
                 const allData = response.data.data;
@@ -335,7 +336,7 @@ export default {
         async getOFertas2() {
             this.cargando = true;
             try {
-                const response = await axios.get(`${this.url2552}?all=true`);
+                const response = await API.get(`${this.url2552}?all=true`);
                 const allData = response.data.data;
 
                 this.ofertas = allData;
@@ -641,7 +642,7 @@ export default {
         },
         eliminar(id, nombre) {
             try {
-                confimar(`${__API_BOLSA__}/b_e/vin/oferta__empleos/`,
+                confimar(`/b_e/vin/oferta__empleos/`,
                     id,
                     'Inhabilitar registro',
                     '¿Realmente desea inhabilitar la oferta ' + nombre + '?',
@@ -656,7 +657,7 @@ export default {
         habilitar(id, nombre) {
             try {
                 confimarhabi(
-                    `${__API_BOLSA__}/b_e/vin/oferta__empleoshabi/`,
+                    `/b_e/vin/oferta__empleoshabi/`,
                     id,
                     'Habilitar registro',
                     '¿Desea habilitar la oferta ' + nombre + '?',

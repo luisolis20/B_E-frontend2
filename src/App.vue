@@ -15,7 +15,7 @@
               class="text-white">Universidad Técnica "Luis Vargas Torres" de Esmeraldas, Nuevos Horizontes, Esmeraldas,
               Ecuador</a></small>
           <small class="me-3"><i class="fas fa-envelope me-2 text-secondary"></i><a href="#Comentario"
-              class="text-white">vinculacion@utelvt.edu.ec</a></small>
+              class="text-white">example@utelvt.edu.ec</a></small>
         </div>
 
       </div>
@@ -198,12 +198,12 @@
                 v-if="mostrarOpciones3" :class="{ 'active': $route.path === '/estadopostulacionall/' + idus }">Estado de
                 Postulaciones</router-link>
 
-              <router-link :to="{ path: '/about/' + idus }" class="nav-item nav-link" v-if="mostrarOpciones3"
+              <!--<router-link :to="{ path: '/about/' + idus }" class="nav-item nav-link" v-if="mostrarOpciones3"
                 :class="{ 'active': $route.path === '/about/' + idus }">Nuevo</router-link>
               <router-link :to="{ path: '/estabout/' + idus }" class="nav-item nav-link" v-if="mostrarOpciones3"
                 :class="{ 'active': $route.path === '/estabout/' + idus }">NuevoE</router-link>
 
-              <!--<router-link :to="{ path: '/userall/' + idus }" class="nav-item nav-link" v-if="mostrarOpciones3"
+              <router-link :to="{ path: '/userall/' + idus }" class="nav-item nav-link" v-if="mostrarOpciones3"
                 :class="{ 'active': $route.path === '/userall/' + idus }">Usuarios Registrados</router-link>-->
 
               <!-- 🔽 DROPDOWN para Mis Ofertas -->
@@ -250,7 +250,7 @@
                     style="min-width: 400px;">
                     <h4 class="d-flex justify-content-between align-items-center mb-3">
                       <span class="text-primary">Postulados Recientemente</span>
-                      <span class="badge bg-primary rounded-pill">{{ vistos }}</span>
+                      <span class="badge bg-primary rounded-pill"> {{ vistos }}</span>
                       <!-- Número dinámico -->
                     </h4>
                     <ul class="list-group mb-3">
@@ -382,6 +382,7 @@
 </style>
 <script>
 import customscript from '@/assets/scripts/custom.js';
+import API from '@/assets/scripts/services/axios';
 import axios from 'axios';
 import { useRoute } from 'vue-router';
 import store from '@/store';
@@ -397,9 +398,9 @@ export default {
   data() {
     return {
       idus2: 0,
-      url213: 'http://backendbolsaempleo.test/api/b_e/vin/postulacions2',
-      url214: 'http://backendbolsaempleo.test/api/b_e/vin/estadopostuser',
-      url215: 'http://backendbolsaempleo.test/api/b_e/vin/estadopostuser2',
+      url213: `/b_e/vin/postulacions2`,
+      url214: `/b_e/vin/estadopostuser`,
+      url215: `/b_e/vin/estadopostuser2`,
       postulaciones: [], // Lista de postulaciones
       postulacionesacepta: [], // Lista de postulaciones
       vistos: 0,
@@ -412,12 +413,13 @@ export default {
   watch: {
 
     '$route'() {
+      
       this.obtener();
     }
   },
   async mounted() {
 
-
+    
     this.obtener();
 
 
@@ -430,8 +432,10 @@ export default {
       //localStorage.clear();
       window.location.replace('/b_e');
     },
+    
     async obtener() {
-
+      const ruta = useRoute();
+      this.idus2 = ruta.params.id;
       this.getPostulaciones();
       this.vistos = JSON.parse(this.$store.state.postulacionesVistas || '[]');
       this.vistos2 = JSON.parse(this.$store.state.postulacionesVistasacept || '[]');
@@ -441,7 +445,7 @@ export default {
         this.idus2 = usuario.CIInfPer;
 
         if (this.idus2) {
-          this.url214 = 'http://backendbolsaempleo.test/api/b_e/vin/estadopostuser/' + customscript.computed.idUsuario();
+          this.url214 = `/b_e/vin/estadopostuser/` + customscript.computed.idUsuario();
 
 
           this.getPostulacionesAcept();
@@ -452,13 +456,13 @@ export default {
     },
     async getPostulaciones() {
       this.cargando = true;
-
+      const params = `user_id=${this.idus2}&all=true`;
       try {
         const [postulacionesRes, excluidasRes] = await Promise.all([
-          axios.get(`${this.url213}?all=true`),
-          axios.get(`${this.url215}?all=true`)
+          API.get(`${this.url213}?${params}`), 
+          API.get(`${this.url215}?all=true`)
         ]);
-
+        console.log(postulacionesRes);
         const todasPostulaciones = postulacionesRes.data?.data || [];
         const excluidas = excluidasRes.data?.data || [];
 
@@ -488,7 +492,7 @@ export default {
     },
     getPostulacionesAcept() {
       this.cargando = true;
-      axios.get(`${this.url214}?all=true`).then(
+      API.get(`${this.url214}?all=true`).then(
         res => {
           // Verificamos que res.data y res.data.data existan antes de intentar ordenar
           if (res.data && Array.isArray(res.data.data)) {

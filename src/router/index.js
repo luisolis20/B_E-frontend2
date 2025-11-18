@@ -249,12 +249,12 @@ const routes = [
     component: Emprendimientosall
   },
   {
-    path: '/about/:id',
+    path: '/about',
     name: 'about',
     component: AboutView
   },
   {
-    path: '/estabout/:id',
+    path: '/estabout',
     name: 'estabout',
     component: EstudiantesAbout
   },

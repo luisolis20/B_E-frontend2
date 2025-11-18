@@ -105,13 +105,14 @@
 <script>
 import axios from 'axios';
 import { useRoute } from 'vue-router';
+import API from '@/assets/scripts/services/axios';
 import { getMe } from '@/store/auth';
 import { confimar } from '@/assets/scripts/scriptfunciones/funciones';
 export default {
     data() {
         return {
             idus: 0,
-            url213: `${__API_BOLSA__}/b_e/vin/postulacionemprendi`,
+            url213: `/b_e/vin/postulacionemprendi`,
             postulacionespr: [],
             filteredpostulaciones: [],
             searchQuery: '',
@@ -133,7 +134,7 @@ export default {
         async getPostulaciones() {
             this.cargando = true;
             try {
-                const response = await axios.get(`${this.url213}?all=true`);
+                const response = await API.get(`${this.url213}?all=true`);
 
                 // Verifica si la respuesta tiene datos válidos
                 const allData = response.data?.data || [];

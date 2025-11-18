@@ -110,6 +110,7 @@
 import { mostraralertas, enviarsoliedit, enviarsolig, enviarsoli } from '@/assets/scripts/scriptfunciones/funciones';
 import { useRoute } from 'vue-router';
 import axios from 'axios';
+import API from '@/assets/scripts/services/axios';
 import { getMe } from '@/store/auth';
 import store from '@/store';
 import jsPDF from 'jspdf';
@@ -351,14 +352,14 @@ export default {
                 investigacion: '', // URL de investigación y publicaciones
                 otrosDatos: '', // URL de otros datos relevantes
             },
-            url44: '${__API_BOLSA__}/b_e/vin/consultapostuserestado2',
+            url44: '/b_e/vin/consultapostuserestado2',
             cargando: false,
             si_postula: false,
             postulacionespr: [],
             detalle_si: "",
             company_name: "",
             job_offer: "",
-            urlest: "${__API_BOLSA__}/b_e/vin/estadopostuser",
+            urlest: "/b_e/vin/estadopostuser",
 
         }
     },
@@ -401,7 +402,7 @@ export default {
             this.cargando = true;
             try {
 
-                const response = await axios.get(this.url44);
+                const response = await API.get(this.url44);
                 // Verifica si la respuesta tiene datos válidos
                 const allData = response.data?.data || [];
                 if (allData.length > 0) {
@@ -1573,7 +1574,7 @@ export default {
 
             try {
                 // Enviar el correo electrónico
-                const responseCorreo = await axios.post(`${__API_BOLSA__}/b_e/vin/enviar-aceptacion-postulacion`, {
+                const responseCorreo = await API.post(`/b_e/vin/enviar-aceptacion-postulacion`, {
 
                     email: this.mailPer.trim(),
                     firts_name: this.apellidos.trim(),
@@ -1603,7 +1604,7 @@ export default {
 
             try {
                 // Enviar el correo electrónico
-                const responseCorreo = await axios.post(`${__API_BOLSA__}/b_e/vin/enviar-rechazo-postulacion`, {
+                const responseCorreo = await API.post(`/b_e/vin/enviar-rechazo-postulacion`, {
 
                     email: this.mailPer.trim(),
                     firts_name: this.apellidos.trim(),

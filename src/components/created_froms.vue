@@ -190,7 +190,7 @@ export default {
 
                     }
 
-                    enviarsolig('POST', parametros, `${__API_BOLSA__}/b_e/vin/seguipreguntas`, 'Formulario Creado');
+                    enviarsolig('POST', parametros, `/b_e/vin/seguipreguntas`, 'Formulario Creado');
                     this.$router.push('/encuestas_all/' + store.state.idusu);
                 }
             } catch (error) {

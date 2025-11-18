@@ -219,6 +219,7 @@
 import { useRoute } from 'vue-router';
 import axios from 'axios';
 import store from '@/store';
+import API from '@/assets/scripts/services/axios';
 import { mostraralertas, enviarsolig, mostraralertas2 } from '@/assets/scripts/scriptfunciones/funciones';
 import customscript from '@/assets/scripts/custom.js';
 import { getMe } from '@/store/auth';
@@ -237,7 +238,7 @@ export default {
             modalidad: '',
             categoria: '',
             jefe: '',
-            urk32: `${__API_BOLSA__}/b_e/vin/consultaofertempr2`,
+            urk32: `/b_e/vin/consultaofertempr2`,
             estado: '',
             ApellInfPer: '',
             ApellMatInfPer: '',
@@ -274,7 +275,7 @@ export default {
     methods: {
         async fetchData(url) {
             try {
-                const response = await axios.get(url);
+                const response = await API.get(url);
                 return response.data;
             } catch (error) {
                 console.error(`Error al obtener datos desde ${url}:`, error);
@@ -284,7 +285,7 @@ export default {
          async getDatosPersonales() {
             try {
 
-                const response = await axios.get(this.urlinformacionpersonal);
+                const response = await API.get(this.urlinformacionpersonal);
                 if (response.data.data && response.data.data.length > 0) {
                     const data = response.data.data[0];
                     this.CIInfPer = data.CIInfPer;

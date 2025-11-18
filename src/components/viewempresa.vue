@@ -151,6 +151,7 @@
 </style>
 <script>
 import axios from 'axios';
+import API from '@/assets/scripts/services/axios';
 import { useRoute } from 'vue-router';
 import { confimar, mostraralertas } from '@/assets/scripts/scriptfunciones/funciones';
 import script2 from '@/assets/scripts/custom.js';
@@ -159,7 +160,7 @@ export default {
     data() {
         return {
             idus: 0,
-            url2: `${__API_BOLSA__}/b_e/vin/empresas`,
+            url2: `/b_e/vin/empresas`,
             empresasprac: [],
             filteredempresas: [],
             searchQuery: '',
@@ -182,7 +183,7 @@ export default {
         async getEmpresas() {
             this.cargando = true;
             try {
-                const response = await axios.get(`${this.url2}?all=true`);
+                const response = await API.get(`${this.url2}?all=true`);
                 const allData = response.data.data;
 
                 this.empresasprac = allData;
@@ -259,7 +260,7 @@ export default {
         eliminar(id, nombre) {
             try {
                 confimar(
-                    `${__API_BOLSA__}/b_e/vin/empresas/`,
+                    `/b_e/vin/empresas/`,
                     id,
                     'Inhabilitar registro',
                     '¿Realmente desea inhabilitar la empresa  ' + nombre + '?',
