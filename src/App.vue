@@ -6,11 +6,11 @@
       <div class="d-flex justify-content-between">
         <div class="top-info ps-2">
           <small class="me-3"><i class="fas fa-building me-2 text-white"></i> <a href="#" class="text-white">{{ role
-          }}</a></small>
+              }}</a></small>
           <small class="me-3"><i class="fas fa-envelope me-2 text-white"></i><a href="#" class="text-white">{{ emaile
-          }}</a></small>
+              }}</a></small>
           <small class="me-3"><i class="fas fa-user me-2 text-white"></i><a href="#" class="text-white">{{ idus
-          }}</a></small>
+              }}</a></small>
           <small class="me-3"><i class="fas fa-map-marker-alt me-2 text-secondary"></i> <a href="#Comentario"
               class="text-white">Universidad Técnica "Luis Vargas Torres" de Esmeraldas, Nuevos Horizontes, Esmeraldas,
               Ecuador</a></small>
@@ -277,7 +277,7 @@
 
                           </div>
                           <div class="col-lg-12 d-flex flex-wrap justify-content-center">
-                            <router-link :to="{ path: '/perfilpostulados/' + post.id + '/' + post.CIInfPer }"
+                            <router-link :to="{ path: '/perfilpostulados/' + post.id + '/' + post.CIInfPer + '/' + post.estado_id }"
                               class="d-block fw-medium text-capitalize mt-2" @click="marcarComoVista(post.id)">Ver
                               detalle
                               completo</router-link>
@@ -401,6 +401,7 @@ export default {
       url213: `/b_e/vin/postulacions2`,
       url214: `/b_e/vin/estadopostuser`,
       url215: `/b_e/vin/estadopostuser2`,
+      vistos_ids: [],
       postulaciones: [], // Lista de postulaciones
       postulacionesacepta: [], // Lista de postulaciones
       vistos: 0,
@@ -413,13 +414,13 @@ export default {
   watch: {
 
     '$route'() {
-      
+
       this.obtener();
     }
   },
   async mounted() {
 
-    
+
     this.obtener();
 
 
@@ -432,10 +433,8 @@ export default {
       //localStorage.clear();
       window.location.replace('/b_e');
     },
-    
+
     async obtener() {
-      const ruta = useRoute();
-      this.idus2 = ruta.params.id;
       this.getPostulaciones();
       this.vistos = JSON.parse(this.$store.state.postulacionesVistas || '[]');
       this.vistos2 = JSON.parse(this.$store.state.postulacionesVistasacept || '[]');
@@ -456,29 +455,40 @@ export default {
     },
     async getPostulaciones() {
       this.cargando = true;
-      const params = `user_id=${this.idus2}&all=true`;
-      try {
-        const [postulacionesRes, excluidasRes] = await Promise.all([
-          API.get(`${this.url213}?${params}`), 
-          API.get(`${this.url215}?all=true`)
-        ]);
-        console.log(postulacionesRes);
-        const todasPostulaciones = postulacionesRes.data?.data || [];
-        const excluidas = excluidasRes.data?.data || [];
+      const userId = customscript.computed.idUsuario(); // Obtener el ID del usuario logueado
 
-        // Obtener lista de IDs de postulaciones que se deben excluir
+      if (!userId) {
+        console.error("ID de usuario no disponible para obtener postulaciones.");
+        this.cargando = false;
+        return;
+      }
+
+      try {
+        const postulacionesUrl = `${this.url213}?all=true&user_id=${userId}`; // AÑADIR user_id AQUÍ
+        const excluidasUrl = `${this.url215}?all=true`;
+
+        const [postulacionesRes, excluidasRes] = await Promise.all([
+          API.get(postulacionesUrl),
+          API.get(excluidasUrl)
+        ]);
+        //console.log(postulacionesRes);
+        // ... el resto de la lógica de filtrado y ordenamiento permanece igual ...
+
+        const todasPostulaciones = postulacionesRes.data?.data || [];
+        //console.log(todasPostulaciones);
+        const excluidas = excluidasRes.data?.data || [];
+        //console.log(excluidas);
         const idsExcluidos = excluidas.map(post => post.IDPostulacion);
 
         let filtradas = [];
 
-        // Si hay postulaciones excluidas, filtramos
-        if (idsExcluidos.length > 0) {
+        if (idsExcluidos.length < 0) {
           filtradas = todasPostulaciones.filter(post => !idsExcluidos.includes(post.id));
         } else {
           filtradas = todasPostulaciones;
         }
+        //console.log(filtradas);
 
-        // Ordenar por fecha
         this.postulaciones = filtradas.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
         this.vistos = this.postulaciones.length;
 

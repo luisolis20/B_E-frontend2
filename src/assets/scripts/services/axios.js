@@ -2,7 +2,7 @@ import axios from "axios";
 
 const API = axios.create({
   baseURL: `${__API_BOLSA__}`,
-  timeout: 15000,
+  timeout: 60000,
 });
 
 API.interceptors.request.use(

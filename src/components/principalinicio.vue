@@ -326,6 +326,7 @@
 
                           </div>
                           <div class="col-md-12 col-lg-8">
+                            <br><br>
                             <h4>{{ ofe2.titulo }}</h4>
                             <h6>Fecha de publicación: {{ new Date(ofe2.created_at).toLocaleDateString('es-ES') }}</h6>
                             <div v-if="new Date(ofe2.fechaFinOferta) > new Date() && tiemposRestantes2[ofe2.id]">
@@ -343,7 +344,7 @@
                               <h6 class="text-danger">La oferta ya caducó</h6>
                             </div>
                             <h6>Categoría / Área: {{ ofe2.categoria }}</h6>
-                            <p class="text-dark">Descripcion: {{ ofe2.descripcion }}</p>
+                            <p class="descripcionmia text-dark">Descripcion: {{ ofe2.descripcion }}</p>
                             <div class="d-flex justify-content-between flex-lg-wrap">
                               <p class="text-dark fs-5 fw-bold mb-0">Nombre del Emprendimiento: {{ ofe2.Empresa }}</p>
                             </div>

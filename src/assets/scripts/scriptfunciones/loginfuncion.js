@@ -65,6 +65,7 @@ export async function enviarsolilogin(method, parametros, url, mensaje) {
           CIInfPer: response.data.id,
           name: response.data.name,
           email: response.data.email,
+          id: response.data.id,
         };
       }
     } else {

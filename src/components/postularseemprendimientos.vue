@@ -316,45 +316,16 @@ export default {
             urlofeempre: `/b_e/vin/view-oferta_empleos_emprendimiento`,
             urk32: `/b_e/vin/consultaofertempr`,
             url255: `/b_e/vin/postulacionemprendi`,
-            apiBaseUrl: "http://vinculacionconlasociedad.utelvt.edu.ec/cvubackendv2/api/cvn/v1",
-            urls: {
-
-                formacion: '', // URL de formación académica
-                experiencia: '', // URL de experiencia profesional
-                declaracion: '', // URL de declaración personal
-                habilidades: '', // URL de habilidades informáticas
-                idiomas: '', // URL de idiomas
-                contacto: '', // URL de información de contacto
-                cursos: '', // URL de cursos y capacitaciones
-                investigacion: '', // URL de investigación y publicaciones
-                otrosDatos: '', // URL de otros datos relevantes
-            },
+            no_cvn: false,
+            cvincompleto: false,
+            cvcompleto: false,
+            urlstatuscvn: `${__API_CVN__}/cvn/v1/getCVNstatusInd`,
             si_cvn: false,
             mi_cvn: '',
 
             postulosii: false,
             cargando: false,
-            filteredDatosPersonales: [],
-            filtereddeclaracion_personals2: [],
-            filteredcursos2: [],
-            experiencia_profesionales2: [],
-            formacion_academicas2: [],
-            habilidades_informaticas2: [],
-            filteredidiomas2: [],
-            filteredreferencias2: [],
-            filteredpublicacion2: [],
-            otros_datos_relevantes2: [],
-            urlinformacionpersonal: "http://vinculacionconlasociedad.utelvt.edu.ec/cvubackendv2/api/cvn/v1/informacionpersonal",
-            urlformacion_academica: "http://vinculacionconlasociedad.utelvt.edu.ec/cvubackendv2/api/cvn/v1/formacion_academica",
-            urlexperiencia_profesionale: "http://vinculacionconlasociedad.utelvt.edu.ec/cvubackendv2/api/cvn/v1/experiencia_profesionale",
-            urlinvestigacion_publicacione: "http://vinculacionconlasociedad.utelvt.edu.ec/cvubackendv2/api/cvn/v1/investigacion_publicacione",
-            urlidioma: "http://vinculacionconlasociedad.utelvt.edu.ec/cvubackendv2/api/cvn/v1/idioma",
-            urlhabilidades_informatica: "http://vinculacionconlasociedad.utelvt.edu.ec/cvubackendv2/api/cvn/v1/habilidades_informatica",
-            urlcursoscapacitacion: "http://vinculacionconlasociedad.utelvt.edu.ec/cvubackendv2/api/cvn/v1/cursoscapacitacion",
-            urlotros_datos_relevante: "http://vinculacionconlasociedad.utelvt.edu.ec/cvubackendv2/api/cvn/v1/otros_datos_relevante",
-            urlinformacion_contacto: "http://vinculacionconlasociedad.utelvt.edu.ec/cvubackendv2/api/cvn/v1/informacion_contacto",
-            urldeclaracion_personal: "http://vinculacionconlasociedad.utelvt.edu.ec/cvubackendv2/api/cvn/v1/declaracion_personal",
-
+            
         }
     },
     async mounted() {
@@ -364,29 +335,12 @@ export default {
         this.idus = ruta.params.secondId;
 
         this.urk32 += '/' + this.idus;
-        this.urlinformacionpersonal += '/' + this.ide;
-        this.urlformacion_academica += '/' + this.ide;
-        this.urlexperiencia_profesionale += '/' + this.ide;
-        this.urlinvestigacion_publicacione += '/' + this.ide;
-        this.urlidioma += '/' + this.ide;
-        this.urlhabilidades_informatica += '/' + this.ide;
-        this.urlotros_datos_relevante += '/' + this.ide;
-        this.urlinformacion_contacto += '/' + this.ide;
-        this.urldeclaracion_personal += '/' + this.ide;
-        this.urlcursoscapacitacion += '/' + this.ide;
+        this.urlstatuscvn += '/' + this.ide;
         if (this.mostrarOpciones2) {
             Promise.all([
-                this.getUsuario_CVN(),
+                this.getStatusIUserCVN(),
                 this.getEmpresa(),
-                this.getDeclaracionPersonal(),
-                this.getFormacionAcademica(),
-                this.getExperienciasProfesionales(),
-                this.getInvestigacionPublicaciones(),
-                this.getIdiomas(),
-                this.getHabilidadesInformaticas(),
-                this.getCursosCapacitaciones(),
-                this.getDatosRelevantes(),
-                this.getInformacionContacto(),
+                
 
             ])
         } else {
@@ -422,58 +376,43 @@ export default {
                 return [];
             }
         },
-        async getUsuario_CVN() {
+        async getStatusIUserCVN() {
 
 
             try {
-                const response = await axios.get(this.urlinformacionpersonal);
+                // 1. Traer todos los datos de CVN iniciados + el conteo de omitidos
+                const response = await API.get(`${this.urlstatuscvn}`);
                 const allData = response.data.data;
-                //console.log(response);
-                const sortedData = allData.map((person) => {
-                    if (!person || !person.CIInfPer) return null;
+                this.totalsincvn = response.data.omittedCount || 0;
 
-                    const CIInfPer = person.CIInfPer;
-
-                    const hasDataInAtLeastOneTable =
-                        this.filteredcursos2.some((data) => data.CIInfPer === CIInfPer) ||
-                        this.experiencia_profesionales2.some((data) => data.CIInfPer === CIInfPer) ||
-                        this.formacion_academicas2.some((data) => data.CIInfPer === CIInfPer) ||
-                        this.habilidades_informaticas2.some((data) => data.CIInfPer === CIInfPer) ||
-                        this.filteredidiomas2.some((data) => data.CIInfPer === CIInfPer) ||
-                        this.filteredreferencias2.some((data) => data.CIInfPer === CIInfPer) ||
-                        this.otros_datos_relevantes2.some((data) => data.CIInfPer === CIInfPer) ||
-                        this.filteredpublicacion2.some((data) => data.CIInfPer === CIInfPer);
-
-                    const hasDataInAllTables =
-                        this.filteredcursos2.some((data) => data.CIInfPer === CIInfPer) ||
-                        this.experiencia_profesionales2.some((data) => data.CIInfPer === CIInfPer) ||
-                        this.formacion_academicas2.some((data) => data.CIInfPer === CIInfPer) ||
-                        this.habilidades_informaticas2.some((data) => data.CIInfPer === CIInfPer) ||
-                        this.filteredidiomas2.some((data) => data.CIInfPer === CIInfPer) ||
-                        this.filteredreferencias2.some((data) => data.CIInfPer === CIInfPer) ||
-                        this.otros_datos_relevantes2.some((data) => data.CIInfPer === CIInfPer) ||
-                        this.filteredpublicacion2.some((data) => data.CIInfPer === CIInfPer);
-
-                    // Asignar estado según los datos
-                    if (hasDataInAllTables) {
-                        this.mi_cvn = 'tiene CVN completo';
-                        this.si_cvn = true;
-                        this.postulosii = true;
-                    } else if (hasDataInAtLeastOneTable) {
-                        this.mi_cvn = 'tiene CVN incompleto';
-                        this.postulosii = true;
-                    } else {
-                        this.mi_cvn = 'tiene CVN en proceso';
-                        this.postulosii = true;
-                    }
-
-                    return person;
-                }).filter(Boolean);
-
+               
+                //console.log(response.data.completionStatus);
+                if (response.data.completionStatus === "Completado") {
+                    this.mi_cvn = 'tiene CVN completo';
+                    this.cvcompleto = true;
+                    this.cvincompleto = false;
+                    this.si_cvn = true;
+                    this.postulosii = true;
+                } else if (response.data.completionStatus === "Incompleto") {
+                    this.mi_cvn = 'tiene CVN incompleto';
+                    this.cvcompleto = false;
+                    this.cvincompleto = true;
+                    this.si_cvn = true;
+                    this.postulosii = true;
+                } else {
+                    
+                    this.cvcompleto = false;
+                    this.cvincompleto = false;
+                    this.no_cvn = true;
+                    this.si_cvn = false;
+                    this.postulosii = false;
+                }
 
             } catch (error) {
-                console.error('Error al verificar los datos del CVN:', error);
-                this.si_cvn = false; // En caso de error, se asume que no está completo
+                console.error("Error al obtener datos:", error);
+                this.totalsincvn = 0;
+            } finally {
+                this.cargando = false;
             }
         },
         async getEmpresa() {
@@ -512,7 +451,7 @@ export default {
             event.preventDefault();
 
             // Asegúrate de que getUsuario_CVN haya terminado antes de proceder
-            await this.getUsuario_CVN();
+            await this.getStatusIUserCVN();
 
             const parametros = {
                 CIInfPer: this.ide,
@@ -531,7 +470,7 @@ export default {
                     fecha: fechaEcuador,
                     detalle_estado: "Verificando Datos de postulación",
                 };
-                axios.post(`/b_e/vin/estadopostuserempr`, parametros2)
+                API.post(`/b_e/vin/estadopostuserempr`, parametros2)
                 //enviarsolig('POST', parametros2, '/b_e/vin/estadopostuserempr', 'Postulación Aceptada');
 
                 this.$router.push('/principal/' + this.ide);
@@ -541,268 +480,7 @@ export default {
         },
         //Datos Personales
 
-        //Formacion Academica
-        async getFormacionAcademica() {
-            try {
-                const response = await axios.get(this.urlformacion_academica);
-                console.log(this.estudioactualmentefacultadcarreras);
-
-
-                if (response.data.data && response.data.data.length > 0) {
-                    const data = response.data.data;
-                    this.formacion_academicas2 = data;
-
-
-
-
-                } else {
-                    console.log("usuario sin Datos");
-                }
-                return response;
-
-            } catch (error) {
-                if (error.response?.status === 404) {
-                    // ✅ Se controla el error y NO se imprime en consola como un error
-                    // ⚠️ Importante: No lanzamos el error ni usamos console.error
-                    console.warn("El estudiante no ha llenado la formación académica y es su primera vez (404).");
-                } else {
-                    // ⚠️ Solo mostramos otros errores reales
-                    console.error("Error inesperado al obtener la formación académica:", error.message);
-                }
-                return null;
-
-
-            }
-        },
-        //Experiencias Profesionales
-        async getExperienciasProfesionales() {
-            try {
-                const response = await axios.get(this.urlexperiencia_profesionale);
-                if (response.data.data && response.data.data.length > 0) {
-                    const data = response.data.data;
-                    this.experiencia_profesionales2 = data;
-
-
-
-
-                } else {
-                    console.log("usuario sin Datos");
-                }
-                return response;
-
-            } catch (error) {
-                if (error.response?.status === 404) {
-                    // ✅ Se controla el error y NO se imprime en consola como un error
-                    // ⚠️ Importante: No lanzamos el error ni usamos console.error
-                    console.warn("El estudiante no ha llenado la experiencia profesional y es su primera vez (404).");
-                } else {
-                    // ⚠️ Solo mostramos otros errores reales
-                    console.error("Error inesperado al obtener la experiencia profesional:", error.message);
-                }
-                return null;
-
-            }
-        },
-        //Investigacion y Publicaciones
-        async getInvestigacionPublicaciones() {
-            try {
-                const response = await axios.get(this.urlinvestigacion_publicacione);
-                if (response.data.data && response.data.data.length > 0) {
-                    const data = response.data.data;
-                    this.filteredpublicacion2 = data;
-
-
-
-                } else {
-                    console.log("usuario sin Datos");
-                }
-                return response;
-
-            } catch (error) {
-                if (error.response?.status === 404) {
-                    // ✅ Se controla el error y NO se imprime en consola como un error
-                    // ⚠️ Importante: No lanzamos el error ni usamos console.error
-                    console.warn("El estudiante no ha llenado investigaciones/Publicaciones y es su primera vez (404).");
-                } else {
-                    // ⚠️ Solo mostramos otros errores reales
-                    console.error("Error inesperado al obtener investigaciones/Publicaciones:", error.message);
-                }
-                return null;
-
-            }
-        },
-        //Idiomas
-        async getIdiomas() {
-            try {
-                const response = await axios.get(this.urlidioma);
-                if (response.data.data && response.data.data.length > 0) {
-                    const data = response.data.data;
-                    this.filteredidiomas2 = data;
-
-
-                } else {
-                    console.log("usuario sin Datos");
-                }
-                return response;
-
-            } catch (error) {
-                if (error.response?.status === 404) {
-                    // ✅ Se controla el error y NO se imprime en consola como un error
-                    // ⚠️ Importante: No lanzamos el error ni usamos console.error
-                    console.warn("El estudiante no ha llenado Idiomas y es su primera vez (404).");
-                } else {
-                    // ⚠️ Solo mostramos otros errores reales
-                    console.error("Error inesperado al obtener Idiomas:", error.message);
-                }
-                return null;
-
-            }
-        },
-        //Habilidades Informaticas
-        async getHabilidadesInformaticas() {
-            try {
-                const response = await axios.get(this.urlhabilidades_informatica);
-                if (response.data.data && response.data.data.length > 0) {
-                    const data = response.data.data;
-                    this.habilidades_informaticas2 = data;
-
-
-
-                } else {
-                    console.log("usuario sin Datos");
-                }
-                return response;
-
-            } catch (error) {
-                if (error.response?.status === 404) {
-                    // ✅ Se controla el error y NO se imprime en consola como un error
-                    // ⚠️ Importante: No lanzamos el error ni usamos console.error
-                    console.warn("El estudiante no ha llenado Habilidades y es su primera vez (404).");
-                } else {
-                    // ⚠️ Solo mostramos otros errores reales
-                    console.error("Error inesperado al obtener Habilidades:", error.message);
-                }
-                return null;
-
-
-            }
-        },
-        //Cursos Capacitaciones
-        async getCursosCapacitaciones() {
-            try {
-                const response = await axios.get(this.urlcursoscapacitacion);
-                if (response.data.data && response.data.data.length > 0) {
-                    const data = response.data.data;
-                    this.filteredcursos2 = data;
-
-
-
-                } else {
-                    console.log("usuario sin Datos");
-                }
-                return response;
-
-            } catch (error) {
-                if (error.response?.status === 404) {
-                    // ✅ Se controla el error y NO se imprime en consola como un error
-                    // ⚠️ Importante: No lanzamos el error ni usamos console.error
-                    console.warn("El estudiante no ha llenado Cursos y es su primera vez (404).");
-                } else {
-                    // ⚠️ Solo mostramos otros errores reales
-                    console.error("Error inesperado al obtener Cursos:", error.message);
-                }
-                return null;
-
-
-            }
-        },
-        //Otros Datos Relevantes
-        async getDatosRelevantes() {
-            try {
-                const response = await axios.get(this.urlotros_datos_relevante);
-                if (response.data.data && response.data.data.length > 0) {
-                    const data = response.data.data;
-                    this.otros_datos_relevantes2 = data;
-
-
-
-                } else {
-                    console.log("usuario sin Datos");
-                }
-                return response;
-
-            } catch (error) {
-                if (error.response?.status === 404) {
-                    // ✅ Se controla el error y NO se imprime en consola como un error
-                    // ⚠️ Importante: No lanzamos el error ni usamos console.error
-                    console.warn("El estudiante no ha llenado Datos Relevantes y es su primera vez (404).");
-                } else {
-                    // ⚠️ Solo mostramos otros errores reales
-                    console.error("Error inesperado al obtener Datos Relevantes :", error.message);
-                }
-                return null;
-
-
-            }
-        },
-        //Informacion de Contacto
-        async getInformacionContacto() {
-            try {
-                const response = await axios.get(this.urlinformacion_contacto);
-                if (response.data.data && response.data.data.length > 0) {
-                    const data = response.data.data;
-                    this.filteredreferencias2 = data;
-
-
-
-
-                } else {
-                    console.log("usuario sin Datos");
-                }
-                return response;
-
-            } catch (error) {
-                if (error.response?.status === 404) {
-                    // ✅ Se controla el error y NO se imprime en consola como un error
-                    // ⚠️ Importante: No lanzamos el error ni usamos console.error
-                    console.warn("El estudiante no ha llenado Información de Contacto y es su primera vez (404).");
-                } else {
-                    // ⚠️ Solo mostramos otros errores reales
-                    console.error("Error inesperado al obtener Información de Contacto:", error.message);
-                }
-                return null;
-
-
-            }
-        },
-        //Declaracion Personal
-        async getDeclaracionPersonal() {
-            try {
-                const response = await axios.get(this.urldeclaracion_personal);
-                if (response.data.data && response.data.data.length > 0) {
-                    const data = response.data.data[0];
-                    this.filtereddeclaracion_personals2 = data;
-
-
-                } else {
-                    console.log("usuario sin Datos");
-                }
-                return response;
-
-            } catch (error) {
-                if (error.response?.status === 404) {
-                    // ✅ Se controla el error y NO se imprime en consola como un error
-                    // ⚠️ Importante: No lanzamos el error ni usamos console.error
-                    console.warn("El estudiante no ha llenado la declaración personal y es su primera vez (404).");
-                } else {
-                    // ⚠️ Solo mostramos otros errores reales
-                    console.error("Error inesperado al obtener la declaración personal:", error.message);
-                }
-                return null;
-
-
-            }
-        },
+       
         actualizar() {
 
         },
