@@ -38,11 +38,10 @@
             <tr v-else v-for="post,  in this.filteredpostulaciones" :key="post.id">
 
               <td>
-                <img v-if="post.fotografia" :src="`data:${post.fotografia.mime};base64,${post.fotografia.data}`"
-                  id="fotoimg" width="100" height="100" style="border-radius: 10px;" />
-                <img v-else style="width: 100px !important;"
-                  src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/User_icon_2.svg/480px-User_icon_2.svg.png"
-                  class="img-thumbnail">
+                <img :src="getFotoUrl(post.CIInfPer)" alt="Foto de perfil" width="100" height="100"
+                  style="border-radius: 10px; object-fit: cover;"
+                  @error.once="$event.target.src = 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/User_icon_2.svg/480px-User_icon_2.svg.png'" />
+
               </td>
               <td v-text="post.CIInfPer"></td>
               <td v-text="post.NombInfPer + ' ' + post.ApellInfPer + ' ' + post.ApellMatInfPer"></td>
@@ -120,6 +119,7 @@ export default {
     return {
       idus: 0,
       url213: "/b_e/vin/informacionpersonalD",
+      url214: "/b_e/vin/getdocentes",
       postulacionespr: [],
       filteredpostulaciones: [],
       searchQuery: '',
@@ -141,7 +141,7 @@ export default {
     async getAdministrativosD(page = 1) {
       this.cargando = true;
       try {
-        const response = await API.get(`${this.url213}?page=${page}&withPhotos=true`);
+        const response = await API.get(`${this.url214}?page=${page}&withPhotos=true`);
 
         this.postulacionespr = response.data?.data || [];
         const pagination = response.data?.pagination || {};
@@ -203,6 +203,18 @@ export default {
         this.getAdministrativosD(this.currentPage - 1);
       }
     },
+    getFotoUrl(ci) {
+      if (!ci) {
+        return 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/User_icon_2.svg/480px-User_icon_2.svg.png';
+      }
+
+      // Asumimos que `API.defaults.baseURL` es la base (ej. /api)
+      const baseURL = API.defaults.baseURL || '';
+
+      // Generamos la URL completa que llama al nuevo endpoint de streaming
+      return `${baseURL}/b_e/vin/informacionpersonalD/${ci}/foto`; // Ajusta la ruta base si es necesario
+    },
+
     async descargarFoto(post) {
       try {
         if (!post.fotografia || !post.fotografia.data) {

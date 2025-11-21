@@ -35,14 +35,15 @@
                 <h3>Cargando....</h3>
               </td>
             </tr>
-            <tr v-else v-for="post,  in this.filteredpostulaciones" :key="post.id">
+            <tr v-else v-for="post,  in this.filteredpostulaciones" :key="post.CIInfPer">
 
               <td>
-                <img v-if="post.fotografia" :src="`data:${post.fotografia.mime};base64,${post.fotografia.data}`"
-                  id="fotoimg" width="100" height="100" style="border-radius: 10px;" />
+                <img v-if="post.hasPhoto" :src="getPhotoUrl(post.CIInfPer)" @error="handleImageError"
+                  alt="Foto de Estudiante" id="fotoimg" width="100" height="100"
+                  style="border-radius: 10px; object-fit: cover;" />
                 <img v-else style="width: 100px !important;"
                   src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/User_icon_2.svg/480px-User_icon_2.svg.png"
-                  class="img-thumbnail">
+                  class="img-thumbnail" alt="Sin Foto">
               </td>
               <td v-text="post.CIInfPer"></td>
               <td v-text="post.NombInfPer + ' ' + post.ApellInfPer + ' ' + post.ApellMatInfPer"></td>
@@ -87,7 +88,7 @@
       <div class="d-flex justify-content-center mb-4">
         <button class="btn btn-primary text-white" @click="actualizar">Actualizar Datos</button>
         &nbsp;&nbsp;&nbsp;
-        <button class="btn btn-primary text-white" @click="descargarDatos">Descargar en formato ZIP</button>
+        <button class="btn btn-primary text-white" @click="descargarDatosMasiva">Descargar en formato ZIP</button>
       </div>
 
     </div>
@@ -116,38 +117,53 @@ export default {
   data() {
     return {
       idus: 0,
-      url213: "/b_e/vin/estudiantesfoto",
+      baseUrl: "/b_e/vin", // Ajustado para usar la base
       postulacionespr: [],
       filteredpostulaciones: [],
       searchQuery: '',
       cargando: false,
       currentPage: 1,
       lastPage: 1,
-      buscando: false,
-      grafico: null,
+      buscando: false, // Mantenido, pero no se usa en la lógica de paginación actual
+      grafico: null, // Mantenido, pero no se usa aquí
+      photoCache: {}, // 🆕 Cache para almacenar URLs de fotos si es necesario
     }
   },
   async mounted() {
     const ruta = useRoute();
-    const usuario = await getMe();
-    this.idus = ruta.params.id;
+    // const usuario = await getMe(); // Solo si es necesario para autenticación
+    this.idus = ruta.params.id; // Asumiendo que `id` es relevante
     this.getAdministrativosD();
-
   },
   methods: {
+    // 🆕 Genera la URL para cargar la foto directamente como imagen binaria
+    getPhotoUrl(ci) {
+      const baseURL2 = API.defaults.baseURL
+      return `${baseURL2}/b_e/vin/fotografia/${ci}`;
+    },
+
+    // 🆕 Maneja el error de carga de imagen (ej: si el CI no tiene foto a pesar del filtro)
+    handleImageError(event) {
+      // Reemplaza la imagen con el ícono de usuario por defecto
+      event.target.src = "https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/User_icon_2.svg/480px-User_icon_2.svg.png";
+      event.target.style.width = '100px';
+      event.target.style.height = '100px';
+    },
+
     async getAdministrativosD(page = 1) {
       this.cargando = true;
       try {
-        // En la vista principal, queremos las fotos
-        const response = await API.get(`${this.url213}?page=${page}&withPhotos=true`, {
-          timeout: 60000
-        });
+        // Petición para obtener METADATOS (sin datos binarios de foto)
+        const response = await API.get(`${this.baseUrl}/estudiantesfoto?page=${page}`); // No es necesario el withPhotos=true/false
+        // ya que el backend lo filtra y no envía la columna `fotografia`
 
         this.postulacionespr = response.data?.data || [];
         const pagination = response.data?.pagination || {};
         this.currentPage = pagination.current_page || 1;
         this.lastPage = pagination.last_page || 1;
 
+        // Limpiar el filtro al cargar una nueva página
+        this.searchQuery = '';
         this.filteredpostulaciones = this.postulacionespr;
       } catch (error) {
         console.warn("⚠️ Error al obtener datos:", error?.response?.data || error);
@@ -157,31 +173,10 @@ export default {
       }
     },
 
-    // 🆕 Nueva función para obtener solo los metadatos paginados (sin fotos)
-    async getStudentMetadata(page = 1) {
-      const response = await API.get(`${this.url213}?page=${page}&withPhotos=false`, {
-        timeout: 60000
-      });
-      return response.data;
-    },
+    // ⛔ Se elimina `updateFilteredData` y `filtrarOfertas` porque la paginación es del backend
 
-
-    filtrarOfertas() {
-      this.currentPage = 1; // Reinicia a la primera página
-      this.updateFilteredData();
-    },
-
-    updateFilteredData() {
-      // Aplicar paginación local
-      const startIndex = (this.currentPage - 1) * 10;
-      const endIndex = startIndex + 10;
-      this.filteredpostulaciones = this.postulacionespr.slice(startIndex, endIndex);
-    },
-    actualizar() {
-      this.cargando = true;
-      this.getAdministrativosD()
-    },
     async filterResults() {
+      // 📝 La búsqueda local se mantiene, solo se busca entre los datos de la página actual.
       const query = this.searchQuery.trim().toLowerCase();
       if (!query) {
         this.filteredpostulaciones = this.postulacionespr;
@@ -195,134 +190,165 @@ export default {
         (inves.ApellMatInfPer && inves.ApellMatInfPer.toLowerCase().includes(query))
       );
     },
+
     onlyNumbers(event) {
+      // Permite solo números y las teclas de navegación (ej. Backspace) si es una cédula
       const charCode = event.which ? event.which : event.keyCode;
+      // Permite números (48-57) y el guion (-) si es necesario, si no, solo números.
       if (charCode < 48 || charCode > 57) {
         event.preventDefault();
       }
     },
+
     nextPage() {
-      if (this.currentPage < this.lastPage) {
+      if (this.currentPage < this.lastPage && !this.cargando) {
         this.getAdministrativosD(this.currentPage + 1);
       }
     },
+
     previousPage() {
-      if (this.currentPage > 1) {
+      if (this.currentPage > 1 && !this.cargando) {
         this.getAdministrativosD(this.currentPage - 1);
       }
     },
-    async descargarFoto(post) {
+
+    actualizar() {
+      // Simplemente recarga la página actual de datos
+      this.getAdministrativosD(this.currentPage);
+    },
+
+    // 🆕 Descarga de una sola foto
+    async descargarFoto(ci, nombre, apellido1, apellido2) {
       try {
-        if (!post.fotografia || !post.fotografia.data) {
-          alert("Este usuario no tiene fotografía disponible.");
-          return;
-        }
+        // Llama al endpoint que devuelve la foto binaria
+        const response = await API.get(`${this.baseUrl}/fotografia/${ci}`, {
+          responseType: 'blob' // Importante para manejar datos binarios
+        });
 
-        // Extensión según el mime
+        const contentType = response.headers['content-type'] || 'image/jpeg';
+
+        // Determinar extensión y nombre de archivo
         let extension = "jpg";
-        if (post.fotografia.mime === "image/png") extension = "png";
-        else if (["image/jpeg", "image/jpg"].includes(post.fotografia.mime)) extension = "jpeg";
+        if (contentType.includes("png")) extension = "png";
+        else if (contentType.includes("jpeg")) extension = "jpeg";
 
-        // Nombre del archivo
-        const nombre = (post.NombInfPer || "sinNombre").replace(/\s+/g, " ");
-        const apellido = (post.ApellInfPer || "sinApellido").replace(/\s+/g, " ");
-        const apellido2 = (post.ApellMatInfPer || "sinApellido").replace(/\s+/g, " ");
-        const cedula = post.CIInfPer || "sinCedula";
-        const fileName = `${nombre} ${apellido} ${apellido2}_${cedula}.${extension}`;
+        const nombreLimpio = (nombre || "sinNombre").replace(/\s+/g, " ").trim();
+        const apellido1Limpio = (apellido1 || "sinApellido1").replace(/\s+/g, " ").trim();
+        const apellido2Limpio = (apellido2 || "sinApellido2").replace(/\s+/g, " ").trim();
+        const fileName = `${nombreLimpio}_${apellido1Limpio}_${apellido2Limpio}_${ci}.${extension}`;
 
-        // Convertir Base64 → binario
-        const byteCharacters = atob(post.fotografia.data);
-        const byteArray = new Uint8Array([...byteCharacters].map(c => c.charCodeAt(0)));
-
-        // Descargar
-        const blob = new Blob([byteArray], { type: post.fotografia.mime });
+        // Crea un Blob y usa file-saver para la descarga
+        const blob = new Blob([response.data], { type: contentType });
         saveAs(blob, fileName);
 
       } catch (error) {
-        console.error("Error al descargar la foto:", error);
+        console.error("Error al descargar la foto:", error?.response?.data || error);
+        alert("Ocurrió un error al descargar la foto. Es posible que el estudiante no tenga una fotografía.");
       }
     },
-    async descargarDatos() {
+
+    // 🆕 Descarga Masiva (Similar al original, pero adaptado a la nueva API)
+    async descargarDatosMasiva() {
       this.cargando = true;
       try {
         const zip = new JSZip();
-        let currentPage = 1;
-        let lastPage = 1;
 
-        // 1. ITERAR SOBRE TODAS LAS PÁGINAS DEL API
-        do {
-          // ⏱ Petición para obtener la página actual de estudiantes con fotos (máx 60s)
-          // Usamos la misma lógica que getAdministrativosD pero con un loop
-          const response = await API.get(`${this.url213}?page=${currentPage}&withPhotos=true`, {
-            timeout: 90000 // Aumentamos el timeout a 90s para el proceso de descarga masiva
-          });
+        console.log("⏱️ Iniciando la obtención masiva de metadatos y fotos (una sola petición)... Esto puede tardar varios minutos.");
 
-          const registros = response.data.data;
-          const pagination = response.data.pagination || {};
-          lastPage = pagination.last_page || 1;
-          
-          console.log(`Procesando página ${currentPage} de ${lastPage}...`);
+        // 1. PETICIÓN ÚNICA AL NUEVO ENDPOINT
+        const response = await API.get(`${this.baseUrl}/descargarfotosmasiva`, {
+          // Aumentar el timeout del cliente para esta petición masiva
+          timeout: 600000 // 10 minutos (600,000 ms). Ajusta si es necesario.
+        });
 
-          // 2. PROCESAR CADA REGISTRO Y AÑADIR AL ZIP
-          for (const post of registros) {
-            // Asegúrate de que la foto exista y tenga datos
-            if (!post.fotografia || !post.fotografia.data) continue;
+        const registros = response.data?.data || [];
+        const totalRegistros = registros.length;
+
+        if (totalRegistros === 0) {
+          alert("No se encontraron estudiantes con foto para descargar.");
+          return;
+        }
+
+        console.log(`✅ Datos recibidos. Procesando ${totalRegistros} registros para generar el ZIP.`);
+
+        let contadorProcesado = 0;
+
+        // 2. PROCESAR CADA REGISTRO (CON FOTO EN BASE64 INCLUIDA)
+        for (const post of registros) {
+          // Decodificar Base64 y preparar la descarga
+          try {
+            // Convertir la cadena Base64 a un ArrayBuffer o Blob
+            const fotoBinariaBase64 = post.fotografia;
+
+            // NOTA: Base64 en JSON no trae el prefijo 'data:image/jpeg;base64,...'
+            // JSZip necesita el blob o arraybuffer directo.
+            // Usamos atob para decodificar, y luego a ArrayBuffer para JSZip
+            const byteCharacters = atob(fotoBinariaBase64);
+            const byteNumbers = new Array(byteCharacters.length);
+            for (let i = 0; i < byteCharacters.length; i++) {
+              byteNumbers[i] = byteCharacters.charCodeAt(i);
+            }
+            const byteArray = new Uint8Array(byteNumbers);
+            // El mime type no es crucial para JSZip, pero se puede estimar 
+            // o usar 'image/jpeg' por defecto si el backend no lo provee.
 
             const carreraNombre = post.NombCarr
-              ? post.NombCarr.replace(/[\\/:*?"<>|]/g, "_")
+              ? post.NombCarr.replace(/[\\/:*?"<>|]/g, "_").trim()
               : "Sin_Carrera";
-            
-            // Creamos o accedemos a la carpeta de la carrera
+
             const folder = zip.folder(carreraNombre);
 
-            // Determinar extensión
+            // Determinar extensión (simplemente usamos .jpg si el backend no lo indica)
             let extension = "jpg";
-            if (post.fotografia.mime === "image/png") extension = "png";
-            else if (["image/jpeg", "image/jpg"].includes(post.fotografia.mime)) extension = "jpeg";
+            // Podrías intentar detectar el tipo de imagen leyendo los primeros bytes si fuera crucial,
+            // pero por simplicidad, dado que la mayoría de fotos estudiantiles son JPG, lo dejamos así.
 
             // Generar nombre de archivo
-            const nombre = (post.NombInfPer || "sinNombre").replace(/\s+/g, " ");
-            const apellido = (post.ApellInfPer || "sinApellido").replace(/\s+/g, " ");
-            const apellido2 = (post.ApellMatInfPer || "sinApellido").replace(/\s+/g, " ");
+            const nombre = (post.NombInfPer || "sinNombre").replace(/\s+/g, " ").trim();
+            const apellido = (post.ApellInfPer || "sinApellido1").replace(/\s+/g, " ").trim();
+            const apellido2 = (post.ApellMatInfPer || "sinApellido2").replace(/\s+/g, " ").trim();
             const cedula = post.CIInfPer || "sinCedula";
-            const fileName = `${nombre} ${apellido} ${apellido2}_${cedula}.${extension}`;
+            const fileName = `${nombre}_${apellido}_${apellido2}_${cedula}.${extension}`;
 
-            // Convertir Base64 a binario y añadir al ZIP
-            const byteCharacters = atob(post.fotografia.data);
-            const byteArray = new Uint8Array([...byteCharacters].map(c => c.charCodeAt(0)));
-            
-            // Añadir al ZIP
+            // Añadir la foto (ArrayBuffer) al ZIP
             folder.file(fileName, byteArray, { binary: true });
+
+          } catch (processingError) {
+            console.warn(`No se pudo procesar la foto para CI: ${post.CIInfPer}. Omitting.`, processingError);
           }
 
-          currentPage++;
-        } while (currentPage <= lastPage);
-        
-        console.log("Generando archivo ZIP...");
-        
+          contadorProcesado++;
+          // Mostrar progreso en consola
+          const progreso = ((contadorProcesado / totalRegistros) * 100).toFixed(2);
+          console.log(`⏳ Procesado: ${contadorProcesado} / ${totalRegistros} (${progreso}%)`);
+        }
+
+        console.log("💾 Generando archivo ZIP final... (Puede tardar)");
+
         // 3. GENERAR Y DESCARGAR EL ZIP
-        const content = await zip.generateAsync({ 
-          type: "blob", 
-          compression: "DEFLATE", // Usar compresión para reducir el tamaño final
+        const content = await zip.generateAsync({
+          type: "blob",
+          compression: "DEFLATE",
           compressionOptions: {
-            level: 9 // Nivel máximo de compresión
+            level: 9
           }
         });
-        saveAs(content, "Estudiantes_por_Carrera.zip");
+        saveAs(content, "Estudiantes_con_Foto_por_Carrera.zip");
         alert("Descarga completada con éxito!");
 
       } catch (error) {
-        console.error("Error al generar ZIP:", error);
-        alert("Ocurrió un error al descargar los datos. Revise la consola para más detalles.");
+        console.error("❌ Error al generar ZIP:", error.response?.status, error);
+        if (error.response?.status === 429) {
+          alert("El servidor reportó 'Too Many Requests' (429). Por favor, inténtelo de nuevo en un momento.");
+        } else if (error.code === 'ECONNABORTED' || error.message.includes('timeout')) {
+          alert("La conexión expiró al intentar descargar todos los datos. El proceso es muy pesado. Inténtelo de nuevo o contacte a soporte.");
+        } else {
+          alert("Ocurrió un error general al descargar los datos. Revise la consola para más detalles.");
+        }
       } finally {
         this.cargando = false;
       }
     }
-
-
-
-
-
   },
   mixins: [script2],
 }
